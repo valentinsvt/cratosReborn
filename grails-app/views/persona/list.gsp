@@ -202,6 +202,7 @@
                         success : function (msg) {
                             bootbox.dialog({
                                 title   : "Ver Persona",
+                                class   : "long",
                                 message : msg,
                                 buttons : {
                                     ok : {
@@ -231,7 +232,7 @@
                                 callback  : function () {
                                 }
                             },
-                            cambiar : {
+                            cambiar  : {
                                 label     : "<i class='fa fa-refresh'></i> Reiniciar",
                                 className : "btn-warning",
                                 callback  : function () {
