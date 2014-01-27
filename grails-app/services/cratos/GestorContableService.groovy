@@ -1,13 +1,16 @@
 package cratos
-import org.codehaus.groovy.grails.web.i18n.ParamsAwareLocaleChangeInterceptor;
+import org.codehaus.groovy.grails.web.i18n.ParamsAwareLocaleChangeInterceptor
+import org.springframework.web.context.request.RequestContextHolder;
 class GestorContableService {
 //    static scope = "session"
+    def session = RequestContextHolder.currentRequestAttributes().getSession()
     boolean transactional = true
     def buscadorService
     def cuentas=[]
     def tipo
     def tiempo
     void vaciarLista(){
+        session.cuentas=[]
         this.cuentas=[]
     }
     List ordenarLista(lista){

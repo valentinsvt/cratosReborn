@@ -1,9 +1,9 @@
-<div id="divPlanCuentasAll" style="width: 100%;float: left; min-height: 150px; margin-top: 0px; ">
-    <div style="width: 800px;float: left;min-height: 10px; margin-top: 2px;border:none;margin-left: 8px;margin-bottom: 15px; " class=" ui-corner-all">
+<div id="divPlanCuentasAll" style="width: 100%; min-height: 150px; ">
+    <div style="width: 100%;min-height: 10px; margin-top: 2px;border:none;margin-left: 8px;margin-bottom: 15px; ">
         <div id="agregarCuentas"></div>
     </div>
 
-    <div style="float: left; width: 100%; ">
+    <div style="width: 100%; ">
         <div style="margin-left: 15px; float: left">
             <div class="span-2">
                 Nombre:
