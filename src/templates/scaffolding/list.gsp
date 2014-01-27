@@ -88,10 +88,11 @@
                 var \$form = \$("#frm${className}");
                 var \$btn = \$("#dlgCreateEdit").find("#btnSave");
                 if (\$form.valid()) {
-                \$btn.replaceWith(spinner);
+                    \$btn.replaceWith(spinner);
+                    openLoader("Grabando");
                     \$.ajax({
                         type    : "POST",
-                        url     : '\${createLink(action:'save_ajax')}',
+                        url     : \$form.attr("action"),
                         data    : \$form.serialize(),
                             success : function (msg) {
                         var parts = msg.split("_");
@@ -124,6 +125,7 @@
                             label     : "<i class='fa fa-trash-o'></i> Eliminar",
                             className : "btn-danger",
                             callback  : function () {
+                                openLoader("Eliminando");
                                 \$.ajax({
                                     type    : "POST",
                                     url     : '\${createLink(action:'delete_ajax')}',
@@ -177,7 +179,7 @@
                             } //buttons
                         }); //dialog
                         setTimeout(function () {
-                            b.find(".form-control").first().focus()
+                            b.find(".form-control").not(".datepicker").first().focus()
                         }, 500);
                     } //success
                 }); //ajax

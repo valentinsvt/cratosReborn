@@ -275,7 +275,7 @@
                     sb << ' required'
                 }
                 sb << '"'
-                sb << " value=\"\${${domainInstance}?.${property.name}}\" ${renderNoSelection(property)} />"
+                sb << " value=\"\${${domainInstance}?.${property.name}}\" />"
 
                 return sb.toString()
             }
