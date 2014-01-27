@@ -220,18 +220,6 @@ class PersonaController extends cratos.seguridad.Shield {
         return [personaInstance: personaInstance]
     } //form para cargar con ajax en un dialog
 
-    def formUsuario_ajax() {
-        def personaInstance = new Persona(params)
-        if (params.id) {
-            personaInstance = Persona.get(params.id)
-            if (!personaInstance) {
-                notFound_ajax()
-                return
-            }
-        }
-        return [personaInstance: personaInstance]
-    }
-
     def validarCedula_ajax() {
         params.cedula = params.cedula.toString().trim()
         if (params.id) {

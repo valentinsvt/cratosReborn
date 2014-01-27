@@ -62,19 +62,6 @@
                 </span>
             </div>
 
-            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'titulo', 'error')} ">
-                <span class="grupo">
-                    <label for="titulo" class="col-md-3 control-label text-info">
-                        Título
-                    </label>
-
-                    <div class="col-md-6">
-                        <g:textField name="titulo" maxlength="4" class="form-control allCaps" value="${personaInstance?.titulo}"/>
-                    </div>
-
-                </span>
-            </div>
-
             <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'fechaNacimiento', 'error')} ">
                 <span class="grupo">
                     <label for="fechaNacimiento" class="col-md-3 control-label text-info">
@@ -89,14 +76,14 @@
                 </span>
             </div>
 
-            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'mail', 'error')} ">
+            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'email', 'error')} ">
                 <span class="grupo">
-                    <label for="mail" class="col-md-3 control-label text-info">
+                    <label for="email" class="col-md-3 control-label text-info">
                         E-mail
                     </label>
 
                     <div class="col-md-6">
-                        <g:textField name="mail" maxlength="63" email="true" class="form-control allCaps" value="${personaInstance?.mail}"/>
+                        <g:textField name="email" maxlength="63" email="true" class="form-control allCaps" value="${personaInstance?.email}"/>
                     </div>
 
                 </span>
@@ -115,34 +102,48 @@
                 </span>
             </div>
 
-            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'celular', 'error')} ">
+            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'empresa', 'error')} ">
                 <span class="grupo">
-                    <label for="celular" class="col-md-3 control-label text-info">
-                        Celular
+                    <label for="empresa" class="col-md-3 control-label text-info">
+                        Empresa
                     </label>
 
                     <div class="col-md-6">
-                        <g:textField name="celular" maxlength="15" celular="true" class="form-control" value="${personaInstance?.celular}"/>
+                        <g:select id="empresa" name="empresa.id" from="${cratos.Empresa.list()}"
+                                  optionKey="id" optionValue="nombre"
+                                  value="${personaInstance?.empresa?.id}" class="many-to-one form-control"/>
                     </div>
 
                 </span>
             </div>
 
-            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'departamento', 'error')} ">
+            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'fechaInicio', 'error')} ">
                 <span class="grupo">
-                    <label for="departamento" class="col-md-3 control-label text-info">
-                        Departamento
+                    <label for="login" class="col-md-3 control-label text-info">
+                        Login
                     </label>
 
-                    <div class="col-md-6">
-                        <g:select id="departamento" name="departamento.id" from="${cratos.tramites.Departamento.list()}"
-                                  optionKey="id" optionValue="descripcion"
-                                  value="${personaInstance?.departamento?.id}" class="many-to-one form-control"/>
+                    <div class="col-md-4">
+                        <g:textField name="login" maxlength="15" class="form-control allCaps" value="${personaInstance?.login}"/>
                     </div>
 
                 </span>
             </div>
 
+            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'activo', 'error')} required">
+                <span class="grupo">
+                    <label for="activo" class="col-md-3 control-label text-info">
+                        Activo
+                    </label>
+
+                    <div class="col-md-3">
+                        %{--<g:field name="activo" type="number" value="${personaInstance.activo}" class="digits form-control required" required=""/>--}%
+                        <g:select name="activo" from="[0: 'NO', 1: 'SI']" value="${personaInstance.activo}" class="form-control required" required=""
+                                  optionKey="key" optionValue="value"/>
+                    </div>
+                    *
+                </span>
+            </div>
         </g:form>
 
         <script type="text/javascript">
