@@ -13,7 +13,7 @@ class GestorContableController extends cratos.seguridad.Shield {
 
     def buscarGestor() {
         gestorContableService.vaciarLista()
-        println "parasm " + params
+//        println "params " + params
         def lista = buscadorService.buscar(Gestor, "Gestor", "incluyente", [campos: ["nombre", "descripcion"], criterios: [params.nombre, params.nombre], operadores: ["like", "like"], ordenado: "nombre", orden: "asc"], true)
         def numRegistros = lista.get(lista.size() - 1)
         lista.pop()

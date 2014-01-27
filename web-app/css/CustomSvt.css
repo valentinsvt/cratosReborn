@@ -23,6 +23,13 @@
 .vertical-container{
     border-bottom: 1px solid black;padding-left: 50px;position: relative;
 }
+.vertical-container-no-padding{
+    border-bottom: 1px solid black;padding-left: 10px;position: relative;
+}
+th{
+    color:white;
+    font-weight: bold;
+}
 
 .titulo-azul{
     /* Antes conocido como titulo chevere */
