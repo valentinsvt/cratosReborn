@@ -1,6 +1,10 @@
 package cratos
 
+import cratos.seguridad.Persona
+
 class Empleado implements Serializable {
+    Persona persona
+
     double porcentajeComision
     byte[] foto
     String estado
@@ -8,16 +12,13 @@ class Empleado implements Serializable {
     Date fechaInicio
     double sueldo
     String cuenta
-    String email
-    String telefono
     int hijo
     String iess
     String numero
     TipoContrato tipoContrato
     Cargo cargo
-    cratos.seguridad.Persona persona
     Canton canton
-    String crgo
+//    String crgo
 
     String observaciones
 
@@ -36,8 +37,6 @@ class Empleado implements Serializable {
             fechaInicio column: 'emplfcin'
             sueldo column: 'emplsldo'
             cuenta column: 'emplcnta'
-            email column: 'emplmail'
-            telefono column: 'empltlfn'
             hijo column: 'emplhijo'
             iess column: 'empliess'
             numero column: 'emplnmro'
@@ -45,7 +44,7 @@ class Empleado implements Serializable {
             cargo column: 'crgo__id'
             persona column: 'prsn__id'
             canton column: 'cntn__id'
-            crgo column: 'emplcrgo'
+//            crgo column: 'emplcrgo'
 
             observaciones column: 'emplobsv'
         }
@@ -58,8 +57,8 @@ class Empleado implements Serializable {
         fechaInicio(blank: true, nullable: true, attributes: [title: 'fechaInicio'])
         sueldo(blank: true, nullable: true, attributes: [title: 'sueldo'])
         cuenta(size: 1..12, blank: true, nullable: true, attributes: [title: 'cuenta'])
-        email(size: 1..63, blank: true, nullable: true, attributes: [title: 'email'])
-        telefono(size: 1..63, blank: true, nullable: true, attributes: [title: 'telefono'])
+//        email(size: 1..63, blank: true, nullable: true, attributes: [title: 'email'])
+//        telefono(size: 1..63, blank: true, nullable: true, attributes: [title: 'telefono'])
         hijo(blank: true, nullable: true, attributes: [title: 'hijo'])
         iess(size: 1..13, blank: true, nullable: true, attributes: [title: 'iess'])
         numero(size: 1..10, blank: true, nullable: true, attributes: [title: 'numero'])
@@ -67,7 +66,7 @@ class Empleado implements Serializable {
         cargo(blank: true, nullable: true, attributes: [title: 'cargo'])
         persona(blank: true, nullable: true, attributes: [title: 'persona'])
         canton(blank: true, nullable: true, attributes: [title: 'canton'])
-        crgo(blank: true, nullable: true, size: 1..127, attributes: [title: 'crgo'])
+//        crgo(blank: true, nullable: true, size: 1..127, attributes: [title: 'crgo'])
         observaciones(blank: true, nullable: true, size: 1..127, attributes: [title: 'observaciones'])
     }
 }
