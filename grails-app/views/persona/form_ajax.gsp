@@ -7,7 +7,7 @@
         <elm:notFound elem="Persona" genero="o"/>
     </g:if>
     <g:else>
-        <g:form class="form-horizontal" name="frmPersona" role="form" action="save" method="POST">
+        <g:form class="form-horizontal" name="frmPersona" role="form" action="save_ajax" method="POST">
             <g:hiddenField name="id" value="${personaInstance?.id}"/>
 
             <div class="form-group keeptogether  ${hasErrors(bean: personaInstance, field: 'cedula', 'error')} required">
@@ -17,7 +17,7 @@
                     </label>
 
                     <div class="col-md-6">
-                        <g:textField name="cedula" maxlength="10" required="" class="allCaps form-control required" value="${personaInstance?.cedula}"/>
+                        <g:textField name="cedula" maxlength="10" cedula="true" required="" class="form-control required" value="${personaInstance?.cedula}"/>
                     </div>
                     *
                 </span>
@@ -30,7 +30,7 @@
                     </label>
 
                     <div class="col-md-6">
-                        <g:textField name="nombre" maxlength="31" required="" class="allCaps form-control required" value="${personaInstance?.nombre}"/>
+                        <g:textField name="nombre" maxlength="31" required="" class="form-control required" value="${personaInstance?.nombre}"/>
                     </div>
                     *
                 </span>
@@ -43,7 +43,7 @@
                     </label>
 
                     <div class="col-md-6">
-                        <g:textField name="apellido" maxlength="31" required="" class="allCaps form-control required" value="${personaInstance?.apellido}"/>
+                        <g:textField name="apellido" maxlength="31" required="" class="form-control required" value="${personaInstance?.apellido}"/>
                     </div>
                     *
                 </span>
@@ -56,7 +56,7 @@
                     </label>
 
                     <div class="col-md-6">
-                        <g:textField name="sigla" maxlength="8" required="" class="allCaps form-control required" value="${personaInstance?.sigla}"/>
+                        <g:textField name="sigla" maxlength="8" required="" class="form-control required" value="${personaInstance?.sigla}"/>
                     </div>
                     *
                 </span>
@@ -70,7 +70,7 @@
 
                     <div class="col-md-4">
                         <elm:datepicker name="fechaNacimiento" title="Fecha de Nacimiento" class="datepicker form-control" maxDate="-15y"
-                                        value="${personaInstance?.fechaNacimiento}" default="none" noSelection="['': '']"/>
+                                        value="${personaInstance?.fechaNacimiento}"/>
                     </div>
 
                 </span>
@@ -85,7 +85,7 @@
                     <div class="col-md-6">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                            <g:textField name="email" maxlength="63" class="allCaps form-control" value="${personaInstance?.email}"/>
+                            <g:textField name="email" maxlength="63" class="form-control" value="${personaInstance?.email}"/>
                         </div>
                     </div>
                 </span>
@@ -100,7 +100,7 @@
                     <div class="col-md-6">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-phone"></i></span>
-                            <g:textField name="telefono" maxlength="63" class="allCaps form-control" value="${personaInstance?.telefono}"/>
+                            <g:textField name="telefono" maxlength="63" class="form-control" value="${personaInstance?.telefono}"/>
                         </div>
                     </div>
 
@@ -114,7 +114,7 @@
                     </label>
 
                     <div class="col-md-6">
-                        <g:textArea name="direccion" maxlength="127" class="allCaps form-control" value="${personaInstance?.direccion}"/>
+                        <g:textArea name="direccion" maxlength="127" class="form-control" value="${personaInstance?.direccion}"/>
                     </div>
 
                 </span>
@@ -127,7 +127,7 @@
                     </label>
 
                     <div class="col-md-6">
-                        <g:textArea name="direccionReferencia" maxlength="127" class="allCaps form-control" value="${personaInstance?.direccionReferencia}"/>
+                        <g:textArea name="direccionReferencia" maxlength="127" class="form-control" value="${personaInstance?.direccionReferencia}"/>
                     </div>
 
                 </span>
@@ -140,24 +140,24 @@
                     </label>
 
                     <div class="col-md-6">
-                        <g:textField name="barrio" maxlength="127" class="allCaps form-control" value="${personaInstance?.barrio}"/>
+                        <g:textField name="barrio" maxlength="127" class="form-control" value="${personaInstance?.barrio}"/>
                     </div>
 
                 </span>
             </div>
 
-            <div class="form-group keeptogether  ${hasErrors(bean: personaInstance, field: 'empresa', 'error')} ">
-                <span class="grupo">
-                    <label for="empresa" class="col-md-3 control-label text-info">
-                        Empresa
-                    </label>
+            %{--<div class="form-group keeptogether  ${hasErrors(bean: personaInstance, field: 'empresa', 'error')} ">--}%
+                %{--<span class="grupo">--}%
+                    %{--<label for="empresa" class="col-md-3 control-label text-info">--}%
+                        %{--Empresa--}%
+                    %{--</label>--}%
 
-                    <div class="col-md-6">
-                        <g:select id="empresa" name="empresa.id" from="${cratos.Empresa.list()}" optionKey="id" value="${personaInstance?.empresa?.id}" class="many-to-one form-control" noSelection="['null': '']"/>
-                    </div>
+                    %{--<div class="col-md-6">--}%
+                        %{--<g:select id="empresa" name="empresa.id" from="${cratos.Empresa.list()}" optionKey="id" value="${personaInstance?.empresa?.id}" class="many-to-one form-control" noSelection="['null': '']"/>--}%
+                    %{--</div>--}%
 
-                </span>
-            </div>
+                %{--</span>--}%
+            %{--</div>--}%
 
             <div class="form-group keeptogether  ${hasErrors(bean: personaInstance, field: 'discapacitado', 'error')} ">
                 <span class="grupo">
@@ -234,7 +234,7 @@
                     </label>
 
                     <div class="col-md-6">
-                        <g:textField name="observaciones" maxlength="127" class="allCaps form-control" value="${personaInstance?.observaciones}"/>
+                        <g:textField name="observaciones" maxlength="127" class="form-control" value="${personaInstance?.observaciones}"/>
                     </div>
 
                 </span>
@@ -247,41 +247,41 @@
                     </label>
 
                     <div class="col-md-6">
-                        <g:textField name="login" maxlength="15" required="" class="allCaps form-control required" value="${personaInstance?.login}"/>
+                        <g:textField name="login" maxlength="15" required="" class="form-control required" value="${personaInstance?.login}"/>
                     </div>
                     *
                 </span>
             </div>
 
-            %{--<div class="form-group keeptogether  ${hasErrors(bean: personaInstance, field: 'password', 'error')} required">--}%
-                %{--<span class="grupo">--}%
-                    %{--<label for="password" class="col-md-3 control-label text-info">--}%
-                        %{--Password--}%
-                    %{--</label>--}%
+        %{--<div class="form-group keeptogether  ${hasErrors(bean: personaInstance, field: 'password', 'error')} required">--}%
+        %{--<span class="grupo">--}%
+        %{--<label for="password" class="col-md-3 control-label text-info">--}%
+        %{--Password--}%
+        %{--</label>--}%
 
-                    %{--<div class="col-md-6">--}%
-                        %{--<div class="input-group"><span class="input-group-addon"><i class="fa fa-lock"></i>--}%
-                        %{--</span><g:field type="password" name="password" maxlength="64" required="" class="allCaps form-control required" value="${personaInstance?.password}"/>--}%
-                        %{--</div>--}%
-                    %{--</div>--}%
-                    %{--*--}%
-                %{--</span>--}%
-            %{--</div>--}%
+        %{--<div class="col-md-6">--}%
+        %{--<div class="input-group"><span class="input-group-addon"><i class="fa fa-lock"></i>--}%
+        %{--</span><g:field type="password" name="password" maxlength="64" required="" class="form-control required" value="${personaInstance?.password}"/>--}%
+        %{--</div>--}%
+        %{--</div>--}%
+        %{--*--}%
+        %{--</span>--}%
+        %{--</div>--}%
 
-            %{--<div class="form-group keeptogether  ${hasErrors(bean: personaInstance, field: 'autorizacion', 'error')} required">--}%
-                %{--<span class="grupo">--}%
-                    %{--<label for="autorizacion" class="col-md-3 control-label text-info">--}%
-                        %{--Autorizacion--}%
-                    %{--</label>--}%
+        %{--<div class="form-group keeptogether  ${hasErrors(bean: personaInstance, field: 'autorizacion', 'error')} required">--}%
+        %{--<span class="grupo">--}%
+        %{--<label for="autorizacion" class="col-md-3 control-label text-info">--}%
+        %{--Autorizacion--}%
+        %{--</label>--}%
 
-                    %{--<div class="col-md-6">--}%
-                        %{--<div class="input-group"><span class="input-group-addon"><i class="fa fa-lock"></i>--}%
-                        %{--</span><g:field type="password" name="autorizacion" maxlength="255" required="" class="allCaps form-control required" value="${personaInstance?.autorizacion}"/>--}%
-                        %{--</div>--}%
-                    %{--</div>--}%
-                    %{--*--}%
-                %{--</span>--}%
-            %{--</div>--}%
+        %{--<div class="col-md-6">--}%
+        %{--<div class="input-group"><span class="input-group-addon"><i class="fa fa-lock"></i>--}%
+        %{--</span><g:field type="password" name="autorizacion" maxlength="255" required="" class="form-control required" value="${personaInstance?.autorizacion}"/>--}%
+        %{--</div>--}%
+        %{--</div>--}%
+        %{--*--}%
+        %{--</span>--}%
+        %{--</div>--}%
 
             <div class="form-group keeptogether  ${hasErrors(bean: personaInstance, field: 'activo', 'error')} required">
                 <span class="grupo">
@@ -298,18 +298,18 @@
                 </span>
             </div>
 
-            %{--<div class="form-group keeptogether  ${hasErrors(bean: personaInstance, field: 'fechaPass', 'error')} ">--}%
-                %{--<span class="grupo">--}%
-                    %{--<label for="fechaPass" class="col-md-3 control-label text-info">--}%
-                        %{--Fecha Pass--}%
-                    %{--</label>--}%
+        %{--<div class="form-group keeptogether  ${hasErrors(bean: personaInstance, field: 'fechaPass', 'error')} ">--}%
+        %{--<span class="grupo">--}%
+        %{--<label for="fechaPass" class="col-md-3 control-label text-info">--}%
+        %{--Fecha Pass--}%
+        %{--</label>--}%
 
-                    %{--<div class="col-md-4">--}%
-                        %{--<elm:datepicker name="fechaPass" title="Fecha de cambio de contraseña" class="datepicker form-control" value="${personaInstance?.fechaPass}" default="none" noSelection="['': '']"/>--}%
-                    %{--</div>--}%
+        %{--<div class="col-md-4">--}%
+        %{--<elm:datepicker name="fechaPass" title="Fecha de cambio de contraseña" class="datepicker form-control" value="${personaInstance?.fechaPass}" default="none" noSelection="['': '']"/>--}%
+        %{--</div>--}%
 
-                %{--</span>--}%
-            %{--</div>--}%
+        %{--</span>--}%
+        %{--</div>--}%
 
         </g:form>
 
@@ -326,6 +326,22 @@
                 },
                 success        : function (label) {
                     label.parents(".grupo").removeClass('has-error');
+                },
+                rules          : {
+                    cedula : {
+                        remote : {
+                            url  : "${createLink(action: 'validarCedula_ajax')}",
+                            type : "post",
+                            data : {
+                                id : "${personaInstance.id}"
+                            }
+                        }
+                    }
+                },
+                messages       : {
+                    cedula : {
+                        remote : "Cédula ya ingresada"
+                    }
                 }
             });
             $(".form-control").keydown(function (ev) {
@@ -334,6 +350,15 @@
                     return false;
                 }
                 return true;
+            });
+
+            $("#apellido, #nombre").blur(function () {
+                var nombre = $("#nombre").val();
+                var apellido = $("#apellido").val();
+                var sigla = (nombre + " " + apellido).acronym().toUpperCase();
+                var user = (nombre.acronym().toUpperCase() + (apellido.split(" ")[0])).toLowerCase();
+                $("#sigla").val(sigla);
+                $("#login").val(user);
             });
         </script>
 

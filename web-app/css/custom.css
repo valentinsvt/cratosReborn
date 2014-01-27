@@ -95,3 +95,8 @@ input.help-block, select.help-block, textarea.help-block {
     color      : black;
     min-height : 250px;
 }
+
+.datepicker {
+    cursor : pointer !important;
+    cursor : hand !important;
+}

@@ -5,7 +5,7 @@
     <elm:notFound elem="${domainClass.propertyName.capitalize()}" genero="o" />
 </g:if>
 <g:else>
-    <g:form class="form-horizontal" name="frm${domainClass.propertyName.capitalize()}" role="form" action="save" method="POST">
+    <g:form class="form-horizontal" name="frm${domainClass.propertyName.capitalize()}" role="form" action="save_ajax" method="POST">
         <g:hiddenField name="id" value="\${${propertyName}?.id}" />
         <%  excludedProps = Event.allEvents.toList() << 'version' << 'dateCreated' << 'lastUpdated'
         persistentPropNames = domainClass.persistentProperties*.name
