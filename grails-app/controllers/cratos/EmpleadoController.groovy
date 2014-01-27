@@ -12,14 +12,14 @@ class EmpleadoController extends cratos.seguridad.Shield {
         redirect(action: "list", params: params)
     }
 
-    def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-
-        def mes = Mes.list([sort:"id"])
-        def periodos = Periodo.findAllByContabilidad(session.contabilidad,[sort: "fechaInicio"])
-
-        [empleadoInstanceList: Empleado.list(params), empleadoInstanceTotal: Empleado.count(),mes:mes,periodos:periodos]
-    }
+//    def list() {
+//        params.max = Math.min(params.max ? params.int('max') : 10, 100)
+//
+//        def mes = Mes.list([sort:"id"])
+//        def periodos = Periodo.findAllByContabilidad(session.contabilidad,[sort: "fechaInicio"])
+//
+//        [empleadoInstanceList: Empleado.list(params), empleadoInstanceTotal: Empleado.count(),mes:mes,periodos:periodos]
+//    }
 
     def findPersona_ajax() {
         def ci = params.ci
@@ -173,4 +173,93 @@ class EmpleadoController extends cratos.seguridad.Shield {
         }
         render "OK"
     }
+
+
+    /* ************************ COPIAR DESDE AQUI ****************************/
+
+    def list() {
+        params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+        def empleadoInstanceList = Empleado.list(params)
+        def empleadoInstanceCount = Empleado.count()
+        if (empleadoInstanceList.size() == 0 && params.offset && params.max) {
+            params.offset = params.offset - params.max
+        }
+        empleadoInstanceList = Empleado.list(params)
+        return [empleadoInstanceList: empleadoInstanceList, empleadoInstanceCount: empleadoInstanceCount]
+    } //list
+
+    def show_ajax() {
+        if (params.id) {
+            def empleadoInstance = Empleado.get(params.id)
+            if (!empleadoInstance) {
+                notFound_ajax()
+                return
+            }
+            return [empleadoInstance: empleadoInstance]
+        } else {
+            notFound_ajax()
+        }
+    } //show para cargar con ajax en un dialog
+
+    def form_ajax() {
+        def empleadoInstance = new Empleado(params)
+        if (params.id) {
+            empleadoInstance = Empleado.get(params.id)
+            if (!empleadoInstance) {
+                notFound_ajax()
+                return
+            }
+        }
+        return [empleadoInstance: empleadoInstance]
+    } //form para cargar con ajax en un dialog
+
+    def save_ajax() {
+
+        params.each { k, v ->
+            if (v != "date.struct" && v instanceof java.lang.String) {
+                params[k] = v.toUpperCase()
+            }
+        }
+
+        def empleadoInstance = new Empleado()
+        if (params.id) {
+            empleadoInstance = Empleado.get(params.id)
+            if (!empleadoInstance) {
+                notFound_ajax()
+                return
+            }
+        } //update
+
+        empleadoInstance.properties = params
+
+        if (!empleadoInstance.save(flush: true)) {
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Empleado."
+            msg += renderErrors(bean: empleadoInstance)
+            render msg
+            return
+        }
+        render "OK_${params.id ? 'Actualización' : 'Creación'} de Empleado exitosa."
+    } //save para grabar desde ajax
+
+    def delete_ajax() {
+        if (params.id) {
+            def empleadoInstance = Empleado.get(params.id)
+            if (empleadoInstance) {
+                try {
+                    empleadoInstance.delete(flush: true)
+                    render "OK_Eliminación de Empleado exitosa."
+                } catch (e) {
+                    render "NO_No se pudo eliminar Empleado."
+                }
+            } else {
+                notFound_ajax()
+            }
+        } else {
+            notFound_ajax()
+        }
+    } //delete para eliminar via ajax
+
+    protected void notFound_ajax() {
+        render "NO_No se encontró Empleado."
+    } //notFound para ajax
 }

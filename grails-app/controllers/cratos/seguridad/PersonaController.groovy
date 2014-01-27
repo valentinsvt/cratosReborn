@@ -226,6 +226,18 @@ class PersonaController extends cratos.seguridad.Shield {
         }
     } //show para cargar con ajax en un dialog
 
+    def form_ajax() {
+        def personaInstance = new Persona(params)
+        if (params.id) {
+            personaInstance = Persona.get(params.id)
+            if (!personaInstance) {
+                notFound_ajax()
+                return
+            }
+        }
+        return [personaInstance: personaInstance]
+    } //form para cargar con ajax en un dialog
+
     def save_ajax() {
 
         params.each { k, v ->
@@ -275,17 +287,5 @@ class PersonaController extends cratos.seguridad.Shield {
     protected void notFound_ajax() {
         render "NO_No se encontró Persona."
     } //notFound para ajax
-
-    def form_ajax() {
-        def personaInstance = new Persona(params)
-        if (params.id) {
-            personaInstance = Persona.get(params.id)
-            if (!personaInstance) {
-                notFound_ajax()
-                return
-            }
-        }
-        return [personaInstance: personaInstance]
-    } //form para cargar con ajax en un dialog
 
 }
