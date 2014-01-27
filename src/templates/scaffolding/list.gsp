@@ -137,7 +137,7 @@
                                             location.reload(true);
                                         } else {
                                             closeLoader();
-                                            spinner.replaceWith($btn);
+                                            spinner.replaceWith(\$btn);
                                             return false;
                                         }
                                     }
