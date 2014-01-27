@@ -1,36 +1,6 @@
 <div id="divPlanCuentasAll" style="width: 100%; min-height: 150px; ">
-    <div style="width: 100%;min-height: 10px; margin-top: 2px;border:none;margin-left: 8px;margin-bottom: 15px; ">
+    <div style="width: 900px;min-height: 10px; margin-top: 2px;border:none;margin-bottom: 15px; ">
         <div id="agregarCuentas"></div>
-    </div>
-
-    <div style="width: 100%; ">
-        <div style="margin-left: 15px; float: left">
-            <div class="span-2">
-                Nombre:
-            </div>
-
-            <div class="span-4">
-                <input type="text" class="span-4 ui-widget-content ui-corner-all" name="nombreBus" id="nombreBus"/>
-            </div>
-        </div> <!-- fila -->
-        <div style="margin-left: 15px;float: left">
-            <div class="span-2">
-                C&oacute;digo:
-            </div>
-
-            <div class="span-4">
-                <input type="text" class="span-4 ui-widget-content ui-corner-all" name="codigo" id="codigoBus"/>
-            </div>
-        </div> <!-- fila -->
-        <input type="hidden" name="movimientos" value="1"/>
-
-        <div style="margin-left: 15px">
-            <input type="button" class="fg-button ui-state-default  ui-corner-all" name="buscar" id="buscar" value="Buscar"/>
-        </div> <!-- fila -->
-    </div>
-
-    <div id="divPlanCuentas" style="float: left; padding: 5px; margin-top: 2px; width: 700px;">
-
     </div>
 </div>
 
@@ -39,12 +9,13 @@
         $(function () {
 
             function cargarCuentas() {
-
+                openLoader()
                 $.ajax({
                     type    : "POST",
                     url     : "${g.createLink(action: 'cargarCuentas',controller: 'gestorContable')}",
                     data    : " ",
                     success : function (msg) {
+                        closeLoader()
                         $("#agregarCuentas").html(msg);
                     }
                 });

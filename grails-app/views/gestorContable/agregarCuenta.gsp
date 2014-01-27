@@ -1,5 +1,5 @@
 <g:if test="${cuentas?.size()>0}">
-    <table width="400px">
+    <table class="table table-bordered">
         <thead>
         <tr>
             <th>&nbsp;</th>
@@ -39,9 +39,9 @@
             <tr style="background-color: ${(genera.tipoComprobante.id==1)?'#D4E6FC':((genera.tipoComprobante.id==2)?'#99CC99':'#FFCC99')} !important; ">
             <td style="max-width: 250px;">${cuenta.numero+'('+cuenta.descripcion+')'}</td>
             <g:if test="${genera.debeHaber=='D'}">
-                <td><input type="text" name="porcentaje" id="por_${i}" style="width: 62px;" value="${genera.porcentaje?:0}"/></td>
-                <td><input type="text" name="impuestos" id="imp_${i}" style="width: 62px;" value="${genera.porcentajeImpuestos?:0}"/></td>
-                <td><input type="text" name="valor" id="val_${i}" style="width: 62px;" value="${genera.valor?:0}"/></td>
+                <td><input type="text" name="porcentaje" id="por_${i}"  class="form-control" style="width: 62px;" value="${genera.porcentaje?:0}"/></td>
+                <td><input type="text" name="impuestos" id="imp_${i}"  class="form-control" style="width: 62px;" value="${genera.porcentajeImpuestos?:0}"/></td>
+                <td><input type="text" name="valor" id="val_${i}"  class="form-control" style="width: 62px;" value="${genera.valor?:0}"/></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -62,9 +62,9 @@
                 <td>&nbsp;</td>
                 <td></td>
                 <td></td>
-                <td><input type="text" name="porcentaje" id="por_${i}" style="width: 62px;" value="${genera.porcentaje?:0}"/></td>
-                <td><input type="text" name="impuestos" id="imp_${i}" style="width: 62px;" value="${genera.porcentajeImpuestos?:0}"/></td>
-                <td><input type="text" name="valor" id="val_${i}" style="width: 62px;" value="${genera.valor?:0}"/></td>
+                <td><input type="text" name="porcentaje" class="form-control" id="por_${i}" style="width: 62px;" value="${genera.porcentaje?:0}"/></td>
+                <td><input type="text" name="impuestos" class="form-control" id="imp_${i}" style="width: 62px;" value="${genera.porcentajeImpuestos?:0}"/></td>
+                <td><input type="text" name="valor" class="form-control" id="val_${i}" style="width: 62px;" value="${genera.valor?:0}"/></td>
                 <td>
                     <div  style="float: left; margin-right: 5px;" class="guardarDatos btnpq ui-state-default ui-corner-all" id="guardar_${i}" posicion="${i}" >
                         <span class="ui-icon ui-icon-circle-check"></span>

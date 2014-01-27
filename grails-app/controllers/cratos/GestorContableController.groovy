@@ -21,7 +21,7 @@ class GestorContableController extends cratos.seguridad.Shield {
     }
 
     def nuevoGestor() {
-        println "nuevo gestor " + params
+        //println "nuevo gestor " + params
         gestorContableService.vaciarLista()
         def gestorInstance
         def nuevo = true
