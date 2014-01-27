@@ -29,41 +29,57 @@
             </div>
         </div>
 
-        <table class="table table-condensed table-bordered table-striped">
-            <thead>
-                <tr>
-                    <%  excludedProps = Event.allEvents.toList() << 'id' << 'version'
-                    allowedNames = domainClass.persistentProperties*.name << 'dateCreated' << 'lastUpdated'
-                    props = domainClass.properties.findAll { allowedNames.contains(it.name) && !excludedProps.contains(it.name) && it.type != null && !Collection.isAssignableFrom(it.type) }
-                    Collections.sort(props, comparator.constructors[0].newInstance([domainClass] as Object[]))
-                    props.eachWithIndex { p, i ->
-                        if (i < 6) {
-                            if (p.isAssociation()) { %>
-                    <th>${p.naturalName}</th>
-                    <%      } else { %>
-                    <g:sortableColumn property="${p.name}" title="${p.naturalName}" />
-                    <%  }   }   } %>
-                </tr>
-            </thead>
-            <tbody>
-                <g:each in="\${${propertyName}List}" status="i" var="${propertyName}">
-                    <tr data-id="\${${propertyName}.id}">
-                        <%  props.eachWithIndex { p, i ->
-                            if (i == 0) { %>
-                        <td>\${fieldValue(bean: ${propertyName}, field: "${p.name}")}</td>
-                        <%      } else if (i < 6) {
-                            if (p.type == Boolean || p.type == boolean) { %>
-                        <td><g:formatBoolean boolean="\${${propertyName}.${p.name}}" /></td>
-                        <%          } else if (p.type == Date || p.type == java.sql.Date || p.type == java.sql.Time || p.type == Calendar) { %>
-                        <td><g:formatDate date="\${${propertyName}.${p.name}}" format="dd-MM-yyyy" /></td>
-                        <%          } else { %>
-                        <td>\${fieldValue(bean: ${propertyName}, field: "${p.name}")}</td>
-                        <%  }   }   } %>
-                    </tr>
-                </g:each>
-            </tbody>
-        </table>
+        <div class="vertical-container vertical-container-list">
+            <p class="css-vertical-text">Lista de ${className}</p>
 
+            <div class="linea"></div>
+            <table class="table table-condensed table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <%  excludedProps = Event.allEvents.toList() << 'id' << 'version'
+                        allowedNames = domainClass.persistentProperties*.name << 'dateCreated' << 'lastUpdated'
+                        props = domainClass.properties.findAll { allowedNames.contains(it.name) && !excludedProps.contains(it.name) && it.type != null && !Collection.isAssignableFrom(it.type) }
+                        Collections.sort(props, comparator.constructors[0].newInstance([domainClass] as Object[]))
+                        props.eachWithIndex { p, i ->
+                            if (i < 6) {
+                                if (p.isAssociation()) { %>
+                        <th>${p.naturalName}</th>
+                        <%      } else { %>
+                        <g:sortableColumn property="${p.name}" title="${p.naturalName}" />
+                        <%  }   }   } %>
+                        <th width="110">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <g:each in="\${${propertyName}List}" status="i" var="${propertyName}">
+                        <tr data-id="\${${propertyName}.id}">
+                            <%  props.eachWithIndex { p, i ->
+                                if (i == 0) { %>
+                            <td>\${fieldValue(bean: ${propertyName}, field: "${p.name}")}</td>
+                            <%      } else if (i < 6) {
+                                if (p.type == Boolean || p.type == boolean) { %>
+                            <td><g:formatBoolean boolean="\${${propertyName}.${p.name}}" /></td>
+                            <%          } else if (p.type == Date || p.type == java.sql.Date || p.type == java.sql.Time || p.type == Calendar) { %>
+                            <td><g:formatDate date="\${${propertyName}.${p.name}}" format="dd-MM-yyyy" /></td>
+                            <%          } else { %>
+                            <td>\${fieldValue(bean: ${propertyName}, field: "${p.name}")}</td>
+                            <%  }   }   } %>
+                            <td>
+                                <a href="#" data-id="\${${propertyName}.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver">
+                                    <i class="fa fa-laptop"></i>
+                                </a>
+                                <a href="#" data-id="\${${propertyName}.id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a href="#" data-id="\${${propertyName}.id}" class="btn btn-danger btn-sm btn-delete btn-ajax" title="Eliminar">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </g:each>
+                </tbody>
+            </table>
+        </div>
         <elm:pagination total="\${${domainClass.propertyName}InstanceCount}" params="\${params}"/>
 
         <script type="text/javascript">
@@ -169,67 +185,39 @@
                     return false;
                 });
 
-                context.settings({
-                    onShow : function (e) {
-                        \$("tr.success").removeClass("success");
-                        var \$tr = \$(e.target).parent();
-                        \$tr.addClass("success");
-                        id = \$tr.data("id");
-                    }
-                });
-                context.attach('tbody>tr', [
-                    {
-                        header : 'Acciones'
-                    },
-                    {
-                        text   : 'Ver',
-                        icon   : "<i class='fa fa-search'></i>",
-                        action : function (e) {
-                            \$("tr.success").removeClass("success");
-                            e.preventDefault();
-                            \$.ajax({
-                                type    : "POST",
-                                url     : "\${createLink(action:'show_ajax')}",
-                                data    : {
-                                    id : id
-                                },
-                                success : function (msg) {
-                                    bootbox.dialog({
-                                        title   : "Ver ${className}",
-                                        message : msg,
-                                        buttons : {
-                                            ok : {
-                                                label     : "Aceptar",
-                                                className : "btn-primary",
-                                                callback  : function () {
-                                                }
-                                            }
+                \$(".btn-show").click(function () {
+                    var id = \$(this).data("id");
+                    \$.ajax({
+                        type    : "POST",
+                        url     : "\${createLink(action:'show_ajax')}",
+                        data    : {
+                            id : id
+                        },
+                        success : function (msg) {
+                            bootbox.dialog({
+                                title   : "Ver ${className}",
+                                message : msg,
+                                buttons : {
+                                    ok : {
+                                        label     : "Aceptar",
+                                        className : "btn-primary",
+                                        callback  : function () {
                                         }
-                                    });
+                                    }
                                 }
                             });
                         }
-                    },
-                    {
-                        text   : 'Editar',
-                        icon   : "<i class='fa fa-pencil'></i>",
-                        action : function (e) {
-                            \$("tr.success").removeClass("success");
-                            e.preventDefault();
-                            createEditRow(id);
-                        }
-                    },
-                    {divider : true},
-                    {
-                        text   : 'Eliminar',
-                        icon   : "<i class='fa fa-trash-o'></i>",
-                        action : function (e) {
-                            \$("tr.success").removeClass("success");
-                            e.preventDefault();
-                            deleteRow(id);
-                        }
-                    }
-                ]);
+                    });
+                });
+                \$(".btn-edit").click(function () {
+                    var id = \$(this).data("id");
+                    createEditRow(id);
+                });
+                \$(".btn-delete").click(function () {
+                    var id = \$(this).data("id");
+                    deleteRow(id);
+                });
+
             });
         </script>
 

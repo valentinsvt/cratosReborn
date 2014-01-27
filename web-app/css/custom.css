@@ -89,3 +89,9 @@ input.help-block, select.help-block, textarea.help-block {
 .iconMargin {
     margin-right : 10px;
 }
+
+.vertical-container-list {
+    margin-top : 25px;
+    color      : black;
+    min-height : 250px;
+}

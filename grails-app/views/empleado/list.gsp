@@ -29,45 +29,61 @@
             </div>
         </div>
 
-        <table class="table table-condensed table-bordered table-striped">
-            <thead>
-                <tr>
-                    
-                    <g:sortableColumn property="porcentajeComision" title="Porcentaje Comision" />
-                    
-                    <g:sortableColumn property="foto" title="Foto" />
-                    
-                    <g:sortableColumn property="estado" title="Estado" />
-                    
-                    <g:sortableColumn property="fechaFin" title="Fecha Fin" />
-                    
-                    <g:sortableColumn property="fechaInicio" title="Fecha Inicio" />
-                    
-                    <g:sortableColumn property="sueldo" title="Sueldo" />
-                    
-                </tr>
-            </thead>
-            <tbody>
-                <g:each in="${empleadoInstanceList}" status="i" var="empleadoInstance">
-                    <tr data-id="${empleadoInstance.id}">
-                        
-                        <td>${fieldValue(bean: empleadoInstance, field: "porcentajeComision")}</td>
-                        
-                        <td>${fieldValue(bean: empleadoInstance, field: "foto")}</td>
-                        
-                        <td>${fieldValue(bean: empleadoInstance, field: "estado")}</td>
-                        
-                        <td><g:formatDate date="${empleadoInstance.fechaFin}" format="dd-MM-yyyy" /></td>
-                        
-                        <td><g:formatDate date="${empleadoInstance.fechaInicio}" format="dd-MM-yyyy" /></td>
-                        
-                        <td>${fieldValue(bean: empleadoInstance, field: "sueldo")}</td>
-                        
-                    </tr>
-                </g:each>
-            </tbody>
-        </table>
+        <div class="vertical-container vertical-container-list">
+            <p class="css-vertical-text">Lista de Empleado</p>
 
+            <div class="linea"></div>
+            <table class="table table-condensed table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        
+                        <g:sortableColumn property="porcentajeComision" title="Porcentaje Comision" />
+                        
+                        <g:sortableColumn property="foto" title="Foto" />
+                        
+                        <g:sortableColumn property="estado" title="Estado" />
+                        
+                        <g:sortableColumn property="fechaFin" title="Fecha Fin" />
+                        
+                        <g:sortableColumn property="fechaInicio" title="Fecha Inicio" />
+                        
+                        <g:sortableColumn property="sueldo" title="Sueldo" />
+                        
+                        <th width="110">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <g:each in="${empleadoInstanceList}" status="i" var="empleadoInstance">
+                        <tr data-id="${empleadoInstance.id}">
+                            
+                            <td>${fieldValue(bean: empleadoInstance, field: "porcentajeComision")}</td>
+                            
+                            <td>${fieldValue(bean: empleadoInstance, field: "foto")}</td>
+                            
+                            <td>${fieldValue(bean: empleadoInstance, field: "estado")}</td>
+                            
+                            <td><g:formatDate date="${empleadoInstance.fechaFin}" format="dd-MM-yyyy" /></td>
+                            
+                            <td><g:formatDate date="${empleadoInstance.fechaInicio}" format="dd-MM-yyyy" /></td>
+                            
+                            <td>${fieldValue(bean: empleadoInstance, field: "sueldo")}</td>
+                            
+                            <td>
+                                <a href="#" data-id="${empleadoInstance.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver">
+                                    <i class="fa fa-laptop"></i>
+                                </a>
+                                <a href="#" data-id="${empleadoInstance.id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a href="#" data-id="${empleadoInstance.id}" class="btn btn-danger btn-sm btn-delete btn-ajax" title="Eliminar">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </g:each>
+                </tbody>
+            </table>
+        </div>
         <elm:pagination total="${empleadoInstanceCount}" params="${params}"/>
 
         <script type="text/javascript">
@@ -173,67 +189,39 @@
                     return false;
                 });
 
-                context.settings({
-                    onShow : function (e) {
-                        $("tr.success").removeClass("success");
-                        var $tr = $(e.target).parent();
-                        $tr.addClass("success");
-                        id = $tr.data("id");
-                    }
-                });
-                context.attach('tbody>tr', [
-                    {
-                        header : 'Acciones'
-                    },
-                    {
-                        text   : 'Ver',
-                        icon   : "<i class='fa fa-search'></i>",
-                        action : function (e) {
-                            $("tr.success").removeClass("success");
-                            e.preventDefault();
-                            $.ajax({
-                                type    : "POST",
-                                url     : "${createLink(action:'show_ajax')}",
-                                data    : {
-                                    id : id
-                                },
-                                success : function (msg) {
-                                    bootbox.dialog({
-                                        title   : "Ver Empleado",
-                                        message : msg,
-                                        buttons : {
-                                            ok : {
-                                                label     : "Aceptar",
-                                                className : "btn-primary",
-                                                callback  : function () {
-                                                }
-                                            }
+                $(".btn-show").click(function () {
+                    var id = $(this).data("id");
+                    $.ajax({
+                        type    : "POST",
+                        url     : "${createLink(action:'show_ajax')}",
+                        data    : {
+                            id : id
+                        },
+                        success : function (msg) {
+                            bootbox.dialog({
+                                title   : "Ver Empleado",
+                                message : msg,
+                                buttons : {
+                                    ok : {
+                                        label     : "Aceptar",
+                                        className : "btn-primary",
+                                        callback  : function () {
                                         }
-                                    });
+                                    }
                                 }
                             });
                         }
-                    },
-                    {
-                        text   : 'Editar',
-                        icon   : "<i class='fa fa-pencil'></i>",
-                        action : function (e) {
-                            $("tr.success").removeClass("success");
-                            e.preventDefault();
-                            createEditRow(id);
-                        }
-                    },
-                    {divider : true},
-                    {
-                        text   : 'Eliminar',
-                        icon   : "<i class='fa fa-trash-o'></i>",
-                        action : function (e) {
-                            $("tr.success").removeClass("success");
-                            e.preventDefault();
-                            deleteRow(id);
-                        }
-                    }
-                ]);
+                    });
+                });
+                $(".btn-edit").click(function () {
+                    var id = $(this).data("id");
+                    createEditRow(id);
+                });
+                $(".btn-delete").click(function () {
+                    var id = $(this).data("id");
+                    deleteRow(id);
+                });
+
             });
         </script>
 
