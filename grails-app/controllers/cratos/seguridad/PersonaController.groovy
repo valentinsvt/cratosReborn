@@ -43,7 +43,6 @@ class PersonaController extends cratos.seguridad.Shield {
 //        println perm.errors
 //    }
 
-
 //    def terminarPermiso_ajax() {
 //        def perm = PermisoUsuario.get(params.id)
 //        def now = new Date().clearTime()
@@ -253,22 +252,7 @@ class PersonaController extends cratos.seguridad.Shield {
                 return
             }
         } //update
-        else {
-            //llena la parte de usuario si se esta creando la persona
-            params.fechaInicio = new Date()
-            def p = params.nombre.split(" ")
-            params.login = ""
-            p.each {
-                params.login += it[0]
-            }
-            p = params.apellido.split(" ")
-            params.login += p[0]
-            params.password = params.cedula.toString().encodeAsMD5()
-            params.activo = 0
-            params.fechaCambioPass = new Date() + 30
-            params.jefe = 0
-            params.codigo = Departamento.get(params.departamento.id).codigo + "_" + params.login
-        } //create
+
         personaInstance.properties = params
 
         if (!personaInstance.save(flush: true)) {

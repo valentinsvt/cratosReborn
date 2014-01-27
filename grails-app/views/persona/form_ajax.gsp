@@ -4,10 +4,10 @@
 
 <div class="col2">
     <g:if test="${!personaInstance}">
-        <elm:notFound elem="Persona" genero="o"/>
+        <elm:notFound elem="Persona" genero="a"/>
     </g:if>
     <g:else>
-        <g:form class="form-horizontal" name="frmPersona" role="form" action="save" method="POST">
+        <g:form class="form-horizontal" name="frmPersona" role="form" action="save_ajax" method="POST">
             <g:hiddenField name="id" value="${personaInstance?.id}"/>
 
             <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'cedula', 'error')} required">
@@ -189,7 +189,9 @@
                 var nombre = $("#nombre").val();
                 var apellido = $("#apellido").val();
                 var sigla = (nombre + " " + apellido).acronym().toUpperCase();
+                var user = nombre.acronym().toUpperCase() + apellido;
                 $("#sigla").val(sigla);
+                $("#login").val(user);
             });
 
         </script>

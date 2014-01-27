@@ -5,14 +5,14 @@
 </g:if>
 <g:else>
 
-    <g:if test="${personaInstance?.departamento}">
+    <g:if test="${personaInstance?.empresa}">
         <div class="row">
             <div class="col-md-3 text-info">
-                Departamento
+                Empresa
             </div>
 
             <div class="col-md-5">
-                ${personaInstance?.departamento?.descripcion}
+                ${personaInstance?.empresa?.nombre}
             </div>
 
         </div>
@@ -26,19 +26,6 @@
 
             <div class="col-md-5">
                 <g:fieldValue bean="${personaInstance}" field="cedula"/>
-            </div>
-
-        </div>
-    </g:if>
-
-    <g:if test="${personaInstance?.titulo}">
-        <div class="row">
-            <div class="col-md-3 text-info">
-                Título
-            </div>
-
-            <div class="col-md-5">
-                <g:fieldValue bean="${personaInstance}" field="titulo"/>
             </div>
 
         </div>
@@ -96,66 +83,14 @@
         </div>
     </g:if>
 
-    <g:if test="${personaInstance?.fechaInicio}">
-        <div class="row">
-            <div class="col-md-3 text-info">
-                Fecha Inicio
-            </div>
-
-            <div class="col-md-5">
-                <g:formatDate date="${personaInstance?.fechaInicio}" format="dd-MM-yyyy"/>
-            </div>
-
-        </div>
-    </g:if>
-
-    <g:if test="${personaInstance?.fechaFin}">
-        <div class="row">
-            <div class="col-md-3 text-info">
-                Fecha Fin
-            </div>
-
-            <div class="col-md-5">
-                <g:formatDate date="${personaInstance?.fechaFin}" format="dd-MM-yyyy"/>
-            </div>
-
-        </div>
-    </g:if>
-
-    <g:if test="${personaInstance?.cargo}">
-        <div class="row">
-            <div class="col-md-3 text-info">
-                Cargo
-            </div>
-
-            <div class="col-md-5">
-                <g:fieldValue bean="${personaInstance}" field="cargo"/>
-            </div>
-
-        </div>
-    </g:if>
-
-    <g:if test="${personaInstance?.codigo}">
-        <div class="row">
-            <div class="col-md-3 text-info">
-                Código
-            </div>
-
-            <div class="col-md-5">
-                <g:fieldValue bean="${personaInstance}" field="codigo"/>
-            </div>
-
-        </div>
-    </g:if>
-
-    <g:if test="${personaInstance?.mail}">
+    <g:if test="${personaInstance?.email}">
         <div class="row">
             <div class="col-md-3 text-info">
                 E-mail
             </div>
 
             <div class="col-md-5">
-                <g:fieldValue bean="${personaInstance}" field="mail"/>
+                <g:fieldValue bean="${personaInstance}" field="email"/>
             </div>
 
         </div>
@@ -174,19 +109,6 @@
         </div>
     </g:if>
 
-    <g:if test="${personaInstance?.celular}">
-        <div class="row">
-            <div class="col-md-3 text-info">
-                Celular
-            </div>
-
-            <div class="col-md-5">
-                <g:fieldValue bean="${personaInstance}" field="celular"/>
-            </div>
-
-        </div>
-    </g:if>
-
     <g:if test="${personaInstance?.login}">
         <div class="row">
             <div class="col-md-3 text-info">
@@ -200,19 +122,6 @@
         </div>
     </g:if>
 
-%{--<g:if test="${personaInstance?.jefe}">--}%
-    <div class="row">
-        <div class="col-md-3 text-info">
-            Es jefe
-        </div>
-
-        <div class="col-md-5">
-            ${personaInstance.jefe == 1 ? "SI" : "NO"}
-        </div>
-
-    </div>
-%{--</g:if>--}%
-
 %{--<g:if test="${personaInstance?.activo}">--}%
     <div class="row">
         <div class="col-md-3 text-info">
@@ -225,31 +134,5 @@
 
     </div>
 %{--</g:if>--}%
-
-%{--<g:if test="${personaInstance?.fechaCambioPass}">--}%
-%{--<div class="row">--}%
-%{--<div class="col-md-3 text-info">--}%
-%{--Fecha Cambio Pass--}%
-%{--</div>--}%
-%{----}%
-%{--<div class="col-md-5">--}%
-%{--<g:formatDate date="${personaInstance?.fechaCambioPass}" format="dd-MM-yyyy" />--}%
-%{--</div>--}%
-%{----}%
-%{--</div>--}%
-%{--</g:if>--}%
-
-    <g:if test="${personaInstance?.foto}">
-        <div class="row">
-            <div class="col-md-3 text-info">
-                Foto
-            </div>
-
-            <div class="col-md-5">
-                <g:fieldValue bean="${personaInstance}" field="foto"/>
-            </div>
-
-        </div>
-    </g:if>
 
 </g:else>
