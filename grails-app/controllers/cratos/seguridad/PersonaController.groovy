@@ -183,6 +183,25 @@ class PersonaController extends cratos.seguridad.Shield {
         }
     }
 
+    def validarCedula_ajax() {
+        params.cedula = params.cedula.toString().trim()
+        if (params.id) {
+            def prsn = Persona.get(params.id)
+            if (prsn.cedula == params.cedula) {
+                render true
+                return
+            } else {
+                render Persona.countByCedula(params.cedula) == 0
+                return
+            }
+        } else {
+            render Persona.countByCedula(params.cedula) == 0
+            return
+        }
+    }
+
+    /* ************************ COPIAR DESDE AQUI ****************************/
+
     def list() {
         params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
         def personaInstanceList = Persona.list(params)
@@ -206,35 +225,6 @@ class PersonaController extends cratos.seguridad.Shield {
             notFound_ajax()
         }
     } //show para cargar con ajax en un dialog
-
-    def form_ajax() {
-        def personaInstance = new Persona(params)
-        if (params.id) {
-            personaInstance = Persona.get(params.id)
-            if (!personaInstance) {
-                notFound_ajax()
-                return
-            }
-        }
-        return [personaInstance: personaInstance]
-    } //form para cargar con ajax en un dialog
-
-    def validarCedula_ajax() {
-        params.cedula = params.cedula.toString().trim()
-        if (params.id) {
-            def prsn = Persona.get(params.id)
-            if (prsn.cedula == params.cedula) {
-                render true
-                return
-            } else {
-                render Persona.countByCedula(params.cedula) == 0
-                return
-            }
-        } else {
-            render Persona.countByCedula(params.cedula) == 0
-            return
-        }
-    }
 
     def save_ajax() {
 
@@ -285,5 +275,17 @@ class PersonaController extends cratos.seguridad.Shield {
     protected void notFound_ajax() {
         render "NO_No se encontró Persona."
     } //notFound para ajax
+
+    def form_ajax() {
+        def personaInstance = new Persona(params)
+        if (params.id) {
+            personaInstance = Persona.get(params.id)
+            if (!personaInstance) {
+                notFound_ajax()
+                return
+            }
+        }
+        return [personaInstance: personaInstance]
+    } //form para cargar con ajax en un dialog
 
 }

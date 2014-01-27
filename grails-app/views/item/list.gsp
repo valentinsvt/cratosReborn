@@ -14,25 +14,32 @@
 
     </head>
     <body>
-        <div class="ui-widget-content ui-corner-all cont">
-            <div class="ui-widget-header ui-corner-all titulo">
-                Lista de Items
-                <div class="fright">
-                    <g:link action="create" class="btnNew miniButton">Nuevo</g:link>
-                </div>
-            </div>
+    <div class="btn-toolbar toolbar">
+        <div class="btn-group">
+            <g:link action="form" class="btn btn-default btnCrear">
+                <i class="fa fa-file-o"></i> Crear
+            </g:link>
+        </div>
 
-            <div id="list-item" class="content scaffold-list" role="main">
-                <g:if test="${flash.message}">
-                    <div class="message" role="status">${flash.message}</div>
-                </g:if>
-                <table id="tbl-item">
+        <div class="btn-group pull-right col-md-3">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Buscar">
+                <span class="input-group-btn">
+                    <a href="#" class="btn btn-default" type="button">
+                        <i class="fa fa-search"></i>&nbsp;
+                    </a>
+                </span>
+            </div><!-- /input-group -->
+        </div>
+    </div>
+
+    <table id="tbl-item" class="table table-bordered table-condensed table-hover">
                     <thead>
                         <tr>
                             
                             %{--<g:sortableColumn property="iva" title="${message(code: 'item.iva.label', default: 'Iva')}" />--}%
 
-                            <g:sortableColumn property="codigo" title="${message(code: 'item.codigo.label', default: 'Código')}"/>
+                            <g:sortableColumn property="codigo" title="Código"/>
 
                             <g:sortableColumn property="nombre" title="${message(code:'item.nombre.label', default: 'Nombre')}"/>
                             
@@ -45,6 +52,8 @@
                             <g:sortableColumn property="precioVenta" title="${message(code: 'item.precioVenta.label', default: 'Precio Venta')}" />
                             
                             <g:sortableColumn property="precioCosto" title="${message(code: 'item.precioCosto.label', default: 'Precio Costo')}" />
+
+                            <th style="width: 110px">Acciones</th>
                             
                         </tr>
                     </thead>
@@ -65,30 +74,41 @@
                                 <td>${fieldValue(bean: itemInstance, field: "precioVenta")}</td>
                                 
                                 <td>${fieldValue(bean: itemInstance, field: "precioCosto")}</td>
+
+                                <td>
+                                    <a class="btn btn-sm btn-info verItem" href="#" rel="tooltip" title="Ver">
+                                        <i class="fa fa-laptop"></i></a>
+
+                                    <a class="btn btn-sm btn-success editarItem" href="#" rel="tooltip" title="Editar">
+                                    <i class="fa fa-pencil"></i></a>
+
+                                    <a class="btn btn-sm btn-danger eliminarItem" href="#" rel="tooltip" title="Eliminar">
+                                        <i class="fa fa-trash-o"></i></a>
+                                </td>
                                 
                             </tr>
                         </g:each>
                     </tbody>
                 </table>
-                <g:if test="${itemInstanceList.size() < itemInstanceTotal}">
-                    <div class="pagination">
-                        <g:paginate total="${itemInstanceTotal}"  prev="Ant." next="Sig." />
-                    </div>
-                </g:if>
-            </div>
-        </div>
+                %{--<g:if test="${itemInstanceList.size() < itemInstanceTotal}">--}%
+                    %{--<div class="pagination">--}%
+                        %{--<g:paginate total="${itemInstanceTotal}"  prev="Ant." next="Sig." />--}%
+                    %{--</div>--}%
+                %{--</g:if>--}%
+            %{--</div>--}%
+        %{--</div>--}%
 
-        <ul id="menu-item" class="contextMenu">
-            <li class="show">
-                <a href="#show">Ver</a>
-            </li>
-            <li class="edit">
-                <a href="#edit">Editar</a>
-            </li>
-            <li class="delete">
-                <a href="#delete">Eliminar</a>
-            </li>
-        </ul>
+        %{--<ul id="menu-item" class="contextMenu">--}%
+            %{--<li class="show">--}%
+                %{--<a href="#show">Ver</a>--}%
+            %{--</li>--}%
+            %{--<li class="edit">--}%
+                %{--<a href="#edit">Editar</a>--}%
+            %{--</li>--}%
+            %{--<li class="delete">--}%
+                %{--<a href="#delete">Eliminar</a>--}%
+            %{--</li>--}%
+        %{--</ul>--}%
 
         <div id="dlg-item" style="width: 960px; height: 380px"></div>
 
@@ -98,6 +118,57 @@
         </div>
 
         <script type="text/javascript">
+
+
+            //crear
+
+            $(".btnCrear").click(function() {
+                createEditRow();
+                return false;
+            });
+
+
+            function createEditRow(id) {
+                var title = id ? "Editar" : "Crear";
+                var data = id ? { id: id } : {};
+                $.ajax({
+                    type    : "POST",
+                    url     : "${createLink(action:'create')}",
+                    data    : data,
+                    success : function (msg) {
+                        var b = bootbox.dialog({
+                            id      : "dlgCreateEdit",
+                            title   : title + " Año",
+                            message : msg,
+                            buttons : {
+                                cancelar : {
+                                    label     : "Cancelar",
+                                    className : "btn-primary",
+                                    callback  : function () {
+                                    }
+                                },
+                                guardar  : {
+                                    id        : "btnSave",
+                                    label     : "<i class='fa fa-save'></i> Guardar",
+                                    className : "btn-success",
+                                    callback  : function () {
+                                        return submitForm();
+                                    } //callback
+                                } //guardar
+                            } //buttons
+                        }); //dialog
+                         setTimeout(function () {
+                        b.find(".form-control").not(".datepicker").first().focus()
+                    }, 500);
+                    } //success
+                }); //ajax
+            } //createEdit
+
+
+
+
+
+
             function openDlg(url, id, cont, ajax, title, buttons) {
                 if (ajax) {
                 $("#dlgLoad").dialog("open");
@@ -178,7 +249,8 @@
                     $(".hover").removeClass("hover");
                 });
 
-                $(".btnNew").button({
+//                $(".btnNew").button({
+                $(".btnCrear").button({
                     icons : {
                         primary : "ui-icon-document"
                     }
