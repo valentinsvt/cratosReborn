@@ -99,6 +99,7 @@
                         if (parts[0] == "OK") {
                             location.reload(true);
                         } else {
+                            closeLoader();
                             spinner.replaceWith(\$btn);
                             return false;
                         }
@@ -134,6 +135,10 @@
                                         log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
                                         if (parts[0] == "OK") {
                                             location.reload(true);
+                                        } else {
+                                            closeLoader();
+                                            spinner.replaceWith($btn);
+                                            return false;
                                         }
                                     }
                                 });

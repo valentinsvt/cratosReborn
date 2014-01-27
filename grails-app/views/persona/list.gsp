@@ -30,40 +30,43 @@
             </div>
         </div>
 
+        <div class="vertical-container vertical-container-list">
+            <p class="css-vertical-text">Lista de Personas</p>
 
+            <div class="linea"></div>
 
-        <table class="table table-condensed table-bordered table-striped table-hover">
-            <thead>
-                <tr>
-                    <g:sortableColumn property="cedula" title="Cédula"/>
-                    <g:sortableColumn property="nombre" title="Nombre"/>
-                    <g:sortableColumn property="apellido" title="Apellido"/>
-                    <g:sortableColumn property="fechaNacimiento" title="Fecha Nacimiento"/>
-                    <g:sortableColumn property="empresa" title="Empresa"/>
-                    <th width="110">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <g:each in="${personaInstanceList}" status="i" var="personaInstance">
-                    <tr data-id="${personaInstance.id}">
-                        <td>${fieldValue(bean: personaInstance, field: "cedula")}</td>
-                        <td>${fieldValue(bean: personaInstance, field: "nombre")}</td>
-                        <td>${fieldValue(bean: personaInstance, field: "apellido")}</td>
-                        <td><g:formatDate date="${personaInstance.fechaNacimiento}" format="dd-MM-yyyy"/></td>
-                        <td>${personaInstance.empresa.nombre}</td>
-                        <td>
-                            <a href="#" data-id="${personaInstance.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver"><i class="fa fa-laptop"></i>
-                            </a>
-                            <a href="#" data-id="${personaInstance.id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar"><i class="fa fa-pencil"></i>
-                            </a>
-                            <a href="#" data-id="${personaInstance.id}" class="btn btn-danger btn-sm btn-delete btn-ajax" title="Eliminar"><i class="fa fa-trash-o"></i>
-                            </a>
-                        </td>
+            <table class="table table-condensed table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <g:sortableColumn property="cedula" title="Cédula"/>
+                        <g:sortableColumn property="nombre" title="Nombre"/>
+                        <g:sortableColumn property="apellido" title="Apellido"/>
+                        <g:sortableColumn property="fechaNacimiento" title="Fecha Nacimiento"/>
+                        <g:sortableColumn property="empresa" title="Empresa"/>
+                        <th width="110">Acciones</th>
                     </tr>
-                </g:each>
-            </tbody>
-        </table>
-
+                </thead>
+                <tbody>
+                    <g:each in="${personaInstanceList}" status="i" var="personaInstance">
+                        <tr data-id="${personaInstance.id}">
+                            <td>${fieldValue(bean: personaInstance, field: "cedula")}</td>
+                            <td>${fieldValue(bean: personaInstance, field: "nombre")}</td>
+                            <td>${fieldValue(bean: personaInstance, field: "apellido")}</td>
+                            <td><g:formatDate date="${personaInstance.fechaNacimiento}" format="dd-MM-yyyy"/></td>
+                            <td>${personaInstance.empresa.nombre}</td>
+                            <td>
+                                <a href="#" data-id="${personaInstance.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver"><i class="fa fa-laptop"></i>
+                                </a>
+                                <a href="#" data-id="${personaInstance.id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar"><i class="fa fa-pencil"></i>
+                                </a>
+                                <a href="#" data-id="${personaInstance.id}" class="btn btn-danger btn-sm btn-delete btn-ajax" title="Eliminar"><i class="fa fa-trash-o"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </g:each>
+                </tbody>
+            </table>
+        </div>
         <elm:pagination total="${personaInstanceCount}" params="${params}"/>
 
         <script type="text/javascript">
@@ -84,6 +87,7 @@
                             if (parts[0] == "OK") {
                                 location.reload(true);
                             } else {
+                                closeLoader();
                                 spinner.replaceWith($btn);
                                 return false;
                             }
@@ -120,6 +124,10 @@
                                         log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
                                         if (parts[0] == "OK") {
                                             location.reload(true);
+                                        } else {
+                                            closeLoader();
+                                            spinner.replaceWith($btn);
+                                            return false;
                                         }
                                     }
                                 });
