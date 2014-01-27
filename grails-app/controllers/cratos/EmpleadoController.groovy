@@ -1,5 +1,6 @@
 package cratos
 
+import cratos.seguridad.Persona
 import groovy.json.JsonBuilder
 import org.springframework.dao.DataIntegrityViolationException
 
