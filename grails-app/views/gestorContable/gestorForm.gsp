@@ -50,7 +50,7 @@
             Guardar
         </a>
         <g:link class="btn btn-default" action="index">
-            <i class="fa fa-close"></i>
+            <i class="fa fa-x"></i>
             Cancelar
         </g:link>
     </div>
