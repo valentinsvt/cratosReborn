@@ -1,5 +1,7 @@
 package cratos.seguridad
 
+import cratos.Contabilidad
+
 
 class LoginController {
 
@@ -89,8 +91,17 @@ class LoginController {
             flash.message = "Ha ocurrido un error grave"
             flash.tipo = "error"
         } else {
+            def ahora = new Date().clearTime()
             user = user[0]
             session.usuario = user
+            session.empresa = user.empresa
+            session.contabilidad = Contabilidad.findByFechaInicioLessThanEqualsAndFechaCierreGreaterThanEquals(ahora, ahora)
+            if (!session.contabilidad) {
+                def conts = Contabilidad.list([sort: "fechaCierre", order: "desc"])
+                if (conts) {
+                    session.contabilidad = conts[0]
+                }
+            }
             def perfiles = Sesn.findAllByUsuario(user)
             if (perfiles.size() == 0) {
                 flash.message = "No puede ingresar. Comuníquese con el administrador."

@@ -37,38 +37,24 @@
             <table class="table table-condensed table-bordered table-striped table-hover">
                 <thead>
                     <tr>
-
-                        <g:sortableColumn property="email" title="Email"/>
-
-                        <g:sortableColumn property="telefono" title="Telefono"/>
-
-                        <g:sortableColumn property="direccionReferencia" title="Direccion Referencia"/>
-
-                        <g:sortableColumn property="barrio" title="Barrio"/>
-
-                        <g:sortableColumn property="direccion" title="Direccion"/>
-
-                        <g:sortableColumn property="fechaNacimiento" title="Fecha Nacimiento"/>
-
-                        <th width="110">Acciones</th>
+                        <g:sortableColumn property="cedula" title="Cédula"/>
+                        <g:sortableColumn property="nombre" title="Nombre"/>
+                        <g:sortableColumn property="apellido" title="Apellido"/>
+                        <g:sortableColumn property="login" title="Login"/>
+                        <g:sortableColumn property="activo" title="Activo"/>
+                        <g:sortableColumn property="observaciones" title="Observaciones"/>
+                        <th width="190">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <g:each in="${personaInstanceList}" status="i" var="personaInstance">
                         <tr data-id="${personaInstance.id}">
-
-                            <td>${fieldValue(bean: personaInstance, field: "email")}</td>
-
-                            <td>${fieldValue(bean: personaInstance, field: "telefono")}</td>
-
-                            <td>${fieldValue(bean: personaInstance, field: "direccionReferencia")}</td>
-
-                            <td>${fieldValue(bean: personaInstance, field: "barrio")}</td>
-
-                            <td>${fieldValue(bean: personaInstance, field: "direccion")}</td>
-
-                            <td><g:formatDate date="${personaInstance.fechaNacimiento}" format="dd-MM-yyyy"/></td>
-
+                            <td>${fieldValue(bean: personaInstance, field: "cedula")}</td>
+                            <td>${fieldValue(bean: personaInstance, field: "nombre")}</td>
+                            <td>${fieldValue(bean: personaInstance, field: "apellido")}</td>
+                            <td>${fieldValue(bean: personaInstance, field: "login")}</td>
+                            <td><g:formatBoolean boolean="${personaInstance.activo == 1}" true="SI" false="NO"/></td>
+                            <td>${fieldValue(bean: personaInstance, field: "observaciones")}</td>
                             <td>
                                 <a href="#" data-id="${personaInstance.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver">
                                     <i class="fa fa-laptop"></i>
@@ -76,7 +62,13 @@
                                 <a href="#" data-id="${personaInstance.id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar">
                                     <i class="fa fa-pencil"></i>
                                 </a>
-                                <a href="#" data-id="${personaInstance.id}" class="btn btn-danger btn-sm btn-delete btn-ajax" title="Eliminar">
+                                <g:link action="perfiles" id="${personaInstance.id}" class="btn btn-primary btn-sm btn-ajax" title="Perfiles">
+                                    <i class="fa fa-users"></i>
+                                </g:link>
+                                <a href="#" data-id="${personaInstance.id}" class="btn btn-warning btn-pass btn-sm" title="Reiniciar password">
+                                    <i class="fa fa-refresh"></i>
+                                </a>
+                                <a href="#" data-id="${personaInstance.id}" class="btn btn-danger btn-delete btn-sm" title="Eliminar">
                                     <i class="fa fa-trash-o"></i>
                                 </a>
                             </td>
@@ -226,6 +218,46 @@
                 $(".btn-edit").click(function () {
                     var id = $(this).data("id");
                     createEditRow(id);
+                });
+                $(".btn-pass").click(function () {
+                    var id = $(this).data("id");
+                    bootbox.dialog({
+                        title   : "Alerta",
+                        message : "<i class='fa fa-warning fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea reiniciar el password de la persona?<br/>El password será el número de cédula y no se puede deshacer.</p>",
+                        buttons : {
+                            cancelar : {
+                                label     : "Cancelar",
+                                className : "btn-primary",
+                                callback  : function () {
+                                }
+                            },
+                            cambiar : {
+                                label     : "<i class='fa fa-refresh'></i> Reiniciar",
+                                className : "btn-warning",
+                                callback  : function () {
+                                    openLoader("Modificando");
+                                    $.ajax({
+                                        type    : "POST",
+                                        url     : '${createLink(action:'reset_pass_ajax')}',
+                                        data    : {
+                                            id : id
+                                        },
+                                        success : function (msg) {
+                                            var parts = msg.split("_");
+                                            log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                                            if (parts[0] == "OK") {
+                                                location.reload(true);
+                                            } else {
+                                                closeLoader();
+                                                spinner.replaceWith($btn);
+                                                return false;
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
                 });
                 $(".btn-delete").click(function () {
                     var id = $(this).data("id");

@@ -22,7 +22,6 @@ class Persona {
     Profesion profesion
     EstadoCivil estadoCivil
     String observaciones
-    String libretaMilitar
     String login
     String password
     String autorizacion
@@ -54,7 +53,6 @@ class Persona {
             profesion column: 'prof__id'
             estadoCivil column: 'edcv__id'
             observaciones column: 'prsnobsr'
-            libretaMilitar column: 'prsnlbml'
             login column: 'prsnlogn'
             password column: 'prsnpass'
             autorizacion column: 'prsnatrz'
@@ -81,7 +79,6 @@ class Persona {
         profesion(blank: true, nullable: true, attributes: [title: 'Profesión'])
         estadoCivil(blank: true, nullable: true, attributes: [title: 'Estado Civil'])
         observaciones(size: 1..127, blank: true, nullable: true, attributes: [title: 'Observaciones'])
-        libretaMilitar(blank: true, nullable: true, attributes: [title: 'Libreta militar'])
         login(size: 1..15, blank: false, nullable: false, unique: true, attributes: [title: 'Nombre de usuario'])
         password(size: 1..64, blank: false, nullable: false, password: true, attributes: [title: 'Contraseña para el ingreso al sistema'])
         autorizacion(size: 1..255, blank: false, nullable: false, password: true, attributes: [title: 'Contraseña para autorizaciones'])

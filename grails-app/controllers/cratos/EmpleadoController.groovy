@@ -105,7 +105,7 @@ class EmpleadoController extends cratos.seguridad.Shield {
                 }
             } else {
                 personaInstance = new Persona(params.persona)
-                personaInstance.empresa=session.empresa
+                personaInstance.empresa = session.empresa
                 personaInstance.nacionalidad = Nacionalidad.get(1)
             }
             empleadoInstance = new Empleado(params.empleado)
@@ -173,7 +173,6 @@ class EmpleadoController extends cratos.seguridad.Shield {
         }
         render "OK"
     }
-
 
     /* ************************ COPIAR DESDE AQUI ****************************/
 

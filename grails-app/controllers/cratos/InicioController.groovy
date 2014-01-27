@@ -1,13 +1,19 @@
 package cratos
 
+import cratos.seguridad.Persona
 import cratos.seguridad.Shield
 
 class InicioController extends Shield {
 
     def index() {
-
-
-
+        def usu = Persona.get(session.usuario?.id)
+        if (usu) {
+            def now = new Date().clearTime()
+            if ((usu.password == usu.cedula.encodeAsMD5()) || usu.fechaPass <= now) {
+                redirect(controller: "login", action: "cambiarPass")
+                return
+            }
+        }
     }
 
     def saldosIniciales(){
