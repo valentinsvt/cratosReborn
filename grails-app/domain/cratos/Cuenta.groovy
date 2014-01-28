@@ -1,4 +1,5 @@
 package cratos
+
 class Cuenta implements Serializable {
     String auxiliar
     String movimiento
@@ -46,9 +47,9 @@ class Cuenta implements Serializable {
         nivel(blank: false, attributes: [title: 'Nivel'])
         presupuesto(blank: true, nullable: true, attributes: [title: 'Presupuesto'])
         estado(blank: false, maxSize: 1, attributes: [title: 'Estado'])
-        retencion(blank: true,nullable: true,size: 0..1)
-        impuesto(blank:true,nullable: true)
-        resultado(blank: true,nullable: true,size:1..1)
+        retencion(blank: true, inList: ['S', 'N'], nullable: true, size: 0..1)
+        impuesto(blank: true, nullable: true)
+        resultado(blank: true, nullable: true, size: 1..1)
     }
 
     String toString() {

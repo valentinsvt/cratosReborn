@@ -58,22 +58,32 @@ class CuentaController extends cratos.seguridad.Shield {
         return [cuentaInstance: cuenta]
     }
 
-    String makeBasicTree(id) {
+    def loadTreePart() {
+        render(makeTreeNode(params.id))
+    }
+
+    String makeTreeNode(id) {
         String tree = "", clase = "", rel = ""
+        Cuenta padre
         Cuenta[] hijos
 
-        def padre = Cuenta.get(id)
-        if (padre) {
-            hijos = Cuenta.findAllByPadre(padre, [sort: "numero"])
-        } else {
+        if (id == "#") {
+            //root
+            tree = "<li id='root' class='root hasChildren jstree-closed' data-jstree='{\"type\":\"root\"}' level='0' ><a href='#' class='label_arbol'>Plan de cuentas</a></li>"
+        } else if (id == "root") {
             hijos = Cuenta.findAllByNivel(Nivel.get(1), [sort: "numero"])
+        } else {
+
+            def parts = id.split("_")
+            def node_id = parts[1].toLong()
+
+            padre = Cuenta.get(node_id)
+            if (padre) {
+                hijos = Cuenta.findAllByPadre(padre, [sort: "numero"])
+            }
         }
 
-        println("id: " + id)
-        println("padre:" + padre)
-        println("hijos " + hijos)
-
-        if (padre || hijos.size() > 0) {
+        if (tree == "" && (padre || hijos.size() > 0)) {
             tree += "<ul>"
 
             hijos.each { hijo ->
@@ -95,7 +105,7 @@ class CuentaController extends cratos.seguridad.Shield {
                     }
                 }
 
-                tree += "<li id='li_" + hijo.id + "' class='" + clase + "' rel='" + rel + "' level='" + hijo.nivel.id + "'>"
+                tree += "<li id='li_" + hijo.id + "' class='" + clase + "' data-jstree='{\"type\":\"${rel}\"}' level='" + hijo.nivel.id + "'>"
                 tree += "<a href='#' class='label_arbol'>" + hijo + "</a>"
                 tree += "</li>"
             }
@@ -104,10 +114,6 @@ class CuentaController extends cratos.seguridad.Shield {
         }
 
         return tree
-    }
-
-    def loadTreePart() {
-        render(makeBasicTree(params.id))
     }
 
     def ajaxSearch() {
@@ -143,29 +149,6 @@ class CuentaController extends cratos.seguridad.Shield {
 
     def list() {
 
-    }
-
-    def editCuenta = {
-        println "edit cuenta " + params
-        def id = params.id
-        def lvl = params.level.toInteger()
-        def tipo = params.type
-
-        def cuentaInstance
-        def cuentaPadre
-        def hijos = 0
-
-        if (tipo == "create") {
-            cuentaInstance = new Cuenta()
-            cuentaPadre = Cuenta.get(id)
-            lvl = lvl + 1
-        } else {
-            cuentaInstance = Cuenta.get(id)
-            cuentaPadre = cuentaInstance.padre
-            hijos = Cuenta.findAllByPadre(cuentaInstance).size()
-        }
-
-        return [cuentaInstance: cuentaInstance, cuentaPadre: cuentaPadre, lvl: lvl, hijos: hijos]
     }
 
     def list_loadAll() {
@@ -364,8 +347,116 @@ class CuentaController extends cratos.seguridad.Shield {
             } else {
                 println "save " + cuenta
             }
-
-
         }
     }
+
+    def show_ajax() {
+        if (params.id) {
+            def cuentaInstance = Cuenta.get(params.id)
+            if (!cuentaInstance) {
+                notFound_ajax()
+                return
+            }
+            return [cuentaInstance: cuentaInstance]
+        } else {
+            notFound_ajax()
+        }
+    } //show para cargar con ajax en un dialog
+
+    def form_ajax() {
+        def cuentaInstance = new Cuenta(params)
+        def hijos = 0
+        if (params.id) {
+            cuentaInstance = Cuenta.get(params.id)
+            if (!cuentaInstance) {
+                notFound_ajax()
+                return
+            }
+            hijos = Cuenta.countByPadre(cuentaInstance)
+        } else {
+            cuentaInstance.padre = Cuenta.get(params.padre)
+            cuentaInstance.nivel = Nivel.get(params.lvl.toInteger() + 1)
+            def last = Cuenta.findAllByPadre(cuentaInstance.padre, [sort: "numero"]).last()
+            def parts = last.numero.split("\\.")
+            if (parts.size() > 0) {
+                def next = parts.last().toInteger() + 1
+                def num = ""
+                for (def i = 0; i < parts.size() - 1; i++) {
+                    num += parts[i] + "."
+                }
+                num += next.toString().padLeft(2, "0")
+                cuentaInstance.numero = num
+            }
+        }
+        return [cuentaInstance: cuentaInstance, hijos: hijos]
+    } //form para cargar con ajax en un dialog
+
+
+    def validarNumero_ajax() {
+        params.numero = params.numero.toString().trim()
+        if (params.id) {
+            def cuenta = Cuenta.get(params.id)
+            if (cuenta.numero == params.numero) {
+                render true
+                return
+            } else {
+                render Cuenta.countByNumero(params.numero) == 0
+                return
+            }
+        } else {
+            render Cuenta.countByNumero(params.numero) == 0
+            return
+        }
+    }
+
+    def save_ajax() {
+
+        params.each { k, v ->
+            if (v != "date.struct" && v instanceof java.lang.String) {
+                params[k] = v.toUpperCase()
+            }
+        }
+        params.estado = 'A'
+        def cuentaInstance = new Cuenta()
+        if (params.id) {
+            cuentaInstance = Cuenta.get(params.id)
+            if (!cuentaInstance) {
+                notFound_ajax()
+                return
+            }
+        } //update
+
+        cuentaInstance.properties = params
+
+        if (!cuentaInstance.save(flush: true)) {
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Cuenta."
+            msg += renderErrors(bean: cuentaInstance)
+            render msg
+            return
+        }
+        render "OK_${params.id ? 'Actualización' : 'Creación'} de Cuenta exitosa."
+    } //save para grabar desde ajax
+
+    def delete_ajax() {
+        if (params.id) {
+            def cuentaInstance = Cuenta.get(params.id)
+            if (cuentaInstance) {
+                try {
+                    cuentaInstance.delete(flush: true)
+                    render "OK_Eliminación de Cuenta exitosa."
+                } catch (e) {
+                    render "NO_No se pudo eliminar Cuenta."
+                }
+            } else {
+                notFound_ajax()
+            }
+        } else {
+            notFound_ajax()
+        }
+    } //delete para eliminar via ajax
+
+    protected void notFound_ajax() {
+        render "NO_No se encontró Cuenta."
+    } //notFound para ajax
+
 }
