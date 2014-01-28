@@ -6,8 +6,8 @@
         <g:set var="entityName" value="${message(code: 'cuenta.label', default: 'Cuenta')}"/>
         <title>Lista de Cuentas</title>
 
-        <script type="text/javascript" src="${resource(dir: 'js/plugins/jstree', file: 'jstree.js')}"></script>
-        <link rel="stylesheet" href="${resource(dir: 'js/plugins/jstree/themes/default', file: 'style.css')}" />
+        <script type="text/javascript" src="${resource(dir: 'js/jquery/plugins/jstree', file: 'jquery.jstree.js')}"></script>
+        <script type="text/javascript" src="${resource(dir: 'js/jquery/plugins/jstree/_lib', file: 'jquery.cookie.js')}"></script>
 
         <style type="text/css">
         .jstree-search {
