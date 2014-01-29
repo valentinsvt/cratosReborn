@@ -35,24 +35,20 @@ class Proceso implements Serializable {
     double retencionIvaBienes = 0
     double retencionIvaServicios = 0
     double retencionIva = 0
-
     String tipoRetencion
-
     String retencionSerie1
     String retencionSerie2
     String retencionSecuencial
     String retencionAutorizacion
-
     PagoAux pagoAux
-
     SustentoTributario sustentoTributario
     TipoComprobanteSri tipoComprobanteSri
-
     Date fechaIngresoSistema
-
     String facturaEstablecimiento
     String facturaPuntoEmision
     String facturaSecuencial
+    Empresa empresa
+    String tipoProceso /*para saber si es compra, venta etc etc........... C--> compra, V---> venta, A--> Ajuste, O--> otros*/
 
     static auditable = true
     static mapping = {
@@ -96,24 +92,21 @@ class Proceso implements Serializable {
             retencionIvaBienes column: 'prcsrtbn'
             retencionIvaServicios column: 'prcsrtsr'
             retencionIva column: 'prcsrtiv'
-
             tipoRetencion column: 'prcstprt'
-
             retencionSerie1 column: 'prcsrts1'
             retencionSerie2 column: 'prcsrts2'
             retencionSecuencial column: 'prcsrtsc'
             retencionAutorizacion column: 'prcsrtat'
-
             pagoAux column: 'pgax__id'
-
             sustentoTributario column: 'sstr__id'
             tipoComprobanteSri column: 'tpcp__id'
-
             fechaIngresoSistema column: 'prcsfcis'
-
             facturaEstablecimiento column: 'prcsfces'
             facturaPuntoEmision column: 'prcsfcpe'
             facturaSecuencial column: 'prcsfcsc'
+            empresa column: 'empr__id'
+            tipoProceso column: 'prcstpps'
+
         }
     }
     static constraints = {
@@ -151,23 +144,19 @@ class Proceso implements Serializable {
         retencionIvaBienes(blank: true, nullable: true, attributes: [title: 'retencionIvaBienes'])
         retencionIvaServicios(blank: true, nullable: true, attributes: [title: 'retencionIvaServicios'])
         retencionIva(blank: true, nullable: true, attributes: [title: 'retencionIva'])
-
         tipoRetencion(blank: true, nullable: true, attributes: [title: 'tipo de rentencion: bienes o servicios'])
-
         retencionSerie1(blank: true, nullable: true)
         retencionSerie2(blank: true, nullable: true)
         retencionSecuencial(blank: true, nullable: true)
         retencionAutorizacion(blank: true, nullable: true)
-
         pagoAux(blank: true, nullable: true)
-
         sustentoTributario(blank: true, nullable: true)
         tipoComprobanteSri(blank: true, nullable: true)
-
         fechaIngresoSistema(blank: true, nullable: true)
-
         facturaEstablecimiento(blank: true, nullable: true)
         facturaPuntoEmision(blank: true, nullable: true)
         facturaSecuencial(blank: true, nullable: true)
+        empresa(nullable: false,blank:false)
+        tipoProceso(nullable: true,blank: true,size: 1..1)
     }
 }

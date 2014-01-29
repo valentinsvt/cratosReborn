@@ -6,7 +6,7 @@
     <style type="text/css">
     .fila {
         width  : 800px;
-        height : 40px;
+        min-height : 40px;
     }
 
     .label {
@@ -23,7 +23,7 @@
     .campo {
         width  : 670px;
         float  : right;
-        height : 30px;
+        min-height: 40px;
     }
     </style>
 </head>
@@ -69,7 +69,9 @@
                 </div>
 
                 <div class="campo">
-                    <input name="nombre" type="text" value="${gestorInstance?.nombre}" maxlength="127" style="width:700px;" class="form-control required"/>
+                    <span class="grupo">
+                        <input name="nombre" type="text" value="${gestorInstance?.nombre}" maxlength="127" style="width:700px;" class="form-control required"/>
+                    </span>
                 </div>
             </div>
 
@@ -79,7 +81,9 @@
                 </div>
 
                 <div class="campo">
-                    <input name="descripcion" type="textArea" value="${gestorInstance?.descripcion}" maxlength="255"  style="width:700px;" class="form-control required"/>
+                    <span class="grupo">
+                        <input name="descripcion" type="textArea" value="${gestorInstance?.descripcion}" maxlength="255"  style="width:700px;" class="form-control required"/>
+                    </span>
                 </div>
             </div>
 
@@ -89,7 +93,7 @@
                 </div>
 
                 <div class="campo">
-                    <input name="observaciones" type="textArea" value="${gestorInstance?.observaciones}"  maxlength="125" style="width:700px;" class="form-control required"/>
+                    <input name="observaciones" type="textArea" value="${gestorInstance?.observaciones}"  maxlength="125" style="width:700px;" class="form-control"/>
                 </div>
             </div>
 
@@ -110,8 +114,10 @@
                 </div>
 
                 <div class="campo">
-                    <g:select name="tipoCom" type="select" campo="tipo" from="${cratos.TipoComprobante.list([sort: 'descripcion'])}" label="Tipo comprobante: " value="${tipoCom?.id}"
-                              optionKey="id" id="tipo" class="form-control required" optionValue="descripcion" style="width: 200px"></g:select>
+                    <span class="grupo">
+                        <g:select name="tipoCom" type="select" campo="tipo" from="${cratos.TipoComprobante.list([sort: 'descripcion'])}" label="Tipo comprobante: " value="${tipoCom?.id}"
+                                  optionKey="id" id="tipo" class="form-control required" optionValue="descripcion" style="width: 200px"></g:select>
+                    </span>
                 </div>
             </div>
 
@@ -207,11 +213,33 @@
             });
         }
 
-        $("#guardar").click(function () {
+        $("#btnGuardar").click(function () {
 //            console.log($(".frmGestor2"))
-            $(".frmGestor").submit()
+            if($(".frmGestor").valid()){
+                if($(".movimiento").size()>0){
+                $(".frmGestor").submit()
+                }else{
+                    bootbox.alert("Por favor ingrese los movimientos contables antes de guardar el gestor")
+                }
+            }
             return false
 
+        });
+        var validator = $(".frmGestor").validate({
+            errorClass     : "help-block",
+            errorPlacement : function (error, element) {
+                if (element.parent().hasClass("input-group")) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+                element.parents(".grupo").addClass('has-error');
+                element.parents(".grupo").parent().parent().height( element.parents(".grupo").parent().parent().height()+30)
+            },
+            success        : function (label) {
+                label.parents(".grupo").removeClass('has-error');
+                label.parents(".grupo").parent().parent().height( label.parents(".grupo").parent().parent().height()-30)
+            }
         });
 
     });

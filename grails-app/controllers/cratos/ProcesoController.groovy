@@ -20,13 +20,14 @@ class ProcesoController extends cratos.seguridad.Shield {
     }
     def nuevoProceso = {
 //        println "nuevo proceso "+params
+        def tiposProceso = ["-1":"Seleccione","C":"Compras","V":"Ventas","O":"Otros","A":"Ajustes"]
         if (params.id) {
             def proceso = Proceso.get(params.id)
             def registro = (Comprobante.findAllByProceso(proceso)?.size() == 0) ? false : true
             println "registro " + registro
-            render(view: "procesoForm", model: [proceso: proceso, registro: registro])
+            render(view: "procesoForm", model: [proceso: proceso, registro: registro,tiposProceso:tiposProceso])
         } else
-            render(view: "procesoForm", model: [registro: false])
+            render(view: "procesoForm", model: [registro: false,tiposProceso:tiposProceso])
     }
 
     def save = {
@@ -47,17 +48,15 @@ class ProcesoController extends cratos.seguridad.Shield {
 
             params.valor = params.baseImponibleIva0.toDouble() + params.baseImponibleIva.toDouble() + params.baseImponibleNoIva.toDouble()
             params.impuesto = params.ivaGenerado.toDouble() + params.iceGenerado.toDouble()
-
             params.documento = params.facturaEstablecimiento + "-" + params.facturaPuntoEmision + "-" + params.facturaSecuencial
-
             params.fechaIngresoSistema = new Date()
-
             if (params.id)
                 p = Proceso.get(params.id)
             else
                 p = new Proceso()
             p.properties = params
             p.contabilidad = session.contabilidad
+            p.empresa=session.empresa
             p.save(flush: true)
             println "errores proceso " + p.errors
             if (p.errors.getErrorCount() == 0)
@@ -224,7 +223,7 @@ class ProcesoController extends cratos.seguridad.Shield {
         /*link de esta accion ...  sive para la opcion de reporte*/
 //        params.ordenado="fecha"
 //        params.orden="desc"
-        def listaSinFiltro = buscadorService.buscar(Proceso, "Proceso", "excluyente", params, true)
+        def listaSinFiltro = buscadorService.buscar(Proceso, "Proceso", "excluyente", params, true," and empresa=${session.empresa.id}")
         /* Dominio, nombre del dominio , excluyente dejar asi,params tal cual llegan de la interfaz del buscador, ignore case */
         listaSinFiltro.pop()
         def lista = []
@@ -290,11 +289,9 @@ class ProcesoController extends cratos.seguridad.Shield {
                 params["haber"] = params.valor
             if (params.proveedor.id == "-1") {
                 def proceso = Proceso.get(params.proceso)
-                println "proveedor " + proceso.proveedor
                 if (proceso.proveedor != null)
                     params["proveedor.id"] = proceso.proveedor.id
             }
-//            kerberosService.save(params,Auxiliar,session.perfil,session.usuario)
             def fecha = params.remove("fechaPago")
             def p = new Auxiliar(params)
             p.fechaPago = new Date().parse("dd-MM-yyyy", fecha)
@@ -390,26 +387,15 @@ class ProcesoController extends cratos.seguridad.Shield {
 
 
     def borrarProceso() {
-
         println("LOG: borrar proceso " + params)
-
         def proceso = Proceso.get(params.id)
-
         def comprobante = Comprobante.findByProceso(proceso)
-
         def asiento
-
         if (comprobante) {
-
             asiento = Asiento.findAllByComprobante(comprobante)
-
         }
-
-
         if (comprobante) {
-
             if (comprobante.registrado == 'N') {
-
                 def msn = kerberosoldService.ejecutarProcedure("mayorizar", [comprobante.id, -1])
                 println "LOG: desmayorizando  comprobante borrar proceso ${comprobante.id} " + msn["mayorizar"]
                 try {
@@ -427,33 +413,18 @@ class ProcesoController extends cratos.seguridad.Shield {
                 comprobante.registrado = "B"
                 comprobante.save(flush: true)
                 flash.message = "Proceso Borrado!"
-
                 redirect(action: 'lsta')
-
             } else {
-
                 flash.message = "No se puede borrar el proceso!!"
-
                 redirect(action: 'lsta')
-
-
             }
 
         } else {
-
-
             proceso.estado = "B"
             proceso.save(flush: true)
-
-
             flash.message = "Proceso Borrado!"
-
             redirect(action: 'lsta')
-
-
         }
-
-
     }
 
 
@@ -598,20 +569,12 @@ class ProcesoController extends cratos.seguridad.Shield {
 
 
     def guardarSri() {
-
         println("guardarSri:" + params)
-
         def fecha = params.remove("fechaEmision")
-
         def proceso = Proceso.get(params.id)
-
         def retencion = Retencion.findByProceso(proceso)
-
         def concepto = ConceptoRetencionImpuestoRenta.get(params.concepto)
-
-
         if (retencion.save(flush: true)) {
-
             retencion.numeroEstablecimiento = params.numeroEstablecimiento
             retencion.numeroPuntoEmision = params.numeroEmision
             retencion.numeroAutorizacionComprobante = params.numeroAutorizacion
@@ -619,7 +582,6 @@ class ProcesoController extends cratos.seguridad.Shield {
             retencion.pais = Pais.get(params.pais)
             retencion.numeroSecuencial = params.numeroSecuencial
             retencion.creditoTributario = params.credito
-
             if (params.pago == '02') {
                 retencion.normaLegal = params.normaLegal
                 retencion.convenio = params.convenio
@@ -627,60 +589,39 @@ class ProcesoController extends cratos.seguridad.Shield {
                 retencion.normaLegal = ''
                 retencion.convenio = ''
             }
-
             if (fecha) {
                 retencion.fechaEmision = new Date().parse("yyyy-MM-dd", fecha)
-            } else {
             }
-
             //detalle
-
             def detalle = DetalleRetencion.findAllByRetencion(retencion)
-
-
             detalle.each { det ->
-
                 if (det.cuenta.impuesto.sri == 'RNT') {
-
 //                   println("entro RNT!")
-
                     det.porcentaje = params.porcentaje
                     det.conceptoRetencionImpuestoRenta = params.concepto
                     det.base = params.base
                     det.total = params.valorRetenido
-
                 }
                 if (det.cuenta.impuesto.sri == 'ICE') {
-
 //                   println("entro ICE!")
-
                     det.porcentaje = params.icePorcentaje.toDouble()
                     det.base = params.iceBase.toDouble()
                     det.total = params.valorRetenidoIce.toDouble()
-
                 }
                 if (det.cuenta.impuesto.sri == 'BNS') {
-
 //                   println("entro BNS!")
-
                     det.porcentaje = params.bienesPorcentaje.toDouble()
                     det.base = params.bienesBase.toDouble()
                     det.total = params.valorRetenidoBienes.toDouble()
                 }
                 if (det.cuenta.impuesto.sri == 'SRV') {
-
 //                   println("entro SRV!")
-
                     det.porcentaje = params.serviciosPorcentaje.toDouble()
                     det.base = params.serviciosBase.toDouble()
                     det.total = params.valorRetenidoServicios.toDouble()
-
-
                 } else {
-
 //                   println("NO entro!")
                 }
-
             }
 
             render "ok"

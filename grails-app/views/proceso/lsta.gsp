@@ -3,32 +3,37 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="layout" content="main" />
-    <g:set var="entityName" value="${message(code: 'presupuesto.label', default: 'Proceso')}" />
     <title>Transacciones contables</title>
-    <script type="text/javascript" src="${resource(dir: 'js/jquery/plugins', file: 'jquery.livequery.js')}"></script>
 </head>
 <body>
-<div class="container entero ui-corner-all">
-
-    <fieldset style="width: 1000px;border: none;margin-top: 30px;" class="ui-corner-all">
-        <legend>
-            Transacciones contables
-        </legend>
-        <g:link class="btn ui-corner-all" action="nuevoProceso" style="color: white !important;">Nuevo</g:link>
-
-        <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
+<g:if test="${flash.message}">
+    <div class="alert ${flash.tipo == 'error' ? 'alert-danger' : flash.tipo == 'success' ? 'alert-success' : 'alert-info'} ${flash.clase}">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <g:if test="${flash.tipo == 'error'}">
+            <i class="fa fa-warning fa-2x pull-left"></i>
         </g:if>
-
-        <bsc:buscador name="proceso.id" value="${proceso?.id}"  accion="listar" campos="${campos}" label="Transacción" tipo="lista"/>
-        <br>
-    </fieldset>
-
-
-      <script type="text/javascript">
-          $(".btn").button()
-      </script>
-
+        <g:elseif test="${flash.tipo == 'success'}">
+            <i class="fa fa-check-square fa-2x pull-left"></i>
+        </g:elseif>
+        <g:elseif test="${flash.tipo == 'notFound'}">
+            <i class="icon-ghost fa-2x pull-left"></i>
+        </g:elseif>
+        <p>
+            ${flash.message}
+        </p>
+    </div>
+</g:if>
+<div class="btn-toolbar toolbar">
+    <div class="btn-group">
+        <g:link class="btn btn-primary" action="nuevoProceso">
+            <i class="fa fa-file-o"></i> Nueva transacción contable
+        </g:link>
+    </div>
+</div>
+<div class="vertical-container-no-padding" style="margin-top: 25px;color: black;min-height: 500px">
+    <div style="width: 1000px;float: left">
+        <bsc:buscador name="proceso.id"  accion="listar" campos="${campos}" label="Transacción" tipo="lista"/>
+    </div>
 </div>
 </body>
 </html>

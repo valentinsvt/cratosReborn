@@ -3,18 +3,16 @@ package cratos
 class GestorContableController extends cratos.seguridad.Shield {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-    def gestorContableService
     def buscadorService
     def kerberosoldService
     def index = {
-        gestorContableService.vaciarLista()
+        session.movimientos=[]
     }
 
     def buscarGestor() {
-        gestorContableService.vaciarLista()
+        session.movimientos=[]
 //        println "params " + params
-        def lista = buscadorService.buscar(Gestor, "Gestor", "incluyente", [campos: ["nombre", "descripcion"], criterios: [params.nombre, params.nombre], operadores: ["like", "like"], ordenado: "nombre", orden: "asc"], true)
+        def lista = buscadorService.buscar(Gestor, "Gestor", "incluyente", [campos: ["nombre", "descripcion"], criterios: [params.nombre, params.nombre], operadores: ["like", "like"], ordenado: "nombre", orden: "asc"], true," and empresa=${session.empresa.id}")
         def numRegistros = lista.get(lista.size() - 1)
         lista.pop()
         return [lista: lista]
@@ -22,28 +20,25 @@ class GestorContableController extends cratos.seguridad.Shield {
 
     def nuevoGestor() {
         //println "nuevo gestor " + params
-        gestorContableService.vaciarLista()
+        session.movimientos=[]
         def gestorInstance
         def nuevo = true
         def tipoCom
         if (params.id) {
             nuevo = false
             gestorInstance = Gestor.get(params.id.toLong())
-            println "gestor " + gestorInstance
-            def movs = gestorInstance.movimientos.toArray()
+//            println "gestor " + gestorInstance
+            def movs = Genera.findAll("from Genera where gestor=${gestorInstance.id} order by debeHaber,cuenta")
             if (movs.size() > 0) {
                 movs.each {
                     println "add " + it
                     tipoCom = it.tipoComprobante
-                    gestorContableService.cuentas.add(it)
+                    session.movimientos.add(it)
                 }
-                println "cuentas " + gestorContableService.cuentas
-                gestorContableService.tipo = movs[0]?.tipoComprobante?.id
-                println "cambio tipo " + gestorContableService.tipo
-
+                session.tipoComp = movs[0]?.tipoComprobante?.id
             }
         } else {
-            gestorContableService.vaciarLista()
+
             gestorInstance = new Gestor()
         }
         //println "nuevo gestor "+gestorInstance
@@ -55,33 +50,34 @@ class GestorContableController extends cratos.seguridad.Shield {
 
         def descripcion = (params.nombre) ?: null
         def numero = (params.codigo) ?: null
-        def res = buscadorService.buscar(Cuenta, "Cuenta", "excluyente", [campos: ["descripcion", "numero", "movimiento"], criterios: [descripcion, numero, "1"], operadores: ["like", "like der", "="], ordenado: "numero", orden: "asc"], true)
+        def res = buscadorService.buscar(Cuenta, "Cuenta", "excluyente", [campos: ["descripcion", "numero", "movimiento"], criterios: [descripcion, numero, "1"], operadores: ["like", "like der", "="], ordenado: "numero", orden: "asc"], true," and empresa=${session.empresa.id}")
         def numRegistros = res.get(res.size() - 1)
         res.pop()
         return [planCuentas: res]
     }
 
     def cargarCuentas() {
-        println "cuentas !!!!! " + gestorContableService.cuentas
-        render(view: 'agregarCuenta', model: [cuentas: gestorContableService.cuentas])
+        println "cuentas !!!!! " + session.movimientos
+//        def cuentas=[]
+        render(view: 'agregarCuenta', model: [cuentas: session.movimientos])
     }
 
     def cambiarComprobante() {
         def tipo = TipoComprobante.get(params.tc)
-        gestorContableService.cambiaTipoComprobante(tipo)
-        render(view: 'agregarCuenta', model: [cuentas: gestorContableService.cuentas])
+        session.tipoComp=tipo
+        render(view: 'agregarCuenta', model: [cuentas: session.movmientos])
     }
 
     def agregarCuenta() {
-        println "agregar cuenta !! " + params
+        // println "agregar cuenta !! " + params
         if (params.posicion) {
             if (!params.eliminar) {
-                gestorContableService.cuentas[params.posicion.toInteger()].porcentaje = params.por.toDouble()
-                gestorContableService.cuentas[params.posicion.toInteger()].porcentajeImpuestos = params.imp.toDouble()
-                gestorContableService.cuentas[params.posicion.toInteger()].valor = params.val.toDouble()
+                session.movimientos[params.posicion.toInteger()].porcentaje = params.por.toDouble()
+                session.movimientos[params.posicion.toInteger()].porcentajeImpuestos = params.imp.toDouble()
+                session.movimientos[params.posicion.toInteger()].valor = params.val.toDouble()
             } else {
-                println "tam " + gestorContableService.cuentas.size() + " pos " + params.posicion
-                gestorContableService.cuentas.remove(params.posicion.toInteger())
+                println "tam " + session.movimientos.size() + " pos " + params.posicion
+                session.movimientos.remove(params.posicion.toInteger())
             }
 
         } else {
@@ -90,15 +86,12 @@ class GestorContableController extends cratos.seguridad.Shield {
             def tipo = TipoComprobante.get(params.tc)
             genera.cuenta = cuenta
             genera.tipoComprobante = tipo
-            println "tipo comprobante  " + tipo
             genera.debeHaber = (params.razon == "Debe") ? "D" : "H"
-            //GestorService.cambiaTipoComprobante(tipo)
-            gestorContableService.cuentas.add(genera)
-
+            session.tipoComp=tipo
+            session.movimientos.add(genera)
         }
-        gestorContableService.cuentas = gestorContableService.ordenarLista(gestorContableService.cuentas)
-        println "cuentas !22#asfasfasfasdasdasd " + gestorContableService.cuentas
-        return [cuentas: gestorContableService.cuentas]
+        session.movimientos=ordernarLista(session.movimientos)
+        return [cuentas: session.movimientos]
     }
 
     def save() {
@@ -106,7 +99,7 @@ class GestorContableController extends cratos.seguridad.Shield {
         println "params save!!! " + params + " id " + params.id
         def p
         if (params.id == null || params.id == "") {
-            println "save "
+            // println "save "
             try {
                 params.controllerName = controllerName
                 params.actionName = actionName
@@ -116,59 +109,57 @@ class GestorContableController extends cratos.seguridad.Shield {
                 p.fecha = new Date()
                 p.empresa = session.empresa
                 p.save(flush: true)
-                println "errores gestor  " + p.properties.errors
-                println "empeiza genera"
-                if (gestorContableService.cuentas.size() > 0) {
-                    println "gestor " + p
-                    gestorContableService.cuentas.each {
-                        println "  size!!!!!!  " + gestorContableService.cuentas.size()
+                //   println "errores gestor  " + p.properties.errors
+                // println "empeiza genera"
+                if (session.movimientos.size() > 0) {
+                    session.movimientos.each {
+                        println "  size!!!!!!  " + session.movimientos.size()
                         it.gestor = p
                         println " save genera " + it + " " + it.save()
                         p.addToMovimientos(it)
                     }
 
-                    gestorContableService.cuentas = []
+                    session.movimientos = []
                 }
-                flash.message = "Registro insertado"
+                flash.message = "Gestor contable guardado exitosamente"
                 redirect(action: 'index')
             } catch (Exception e) {
                 println "catch " + e
                 render(view: 'gestorForm', model: ['GestorInstance': p], error: true)
             }
         } else {
-            println "edit "
+            //  println "edit "
             try {
                 params.controllerName = controllerName
                 params.actionName = actionName
                 params.estado = "A"
-//                kerberosService.save(params,Gestor,session.perfil,session.usuario)
                 p = Gestor.get(params.id)
                 p.properties = params
                 p.save(flush: true)
                 println "errores " + p.properties.errors
                 def lista = []
                 def generaAntiguos = Genera.findAllByGestor(p)
-                if (gestorContableService.cuentas.size() > 0) {
-                    println "  size!!!!!!  " + gestorContableService.cuentas.size() + " \n\n\n\n\n"
+                if (session.movimientos.size() > 0) {
+                    println "  size!!!!!!  " + session.movimientos.size() + " \n\n\n\n\n"
                     def genera
-                    gestorContableService.cuentas.each {
+                    session.movimientos.each {
                         println "cuentas  ==> " + it.id
                         if (it.id == null) {
-                            println "save cuenta"
+                            //  println "save cuenta"
                             it.gestor = p
                             println " save new " + it + " " + it.save()
                             p.addToMovimientos(it)
                         } else {
-                            println "edit cuenta"
+                            // println "edit cuenta"
                             genera = Genera.get(it.id)
                             genera.porcentaje = it.porcentaje
                             genera.porcentajeImpuestos = it.porcentajeImpuestos
                             genera.valor = it.valor
-                            println "tipo  !! " + gestorContableService.tipo
-                            if (gestorContableService.tipo)
-                                genera.tipoComprobante = TipoComprobante.get(gestorContableService.tipo.toLong())
-                            println " datos " + it.porcentajeImpuestos + " " + it.porcentaje + " " + it.valor
-                            println "paso genera " + genera
+                            println "tipo  !! " + session.tipoComp
+                            if (session.tipoComp)
+                                genera.tipoComprobante = session.tipoComp
+                            //println " datos " + it.porcentajeImpuestos + " " + it.porcentaje + " " + it.valor
+                            //println "paso genera " + genera
                             genera.save(flush: true)
                             lista.add(it.id)
                             println " save edit " + genera + " " + genera.save()
@@ -183,9 +174,9 @@ class GestorContableController extends cratos.seguridad.Shield {
                     }
 
                     p.save()
-                    gestorContableService.cuentas = []
+                    session.movimientos = []
                 }
-                flash.message = "Registro insertado"
+                flash.message = "Gestor contable guardado exitosamente"
                 redirect(action: 'index')
             } catch (Exception e) {
                 println "catch " + e
@@ -199,16 +190,14 @@ class GestorContableController extends cratos.seguridad.Shield {
         def gestor = Gestor.get(params.id)
         def c = Genera.findAllByGestor(gestor)
         println "ver gestor "
-        c.each {
-            println "it " + it + " tipo " + it.tipoComprobante.id
-        }
-        gestorContableService.cuentas = Genera.findAllByGestor(gestor)
-        //println "cuentas "+GestorService.cuentas[0].tipoComprobante
+        session.movimientos = Genera.findAll("from Genera where gestor=${gestor.id} order by debeHaber,cuenta")
+        if(session.movimientos.size()>0)
+            session.tipoComp=session.movimientos[0].tipoComprobante
         if (!gestor) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'Gestor.label', default: 'Gestor'), params.id])}"
             redirect(action: "index")
         } else {
-            [gestor: gestor, cuentas: gestorContableService.cuentas]
+            [gestor: gestor, cuentas: session.movimientos]
         }
     }
 
@@ -263,5 +252,15 @@ class GestorContableController extends cratos.seguridad.Shield {
             return [msn: msn, gestor: gestor]
         }
     }
+
+
+    def ordernarLista(lista){
+        println "original "+lista
+        def res = lista.sort{it.debeHaber}
+        //res = res.sort{it.cuenta}
+        println "despues "+res
+        return res
+    }
+
 
 }

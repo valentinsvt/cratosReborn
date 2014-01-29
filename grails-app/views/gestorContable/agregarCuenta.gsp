@@ -36,7 +36,7 @@
                 <g:set var="gnra" value="${genera}"></g:set>
                 <g:set var="cuenta" value="${genera.cuenta}"></g:set>
             </g:else>
-            <tr style="background-color: ${(genera.tipoComprobante.id==1)?'#D4E6FC':((genera.tipoComprobante.id==2)?'#99CC99':'#FFCC99')} !important; ">
+            <tr style="background-color: ${(genera.tipoComprobante.id==1)?'#D4E6FC':((genera.tipoComprobante.id==2)?'#99CC99':'#FFCC99')} !important; " class="movimiento">
             <td style="max-width: 250px;">${cuenta.numero+'('+cuenta.descripcion+')'}</td>
             <g:if test="${genera.debeHaber=='D'}">
                 <td><input type="text" name="porcentaje" id="por_${i}"  class="form-control" style="width: 62px;" value="${genera.porcentaje?:0}"/></td>

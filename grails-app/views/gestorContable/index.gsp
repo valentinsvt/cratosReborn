@@ -61,16 +61,19 @@
 
 
     $(function () {
+        enviar();
         $("#buscarGestor").click(function () {
             enviar();
         });
 
         function enviar() {
+            openLoader("Buscando")
             $.ajax({
                 type    : "POST",
                 url     : "${g.createLink(action: 'buscarGestor')}",
                 data    : $(".buscarGestor").serialize(),
                 success : function (msg) {
+                    closeLoader()
                     $("#divLista").html(msg).show("slide");
 
                 }
