@@ -4,7 +4,7 @@
 
 <div class="col2">
     <g:if test="${!personaInstance}">
-        <elm:notFound elem="Persona" genero="o"/>
+        <elm:notFound elem="Persona" genero="a"/>
     </g:if>
     <g:else>
         <g:form class="form-horizontal" name="frmPersona" role="form" action="save_ajax" method="POST">

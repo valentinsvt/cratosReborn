@@ -75,6 +75,7 @@
         <link href="${resource(dir: 'css', file: 'custom/tablas.css')}" rel="stylesheet">
         <link href="${resource(dir: 'css', file: 'custom/datepicker.css')}" rel="stylesheet">
         <link href="${resource(dir: 'css', file: 'custom/context.css')}" rel="stylesheet">
+        <link href="${resource(dir: 'css', file: 'custom/forms.css')}" rel="stylesheet">
         <link href="${resource(dir: 'css', file: 'CustomSvt.css')}" rel="stylesheet">
         %{--Buscador--}%
         <link href='${resource(dir: 'css', file: 'buscador.css')}' rel='stylesheet'>

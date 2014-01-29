@@ -96,8 +96,8 @@ class PersonaController extends cratos.seguridad.Shield {
     def reset_pass_ajax() {
         def prsn = Persona.get(params.id)
         prsn.password = prsn.cedula.encodeAsMD5()
-        if(!prsn.save(flush:true)) {
-            render "NO_"+renderErrors(bean: prsn)
+        if (!prsn.save(flush: true)) {
+            render "NO_" + renderErrors(bean: prsn)
         } else {
             render "OK_Password reiniciado exitosamente."
         }
@@ -115,6 +115,18 @@ class PersonaController extends cratos.seguridad.Shield {
         personaInstanceList = Persona.list(params)
         return [personaInstanceList: personaInstanceList, personaInstanceCount: personaInstanceCount]
     } //list
+
+    def createAdmin() {
+        def personaInstance = new Persona(params)
+        if (params.id) {
+            personaInstance = Persona.get(params.id)
+            if (!personaInstance) {
+                notFound_ajax()
+                return
+            }
+        }
+        return [personaInstance: personaInstance]
+    }
 
     def show_ajax() {
         if (params.id) {
@@ -140,6 +152,78 @@ class PersonaController extends cratos.seguridad.Shield {
         }
         return [personaInstance: personaInstance]
     } //form para cargar con ajax en un dialog
+
+    def save() {
+        def personaInstance = new Persona()
+        if (params.id) {
+            personaInstance = Persona.get(params.id)
+            if (!personaInstance) {
+                notFound_ajax()
+                return
+            }
+        } //update
+        else {
+            //create: pone la cedula en el pass y validacion y pone fecha de cambio de pass en ahora
+            params.password = params.cedula.toString().encodeAsMD5()
+            params.autorizacion = params.cedula.toString().encodeAsMD5()
+            params.fechaPass = new Date()
+        }
+
+        personaInstance.properties = params
+
+        if (!personaInstance.save(flush: true)) {
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Persona."
+            msg += renderErrors(bean: personaInstance)
+            render msg
+            return
+        }
+
+        def perfilesUsu = Sesn.findAllByUsuario(personaInstance).perfil.id*.toString()
+        def arrRemove = perfilesUsu, arrAdd = []
+        def errores = ""
+
+        if (params.perfil instanceof java.lang.String) {
+            params.perfil = [params.perfil]
+        }
+
+        params.perfil.each { pid ->
+            if (perfilesUsu.contains(pid)) {
+                //ya tiene este perfil: le quito de la lista de los de eliminar
+                arrRemove.remove(pid)
+            } else {
+                //no tiene este perfil: le pongo en la lista de agregar
+                arrAdd.add(pid)
+            }
+        }
+        arrRemove.each { pid ->
+            def perf = Prfl.get(pid)
+            def sesn = Sesn.findByUsuarioAndPerfil(personaInstance, perf)
+            try {
+                sesn.delete(flush: true)
+            } catch (e) {
+                println "erorr al eliminar perfil: " + e
+                errores += "<li>No se puedo remover el perfil ${perf.nombre}</li>"
+            }
+        }
+        arrAdd.each { pid ->
+            def perf = Prfl.get(pid)
+            def sesn = new Sesn([usuario: personaInstance, perfil: perf])
+            if (!sesn.save(flush: true)) {
+                println "error al asignar perfil: " + sesn.errors
+                errores += "<li>No se puedo remover el perfil ${perf.nombre}</li>"
+            }
+        }
+
+        def mensaje = "OK_${params.id ? 'Actualización' : 'Creación'} de Persona exitosa."
+
+        if (errores == "") {
+            mensaje += "<br/>Perfil(es) asignado(s) exitosamente"
+        } else {
+            mensaje += "<br/><ul>" + errores + "</ul>"
+        }
+
+        render mensaje
+    } //save para grabar desde ajax
 
     def save_ajax() {
 

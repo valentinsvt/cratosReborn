@@ -6,3 +6,8 @@
 .datepicker-dropdown {
     background-color : #efefef !important;
 }
+
+.datepicker {
+    cursor : pointer !important;
+    cursor : hand !important;
+}

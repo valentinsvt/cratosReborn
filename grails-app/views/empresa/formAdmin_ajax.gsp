@@ -17,9 +17,9 @@
                         </label>
 
                         <div class="col-md-6">
-                            <g:textField name="nombre" maxlength="63" class="form-control" value="${empresaInstance?.nombre}"/>
+                            <g:textField name="nombre" maxlength="63" required="" class="form-control" value="${empresaInstance?.nombre}"/>
                         </div>
-
+                        *
                     </span>
                 </div>
 
@@ -30,9 +30,9 @@
                         </label>
 
                         <div class="col-md-6">
-                            <g:textField name="ruc" maxlength="13" class="form-control" value="${empresaInstance?.ruc}"/>
+                            <g:textField name="ruc" maxlength="13" required="" class="form-control" value="${empresaInstance?.ruc}"/>
                         </div>
-
+                        *
                     </span>
                 </div>
 
@@ -228,6 +228,24 @@
                 },
                 success        : function (label) {
                     label.parents(".grupo").removeClass('has-error');
+                },
+                rules          : {
+                    ruc : {
+                        remote      : {
+                            url  : "${createLink(action: 'validarRuc_ajax')}",
+                            type : "post",
+                            data : {
+                                id : "${empresaInstance.id}"
+                            }
+                        },
+                        rangelength : [13, 13]
+                    }
+                },
+                messages       : {
+                    ruc : {
+                        remote      : "R.U.C. ya ingresado",
+                        rangelength : "Ingrese un número de R.U.C. válido"
+                    }
                 }
             });
             $(".form-control").keydown(function (ev) {

@@ -22,6 +22,12 @@ class LoginController {
     }
 
     def guardarPass() {
+        def usu = Persona.get(params.id)
+        usu.password = params.pass.toString().trim().encodeAsMD5()
+        usu.fechaPass = new Date() + 30
+        if (usu.save(flush: true)) {
+            redirect(controller: session.cn, action: session.an)
+        }
         render params
     }
 
@@ -66,16 +72,17 @@ class LoginController {
     }
 
     def login() {
-        def usu = session.usuario
-        def cn = "inicio"
-        def an = "index"
-        if (usu) {
-            if (session.cn && session.an) {
-                cn = session.cn
-                an = session.an
-            }
-            redirect(controller: cn, action: an)
-        }
+//        def usu = session.usuario
+//        def cn = "inicio"
+//        def an = "index"
+//        if (usu) {
+//            if (session.cn && session.an) {
+//                cn = session.cn
+//                an = session.an
+//            }
+//            println "cn: " + cn + "   an:" + an
+//            redirect(controller: cn, action: an)
+//        }
     }
 
     def validar() {

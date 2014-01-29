@@ -6,6 +6,7 @@ import cratos.seguridad.Shield
 class InicioController extends Shield {
 
     def index() {
+        println "inicio"
         def usu = Persona.get(session.usuario?.id)
         if (usu) {
             def now = new Date().clearTime()
