@@ -45,6 +45,42 @@ class EmpresaController extends cratos.seguridad.Shield {
         return [empresaInstance: empresaInstance]
     } //form para cargar con ajax en un dialog
 
+    def listAdmin() {
+        params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+        def empresaInstanceList = Empresa.list(params)
+        def empresaInstanceCount = Empresa.count()
+        if(empresaInstanceList.size() == 0 && params.offset && params.max) {
+            params.offset = params.offset - params.max
+        }
+        empresaInstanceList = Empresa.list(params)
+        return [empresaInstanceList: empresaInstanceList, empresaInstanceCount: empresaInstanceCount]
+    } //list
+
+    def showAdmin_ajax() {
+        if(params.id) {
+            def empresaInstance = Empresa.get(params.id)
+            if(!empresaInstance) {
+                notFound_ajax()
+                return
+            }
+            return [empresaInstance: empresaInstance]
+        } else {
+            notFound_ajax()
+        }
+    } //show para cargar con ajax en un dialog
+
+    def formAdmin_ajax() {
+        def empresaInstance = new Empresa(params)
+        if(params.id) {
+            empresaInstance = Empresa.get(params.id)
+            if(!empresaInstance) {
+                notFound_ajax()
+                return
+            }
+        }
+        return [empresaInstance: empresaInstance]
+    } //form para cargar con ajax en un dialog
+
     def save_ajax() {
         def empresaInstance = new Empresa()
         if(params.id) {
