@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta name="layout" content="main">
-        <title>Lista de Empresa</title>
+        <title>Parámetros de la Empresa</title>
     </head>
 
     <body>
@@ -11,27 +11,27 @@
         <elm:flashMessage tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
 
         <!-- botones -->
-        <div class="btn-toolbar toolbar">
-            <div class="btn-group">
-                <g:link action="form" class="btn btn-default btnCrear">
-                    <i class="fa fa-file-o"></i> Crear
-                </g:link>
-            </div>
+        %{--<div class="btn-toolbar toolbar">--}%
+            %{--<div class="btn-group">--}%
+                %{--<g:link action="form" class="btn btn-default btnCrear">--}%
+                    %{--<i class="fa fa-file-o"></i> Crear--}%
+                %{--</g:link>--}%
+            %{--</div>--}%
 
-            <div class="btn-group pull-right col-md-3">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Buscar">
-                    <span class="input-group-btn">
-                        <a href="#" class="btn btn-default" type="button">
-                            <i class="fa fa-search"></i>&nbsp;
-                        </a>
-                    </span>
-                </div><!-- /input-group -->
-            </div>
-        </div>
+            %{--<div class="btn-group pull-right col-md-3">--}%
+                %{--<div class="input-group">--}%
+                    %{--<input type="text" class="form-control" placeholder="Buscar">--}%
+                    %{--<span class="input-group-btn">--}%
+                        %{--<a href="#" class="btn btn-default" type="button">--}%
+                            %{--<i class="fa fa-search"></i>&nbsp;--}%
+                        %{--</a>--}%
+                    %{--</span>--}%
+                %{--</div><!-- /input-group -->--}%
+            %{--</div>--}%
+        %{--</div>--}%
 
         <div class="vertical-container vertical-container-list">
-            <p class="css-vertical-text">Lista de Empresa</p>
+            <p class="css-vertical-text">Parámetros de la Empresa</p>
 
             <div class="linea"></div>
             <table class="table table-condensed table-bordered table-striped table-hover">
@@ -47,31 +47,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <g:each in="${empresaInstanceList}" status="i" var="empresaInstance">
-                        <tr data-id="${empresaInstance.id}">
-                            <td>${fieldValue(bean: empresaInstance, field: "nombre")}</td>
-                            <td>${fieldValue(bean: empresaInstance, field: "email")}</td>
-                            <td><g:formatDate date="${empresaInstance.fechaInicio}" format="dd-MM-yyyy"/></td>
-                            <td><g:formatDate date="${empresaInstance.fechaFin}" format="dd-MM-yyyy"/></td>
-                            <td>${fieldValue(bean: empresaInstance, field: "direccion")}</td>
-                            <td>${fieldValue(bean: empresaInstance, field: "telefono")}</td>
+                    %{--<g:each in="${empresaInstanceList}" status="i" var="empresaInstance">--}%
+                        <tr data-id="${empresa.id}">
+                            <td>${fieldValue(bean: empresa, field: "nombre")}</td>
+                            <td>${fieldValue(bean: empresa, field: "email")}</td>
+                            <td><g:formatDate date="${empresa.fechaInicio}" format="dd-MM-yyyy"/></td>
+                            <td><g:formatDate date="${empresa.fechaFin}" format="dd-MM-yyyy"/></td>
+                            <td>${fieldValue(bean: empresa, field: "direccion")}</td>
+                            <td>${fieldValue(bean: empresa, field: "telefono")}</td>
                             <td>
-                                <a href="#" data-id="${empresaInstance.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver">
+                                <a href="#" data-id="${empresa.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver">
                                     <i class="fa fa-laptop"></i>
                                 </a>
-                                <a href="#" data-id="${empresaInstance.id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar">
+                                <a href="#" data-id="${empresa.id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar">
                                     <i class="fa fa-pencil"></i>
                                 </a>
-                                <a href="#" data-id="${empresaInstance.id}" class="btn btn-danger btn-sm btn-delete btn-ajax" title="Eliminar">
-                                    <i class="fa fa-trash-o"></i>
-                                </a>
+                                %{--<a href="#" data-id="${empresaInstance.id}" class="btn btn-danger btn-sm btn-delete btn-ajax" title="Eliminar">--}%
+                                    %{--<i class="fa fa-trash-o"></i>--}%
+                                %{--</a>--}%
                             </td>
                         </tr>
-                    </g:each>
+                    %{--</g:each>--}%
                 </tbody>
             </table>
         </div>
-        <elm:pagination total="${empresaInstanceCount}" params="${params}"/>
+        %{--<elm:pagination total="${empresaInstanceCount}" params="${params}"/>--}%
 
         <script type="text/javascript">
             var id = null;
@@ -145,7 +145,7 @@
                 var data = id ? { id : id } : {};
                 $.ajax({
                     type    : "POST",
-                    url     : "${createLink(action:'formAdmin_ajax')}",
+                    url     : "${createLink(action:'form_ajax')}",
                     data    : data,
                     success : function (msg) {
                         var b = bootbox.dialog({
@@ -188,7 +188,7 @@
                     var id = $(this).data("id");
                     $.ajax({
                         type    : "POST",
-                        url     : "${createLink(action:'showAdmin_ajax')}",
+                        url     : "${createLink(action:'show_ajax')}",
                         data    : {
                             id : id
                         },

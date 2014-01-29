@@ -17,7 +17,16 @@ class EmpresaController extends cratos.seguridad.Shield {
             params.offset = params.offset - params.max
         }
         empresaInstanceList = Empresa.list(params)
-        return [empresaInstanceList: empresaInstanceList, empresaInstanceCount: empresaInstanceCount]
+
+
+//        def miEmpresa = session.empresa
+
+        def empresa = Empresa.get(session.empresa.id)
+
+        println("empresa:" + empresa)
+
+
+        return [empresaInstanceList: empresaInstanceList, empresaInstanceCount: empresaInstanceCount, empresa: empresa]
     } //list
 
     def show_ajax() {

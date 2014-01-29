@@ -37,7 +37,7 @@
                 Descripción
             </div>
             
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <g:fieldValue bean="${bancoInstance}" field="descripcion"/>
             </div>
             
