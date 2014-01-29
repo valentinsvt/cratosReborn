@@ -13,7 +13,7 @@ class EmpresaController extends cratos.seguridad.Shield {
         params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
         def empresaInstanceList = Empresa.list(params)
         def empresaInstanceCount = Empresa.count()
-        if(empresaInstanceList.size() == 0 && params.offset && params.max) {
+        if (empresaInstanceList.size() == 0 && params.offset && params.max) {
             params.offset = params.offset - params.max
         }
         empresaInstanceList = Empresa.list(params)
@@ -21,9 +21,9 @@ class EmpresaController extends cratos.seguridad.Shield {
     } //list
 
     def show_ajax() {
-        if(params.id) {
+        if (params.id) {
             def empresaInstance = Empresa.get(params.id)
-            if(!empresaInstance) {
+            if (!empresaInstance) {
                 notFound_ajax()
                 return
             }
@@ -35,9 +35,9 @@ class EmpresaController extends cratos.seguridad.Shield {
 
     def form_ajax() {
         def empresaInstance = new Empresa(params)
-        if(params.id) {
+        if (params.id) {
             empresaInstance = Empresa.get(params.id)
-            if(!empresaInstance) {
+            if (!empresaInstance) {
                 notFound_ajax()
                 return
             }
@@ -49,7 +49,7 @@ class EmpresaController extends cratos.seguridad.Shield {
         params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
         def empresaInstanceList = Empresa.list(params)
         def empresaInstanceCount = Empresa.count()
-        if(empresaInstanceList.size() == 0 && params.offset && params.max) {
+        if (empresaInstanceList.size() == 0 && params.offset && params.max) {
             params.offset = params.offset - params.max
         }
         empresaInstanceList = Empresa.list(params)
@@ -57,9 +57,9 @@ class EmpresaController extends cratos.seguridad.Shield {
     } //list
 
     def showAdmin_ajax() {
-        if(params.id) {
+        if (params.id) {
             def empresaInstance = Empresa.get(params.id)
-            if(!empresaInstance) {
+            if (!empresaInstance) {
                 notFound_ajax()
                 return
             }
@@ -71,9 +71,9 @@ class EmpresaController extends cratos.seguridad.Shield {
 
     def formAdmin_ajax() {
         def empresaInstance = new Empresa(params)
-        if(params.id) {
+        if (params.id) {
             empresaInstance = Empresa.get(params.id)
-            if(!empresaInstance) {
+            if (!empresaInstance) {
                 notFound_ajax()
                 return
             }
@@ -81,17 +81,35 @@ class EmpresaController extends cratos.seguridad.Shield {
         return [empresaInstance: empresaInstance]
     } //form para cargar con ajax en un dialog
 
+
+    def validarRuc_ajax() {
+        params.ruc = params.ruc.toString().trim()
+        if (params.id) {
+            def empr = Empresa.get(params.id)
+            if (empr.ruc == params.ruc) {
+                render true
+                return
+            } else {
+                render Empresa.countByRuc(params.ruc) == 0
+                return
+            }
+        } else {
+            render Empresa.countByRuc(params.ruc) == 0
+            return
+        }
+    }
+
     def save_ajax() {
         def empresaInstance = new Empresa()
-        if(params.id) {
+        if (params.id) {
             empresaInstance = Empresa.get(params.id)
-            if(!empresaInstance) {
+            if (!empresaInstance) {
                 notFound_ajax()
                 return
             }
         } //update
         empresaInstance.properties = params
-        if(!empresaInstance.save(flush:true)) {
+        if (!empresaInstance.save(flush: true)) {
             def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Empresa."
             msg += renderErrors(bean: empresaInstance)
             render msg
@@ -101,11 +119,11 @@ class EmpresaController extends cratos.seguridad.Shield {
     } //save para grabar desde ajax
 
     def delete_ajax() {
-        if(params.id) {
+        if (params.id) {
             def empresaInstance = Empresa.get(params.id)
-            if(empresaInstance) {
+            if (empresaInstance) {
                 try {
-                    empresaInstance.delete(flush:true)
+                    empresaInstance.delete(flush: true)
                     render "OK_Eliminación de Empresa exitosa."
                 } catch (e) {
                     render "NO_No se pudo eliminar Empresa."
