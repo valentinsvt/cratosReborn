@@ -1,325 +1,256 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: fabricio
-  Date: 1/27/14
-  Time: 12:14 PM
---%>
-
 <%@ page import="cratos.Item" %>
 
-<div class="col2">
+<script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>
 
 
-<div class="fila span-20">
-
-    <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'estado', 'error')}">
-        <div class="grupo">
-            <label for="estado" class="col-md-3 control-label text-info">
-                Estado
-            </label>
+<g:if test="${!itemInstance}">
+    <elm:notFound elem="Item" genero="o" />
+</g:if>
+<g:else>
+    <g:form class="form-horizontal" name="frmItem" role="form" action="save" method="POST">
+        <g:hiddenField name="id" value="${itemInstance?.id}" />
+        
+        <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'empresa', 'error')} required">
+            <span class="grupo">
+                <label for="empresa" class="col-md-3 control-label text-info">
+                    Empresa
+                </label>
+                <div class="col-md-8">
+                    <g:select id="empresa" name="empresa.id" from="${cratos.Empresa.list()}" optionKey="id" required="" value="${itemInstance?.empresa?.id}" class="many-to-one form-control"/>
+                </div>
+                 *
+            </span>
         </div>
 
-        <div class="col-md-6">
 
-            <g:select id="estado" class="field  required  ui-corner-all form-control" name="estado.id" maxlength="1" required=""
-                      value="${itemInstance?.estado}" title="${Item.constraints.estado.attributes.title}" from="${[1:'Activo',2:'No Activo']}" optionKey="key" optionValue="value"/>
-            <span class="required-indicator">*</span>
-        </div>
-    </div>
-
-
-    <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'fecha', 'error')} ">
-        <div class="grupo">
-            <label for="fecha" class="col-md-3 control-label te">
-                Fecha
-            </label>
-        </div>
-
-        <div class="span-6">
-            <elm:datePicker class="field ui-corner-all" title="${Item.constraints.fecha.attributes.title}"
-                            name="fecha" format="yyyy-MM-dd" value="${itemInstance?.fecha}"/>
-        </div>
-
-    </div>
-
-
-
-
-</div>
-
-<div class="fila span-20">
-
-    <div class="${hasErrors(bean: itemInstance, field: 'codigo', 'error')} required">
-
-        <div class="span-3">
-
-            <label for="codigo">
-                Codigo
-            </label>
-        </div>
-
-        <div class="span-6">
-            <g:textField class="field  required  ui-corner-all" name="codigo" id="codigo" maxlength="15" required=""
-                         value="${itemInstance?.codigo}" title="${Item.constraints.codigo.attributes.title}"/>
-            <span class="required-indicator">*</span>
-        </div>
-    </div>
-
-
-
-</div>
-
-
-<div class="fila span-20">
-
-    <div class="${hasErrors(bean: itemInstance, field: 'nombre', 'error')} required">
-
-        <div class="span-3">
-
-            <label for="nombre">
+    <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'nombre', 'error')} required">
+        <span class="grupo">
+            <label for="nombre" class="col-md-3 control-label text-info">
                 Nombre
             </label>
-
-        </div>
-
-        <div class="span-12">
-            <g:textField class="field  required  ui-corner-all" name="nombre" maxlength="127" required=""
-                         style="width: 350px"
-                         value="${itemInstance?.nombre}" title="${Item.constraints.nombre.attributes.title}"/>
-            <span class="required-indicator">*</span>
-        </div>
-
-
-
+            <div class="col-md-8">
+                <g:textField name="nombre" maxlength="127" required="" class=" form-control required" value="${itemInstance?.nombre}"/>
+            </div>
+            *
+        </span>
     </div>
 
-</div>
-<div class="fila span-20 ">
-
-
-    <div class="${hasErrors(bean: itemInstance, field: 'marca', 'error')} ">
-        <div class="span-3">
-            <label for="marca">
-                Marca
+    <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'codigo', 'error')} required">
+        <span class="grupo">
+            <label for="codigo" class="col-md-3 control-label text-info">
+                Codigo
             </label>
-        </div>
-
-        <div class="span-6">
-            <g:select id="marca" name="marca.id" from="${cratos.Marca.list()}" optionKey="id" optionValue="descripcion"
-                      value="${itemInstance?.marca?.id}" class="field  many-to-one ui-corner-all"
-                      title="${Item.constraints.marca.attributes.title}" noSelection="['null': '']"/>
-
-        </div>
+            <div class="col-md-8">
+                <g:textField name="codigo" maxlength="15" required="" class=" form-control required" value="${itemInstance?.codigo}"/>
+            </div>
+            *
+        </span>
     </div>
 
+    <div class="col2">
 
-
-
-
-    <div class="${hasErrors(bean: itemInstance, field: 'unidad', 'error')} ">
-        <div class="span-3 prepend-1">
-            <label for="unidad">
-                Unidad
-            </label>
+      <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'precioVenta', 'error')} required">
+    <span class="grupo">
+        <label for="precioVenta" class="col-md-6 control-label text-info">
+            Precio Venta
+        </label>
+        <div class="col-md-5">
+            <g:field name="precioVenta" type="number" value="${fieldValue(bean: itemInstance, field: 'precioVenta')}" class="number form-control  required" required=""/>
         </div>
-
-        <div class="span-6">
-            <g:select id="unidad" name="unidad.id" from="${cratos.Unidad.list()}" optionKey="id"
-                      value="${itemInstance?.unidad?.id}" class="field  many-to-one ui-corner-all"
-                      title="${Item.constraints.unidad.attributes.title}" noSelection="['null': '']"/>
-
-        </div>
+        *
+    </span>
     </div>
 
-</div>
-
-
-<div class="fila span-20">
-
-
-
-    <div class="${hasErrors(bean: itemInstance, field: 'stock', 'error')} required">
-        <div class="span-3">
-            <label for="stock">
-                Stock Mínimo
-            </label>
-        </div>
-
-        <div class="span-6">
-            <g:field class="field  required number  ui-corner-all" type="number" name="stock" required="" optionValue="value" optionKey="id"
-                     title='${Item.constraints.stock.attributes.title}'
-                     value="${fieldValue(bean: itemInstance, field: 'stock')}"/>
-            <span class="required-indicator">*</span>
-        </div>
-    </div>
-
-    <div class="${hasErrors(bean: itemInstance, field: 'stockMaximo', 'error')} required">
-        <div class="span-3 prepend-1">
-            <label for="stockMaximo">
-                Stock Maximo
-            </label>
-        </div>
-
-        <div class="span-6">
-            <g:field class="field  required number  ui-corner-all" type="number" name="stockMaximo" id="stockMaximo" optionValue="value" optionKey="id"
-                     required=""
-                     title='${Item.constraints.stockMaximo.attributes.title}'
-                     value="${fieldValue(bean: itemInstance, field: 'stockMaximo')}"/>
-            <span class="required-indicator">*</span>
-        </div>
-    </div>
-
-
-
-</div>
-
-<div class="fila span-20">
-
-    <div class="${hasErrors(bean: itemInstance, field: 'precioVenta', 'error')} required">
-        <div class="span-3">
-            <label for="precioVenta">
-                Precio Venta
-            </label>
-        </div>
-
-        <div class="span-6">
-            <g:field class="field  required number  ui-corner-all" type="number" name="precioVenta" required=""
-                     title='${Item.constraints.precioVenta.attributes.title}'
-                     value="${fieldValue(bean: itemInstance, field: 'precioVenta')}"/>
-            <span class="required-indicator">*</span>
-        </div>
-    </div>
-
-
-    <div class="${hasErrors(bean: itemInstance, field: 'precioUnitario', 'error')} required">
-        <div class="span-3 prepend-1">
-            <label for="precioUnitario">
-                Precio Unitario
-            </label>
-        </div>
-
-        <div class="span-6">
-            <g:field class="field  required number  ui-corner-all" type="number" name="precioUnitario"
-                     required=""
-                     title='${Item.constraints.precioUnitario.attributes.title}'
-                     value="${fieldValue(bean: itemInstance, field: 'precioUnitario')}"/>
-            <span class="required-indicator">*</span>
-        </div>
-    </div>
-
-</div>
-
-
-
-<div class="fila span-20">
-
-
-
-    <div class="${hasErrors(bean: itemInstance, field: 'precioCosto', 'error')} required">
-        <div class="span-3">
-            <label for="precioCosto">
+    <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'precioCosto', 'error')} required">
+        <span class="grupo">
+            <label for="precioCosto" class="col-md-6 control-label text-info">
                 Precio Costo
             </label>
-        </div>
-
-        <div class="span-6">
-            <g:field class="field  required number  ui-corner-all" type="number" name="precioCosto" required=""
-                     title='${Item.constraints.precioCosto.attributes.title}'
-                     value="${fieldValue(bean: itemInstance, field: 'precioCosto')}"/>
-            <span class="required-indicator">*</span>
-        </div>
+            <div class="col-md-5">
+                <g:field name="precioCosto" type="number"  value="${fieldValue(bean: itemInstance, field: 'precioCosto')}" class="number form-control  required" required=""/>
+            </div>
+            *
+        </span>
     </div>
 
-</div>
-<div class="fila span-20">
-
-    <div class="${hasErrors(bean: itemInstance, field: 'iva', 'error')} required">
-        <div class="span-3">
-            <label for="iva">
-                Iva
+    <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'precioUnitario', 'error')} required">
+        <span class="grupo">
+            <label for="precioUnitario" class="col-md-6 control-label text-info">
+                Precio Unitario
             </label>
-        </div>
-
-        <div class="span-6">
-            <g:textField class="field  required  ui-corner-all" name="iva" id="iva" required=""
-                         value="${itemInstance?.iva}"
-                         title="${Item.constraints.iva.attributes.title}"/>
-            <span class="required-indicator">*</span>
-        </div>
-    </div>
-    <div class="${hasErrors(bean: itemInstance, field: 'ice', 'error')}">
-        <div class="span-3 prepend-1">
-            <label for="ice">
-
-                Ice
-
-            </label>
-
-        </div>
-        <div class="span-6">
-
-            <g:textField class="field ui-corner-all" name="ice" value="${fieldValue(bean: itemInstance, field: 'ice')}"
-                         title="${Item.constraints.ice.attributes.title}"/>
-        </div>
-
+            <div class="col-md-5">
+                <g:field name="precioUnitario" type="number" value="${fieldValue(bean: itemInstance, field: 'precioUnitario')}" class="number form-control  required" required=""/>
+            </div>
+            *
+        </span>
     </div>
 
-
-
-</div>
-
-
-<div class="fila span-20">
-
-    <div class="${hasErrors(bean: itemInstance, field: 'peso', 'error')} required">
-        <div class="span-3">
-            <label for="peso">
+    <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'peso', 'error')} required">
+        <span class="grupo">
+            <label for="peso" class="col-md-6 control-label text-info">
                 Peso
             </label>
-        </div>
-
-        <div class="span-6">
-            <g:field class="field  required number  ui-corner-all" type="number" name="peso" required=""
-                     title='${Item.constraints.peso.attributes.title}'
-                     value="${fieldValue(bean: itemInstance, field: 'peso')}"/>
-            <span class="required-indicator">*</span>
-        </div>
+            <div class="col-md-5">
+                <g:field name="peso" type="number" value="${fieldValue(bean: itemInstance, field: 'peso')}" class="number form-control  required" required=""/>
+            </div>
+            *
+        </span>
     </div>
-    <div class="${hasErrors(bean: itemInstance, field: 'grupo', 'error')} ">
-        <div class="span-3 prepend-1">
-            <label for="grupo">
-                Grupo
+
+
+    <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'stockMaximo', 'error')} required">
+        <span class="grupo">
+            <label for="stockMaximo" class="col-md-6 control-label text-info">
+                Stock Maximo
             </label>
-        </div>
-
-        <div class="span-6">
-            <g:select id="grupo" name="grupo.id" from="${cratos.Grupo.list()}" optionKey="id"
-                      value="${itemInstance?.grupo?.id}" class="field  many-to-one ui-corner-all"
-                      title="${Item.constraints.grupo.attributes.title}" noSelection="['null': '']"/>
-
-        </div>
+            <div class="col-md-5">
+                <g:field name="stockMaximo" type="number" value="${fieldValue(bean: itemInstance, field: 'stockMaximo')}" class="number form-control  required" required=""/>
+            </div>
+            *
+        </span>
     </div>
 
-</div>
-
-<div class="fila span-20">
-
-    <div class="${hasErrors(bean: itemInstance, field: 'observaciones', 'error')} ">
-        <div class="span-3">
-            <label for="observaciones">
-                Observaciones
+    <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'stock', 'error')} required">
+        <span class="grupo">
+            <label for="stock" class="col-md-6 control-label text-info">
+                Stock
             </label>
-        </div>
-
-        <div class="span-6">
-            <g:textField class="field  ui-corner-all" name="observaciones" maxlength="127" style="width: 350px"
-                         value="${fieldValue(bean: itemInstance, field: 'observaciones')}" title='${Item.constraints.observaciones.attributes.title}'/>
-
-        </div>
+            <div class="col-md-5">
+                <g:field name="stock" type="number" value="${fieldValue(bean: itemInstance, field: 'stock')}" class="number form-control  required" required=""/>
+            </div>
+            *
+        </span>
     </div>
 
-</div>
+
+    <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'estado', 'error')} ">
+        <span class="grupo">
+            <label for="estado" class="col-md-6 control-label text-info">
+                Estado
+            </label>
+            <div class="col-md-5">
+                <g:textField name="estado" maxlength="1" class=" form-control" value="${itemInstance?.estado}"/>
+            </div>
+
+        </span>
+    </div>
 
 
+    <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'iva', 'error')} required">
+            <span class="grupo">
+                <label for="iva" class="col-md-4 control-label text-info">
+                    Iva
+                </label>
+                <div class="col-md-7">
+                    <g:field name="iva" type="number" value="${itemInstance.iva}" class="digits form-control required" required=""/>
+                </div>
+                 *
+            </span>
+        </div>
+        
+        <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'ice', 'error')} required">
+            <span class="grupo">
+                <label for="ice" class="col-md-4 control-label text-info">
+                    Ice
+                </label>
+                <div class="col-md-7">
+                    <g:field name="ice" type="number" value="${fieldValue(bean: itemInstance, field: 'ice')}" class="number form-control  required" required=""/>
+                </div>
+                 *
+            </span>
+        </div>
 
-</div>
+        <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'fecha', 'error')} ">
+            <span class="grupo">
+                <label for="fecha" class="col-md-4 control-label text-info">
+                    Fecha
+                </label>
+                <div class="col-md-7">
+                    <elm:datepicker name="fecha" title="fecha"  class="datepicker form-control" value="${itemInstance?.fecha}" default="none" noSelection="['': '']" />
+                </div>
+                
+            </span>
+        </div>
+
+        <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'marca', 'error')} ">
+            <span class="grupo">
+                <label for="marca" class="col-md-4 control-label text-info">
+                    Marca
+                </label>
+                <div class="col-md-7">
+                    <g:select id="marca" name="marca.id" from="${cratos.Marca.list()}" optionKey="id" optionValue="descripcion" value="${itemInstance?.marca?.id}" class="many-to-one form-control" noSelection="['null': '']"/>
+                </div>
+
+            </span>
+        </div>
+
+
+        <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'unidad', 'error')} ">
+            <span class="grupo">
+                <label for="unidad" class="col-md-4 control-label text-info">
+                    Unidad
+                </label>
+                <div class="col-md-7">
+                    <g:select id="unidad" name="unidad.id" from="${cratos.Unidad.list()}" optionKey="id" value="${itemInstance?.unidad?.id}" class="many-to-one form-control" noSelection="['null': '']"/>
+                </div>
+                
+            </span>
+        </div>
+        
+
+        
+        <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'grupo', 'error')} ">
+            <span class="grupo">
+                <label for="grupo" class="col-md-4 control-label text-info">
+                    Grupo
+                </label>
+                <div class="col-md-7">
+                    <g:select id="grupo" name="grupo.id" from="${cratos.Grupo.list()}" optionKey="id" value="${itemInstance?.grupo?.id}" class="many-to-one form-control" noSelection="['null': '']"/>
+                </div>
+                
+            </span>
+        </div>
+
+    </div>
+        
+        <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'observaciones', 'error')} ">
+            <span class="grupo">
+                <label for="observaciones" class="col-md-3 control-label text-info">
+                    Observaciones
+                </label>
+                <div class="col-md-8">
+                    %{--<g:textField name="observaciones" maxlength="127" class=" form-control" value="${itemInstance?.observaciones}"/>--}%
+
+                    <g:textArea name="observaciones" maxlength="127" class="form-control" value="${itemInstance?.observaciones}" style="resize: none"/>
+                </div>
+                
+            </span>
+        </div>
+        
+    </g:form>
+
+    <script type="text/javascript">
+        var validator = $("#frmItem").validate({
+            errorClass     : "help-block",
+            errorPlacement : function (error, element) {
+                if (element.parent().hasClass("input-group")) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+                element.parents(".grupo").addClass('has-error');
+            },
+            success        : function (label) {
+                label.parents(".grupo").removeClass('has-error');
+            }
+        });
+        $(".form-control").keydown(function (ev) {
+            if (ev.keyCode == 13) {
+                submitForm();
+                return false;
+            }
+            return true;
+        });
+    </script>
+
+</g:else>

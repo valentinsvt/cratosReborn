@@ -31,16 +31,6 @@ class ProveedorController extends cratos.seguridad.Shield {
         redirect(action: "list", params: params)
     }
 
-    def list() {
-
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        def c = Proveedor.createCriteria()
-        def results = c.list(params) {
-            eq("empresa", session.empresa)
-        }
-
-        [proveedorInstanceList: results, proveedorInstanceTotal: results.totalCount]
-    }
 
     def create() {
         [proveedorInstance: new Proveedor(params)]
@@ -157,6 +147,141 @@ class ProveedorController extends cratos.seguridad.Shield {
     }
 
 
+    def validarCedula_ajax() {
+        params.ruc = params.ruc.toString().trim()
+        if (params.id) {
+            def prov = Proveedor.get(params.id)
+            if (prov.ruc == params.ruc) {
+                render true
+                return
+            } else {
+                render Proveedor.countByRuc(params.ruc) == 0
+                return
+            }
+        } else {
+            render Proveedor.countByRuc(params.ruc) == 0
+            return
+        }
+    }
+
+
+    /* ************************ COPIAR DESDE AQUI ****************************/
+
+    def list() {
+        params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+        def proveedorInstanceList = Proveedor.list(params)
+        def proveedorInstanceCount = Proveedor.count()
+        if (proveedorInstanceList.size() == 0 && params.offset && params.max) {
+            params.offset = params.offset - params.max
+        }
+        proveedorInstanceList = Proveedor.list(params)
+        return [proveedorInstanceList: proveedorInstanceList, proveedorInstanceCount: proveedorInstanceCount]
+    } //list
+
+    def show_ajax() {
+        if (params.id) {
+            def proveedorInstance = Proveedor.get(params.id)
+            if (!proveedorInstance) {
+                notFound_ajax()
+                return
+            }
+            return [proveedorInstance: proveedorInstance]
+        } else {
+            notFound_ajax()
+        }
+    } //show para cargar con ajax en un dialog
+
+    def form_ajax() {
+        def proveedorInstance = new Proveedor(params)
+        if (params.id) {
+            proveedorInstance = Proveedor.get(params.id)
+            if (!proveedorInstance) {
+                notFound_ajax()
+                return
+            }
+        }
+        return [proveedorInstance: proveedorInstance]
+    } //form para cargar con ajax en un dialog
+
+    def save_ajax() {
+
+//        println("params:" + params)
+
+//        params.each { k, v ->
+//            if (v != "date.struct" && v instanceof java.lang.String) {
+//                params[k] = v.toUpperCase()
+//            }
+//        }
+
+        //nuevo
+
+        def persona
+
+//        if (params.fecha) {
+//
+//            params.fecha = new Date().parse("yyyy-MM-dd", params.fecha)
+//
+//        }
+//        if (params.fechaCaducidad) {
+//
+//            params.fechaCaducidad = new Date().parse("yyyy-MM-dd", params.fechaCaducidad)
+//
+//        }
+
+        //original
+        def proveedorInstance = new Proveedor()
+        if (params.id) {
+            proveedorInstance = Proveedor.get(params.id)
+            proveedorInstance.properties = params
+            if (!proveedorInstance) {
+                notFound_ajax()
+                return
+            }
+        }else {
+
+            proveedorInstance = new Proveedor()
+            proveedorInstance.properties = params
+//            proveedorInstance.estado = '1'
+            proveedorInstance.empresa = session.empresa
+
+
+        } //update
+
+
+        if (!proveedorInstance.save(flush: true)) {
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Proveedor."
+            msg += renderErrors(bean: proveedorInstance)
+            render msg
+            return
+        }
+        render "OK_${params.id ? 'Actualización' : 'Creación'} de Proveedor exitosa."
+    } //save para grabar desde ajax
+
+
+
+
+
+    def delete_ajax() {
+        if (params.id) {
+            def proveedorInstance = Proveedor.get(params.id)
+            if (proveedorInstance) {
+                try {
+                    proveedorInstance.delete(flush: true)
+                    render "OK_Eliminación de Proveedor exitosa."
+                } catch (e) {
+                    render "NO_No se pudo eliminar Proveedor."
+                }
+            } else {
+                notFound_ajax()
+            }
+        } else {
+            notFound_ajax()
+        }
+    } //delete para eliminar via ajax
+
+    protected void notFound_ajax() {
+        render "NO_No se encontró Proveedor."
+    } //notFound para ajax
 
 
 

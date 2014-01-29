@@ -86,10 +86,10 @@ class Proveedor {
 
         tipoRelacion(blank: true, attributes: [title: 'tipoRelacion'])
 
-        actividad(blank: true, attributes: [title: 'actividad'])
-        email(blank: true, attributes: [title: 'email'])
-        pais(blank: true, attributes: [title: 'pais'])
-        nombreCheque(blank: true, attributes: [title: 'nombreCheque'])
+        actividad(blank: true, nullable: true, attributes: [title: 'actividad'])
+        email(blank: true, nullable: true, attributes: [title: 'email'])
+        pais(blank: true, nullable: true, attributes: [title: 'pais'])
+        nombreCheque(blank: true, nullable: true, attributes: [title: 'nombreCheque'])
         autorizacionSri(blank: true,nullable: true,size: 1..40)
         fechaCaducidad(blank:true,nullable: true)
     }

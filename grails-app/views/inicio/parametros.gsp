@@ -5,12 +5,18 @@
         <meta name="layout" content="main"/>
         <title>Parámetros</title>
 
-        <script type="text/javascript" src="${resource(dir: 'js/jquery/plugins', file: 'jquery.cookie.js')}"></script>
+        %{--<script type="text/javascript" src="${resource(dir: 'js/jquery/plugins', file: 'jquery.cookie.js')}"></script>--}%
 
     </head>
 
     <body>
 
+
+
+
+
+
+       %{--//antiguo--}%
         <div class="container ui-corner-all " style="">
             <div style="float:left; width:640px;">
                 <div id="info">
@@ -188,6 +194,8 @@
                     </div>
                 </div>
             </div>
+
+    </div>
 
             <div id="tool" style="float:left; width: 200px; height: 300px; margin-top: 80px; margin-left: 30px; display: none; padding:20px;"
                  class="ui-widget-content ui-corner-all">
@@ -406,16 +414,16 @@
                         $('#tool').hide('');
                     });
 
-                    $('#info').tabs({
-                        //event: 'mouseover', fx: {
-                        cookie:{ expires:30 },
-                        event:'click', fx:{
-                            opacity:'toggle',
-                            duration:'fast'
-                        },
-                        spinner:'Cargando...',
-                        cache:true
-                    });
+//                    $('#info').tabs({
+//                        //event: 'mouseover', fx: {
+//                        cookie:{ expires:30 },
+//                        event:'click', fx:{
+//                            opacity:'toggle',
+//                            duration:'fast'
+//                        },
+//                        spinner:'Cargando...',
+//                        cache:true
+//                    });
                 });
             </script>
     </body>

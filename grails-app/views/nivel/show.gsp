@@ -4,7 +4,7 @@
     
     <g:if test="${nivelInstance?.descripcion}">
         <li class="fieldcontain">
-            <span id="descripcion-label" class="property-label"><g:message code="nivel.descripcion.label" default="Descripcion" /></span>
+            <span id="descripcion-label" class="property-label"><g:message code="nivel.descripcion.label" default="Descripción" /></span>
             
             <span class="property-value" aria-labelledby="descripcion-label"><g:fieldValue bean="${nivelInstance}" field="descripcion"/></span>
             

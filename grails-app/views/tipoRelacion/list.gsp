@@ -1,238 +1,220 @@
 
 <%@ page import="cratos.TipoRelacion" %>
-<!doctype html>
+<!DOCTYPE html>
 <html>
     <head>
         <meta name="layout" content="main">
-        <title>Lista de TipoRelacions</title>
-
-        <script type="text/javascript" src="${resource(dir: 'js/jquery/plugins/contextMenu', file: 'jquery.contextMenu.js')}"></script>
-        <link rel="stylesheet" href="${resource(dir: 'js/jquery/plugins/contextMenu', file: 'jquery.contextMenu.css')}" type="text/css">
-
-        <script type="text/javascript" src="${resource(dir: 'js/jquery/plugins/jquery-validation-1.9.0', file: 'jquery.validate.min.js')}"></script>
-        <script type="text/javascript" src="${resource(dir: 'js/jquery/plugins/jquery-validation-1.9.0', file: 'messages_es.js')}"></script>
-
+        <title>Lista de Tipo de Relación</title>
     </head>
     <body>
-        <div class="ui-widget-content ui-corner-all cont">
-            <div class="ui-widget-header ui-corner-all titulo">
-                Lista de TipoRelacions
-                <div class="fright">
-                    <g:link action="create" class="btnNew miniButton">Nuevo</g:link>
-                </div>
-            </div>
 
-            <div id="list-tipoRelacion" class="content scaffold-list" role="main">
-                <g:if test="${flash.message}">
-                    <div class="message" role="status">${flash.message}</div>
-                </g:if>
-                <table id="tbl-tipoRelacion">
-                    <thead>
-                        <tr>
+        <elm:flashMessage tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
+
+    <!-- botones -->
+        <div class="btn-toolbar toolbar">
+            <div class="btn-group">
+                <g:link action="form" class="btn btn-default btnCrear">
+                    <i class="fa fa-file-o"></i> Crear
+                </g:link>
+            </div>
+            <div class="btn-group pull-right col-md-3">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Buscar">
+                    <span class="input-group-btn">
+                        <a href="#" class="btn btn-default" type="button">
+                            <i class="fa fa-search"></i>&nbsp;
+                        </a>
+                    </span>
+                </div><!-- /input-group -->
+            </div>
+        </div>
+
+        <div class="vertical-container vertical-container-list">
+            <p class="css-vertical-text">Lista de Tipo de Relación</p>
+
+            <div class="linea"></div>
+            <table class="table table-condensed table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        
+                        <g:sortableColumn property="codigo" title="Código" />
+                        
+                        <g:sortableColumn property="descripcion" title="Descripción" />
+                        
+                        <th width="110">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <g:each in="${tipoRelacionInstanceList}" status="i" var="tipoRelacionInstance">
+                        <tr data-id="${tipoRelacionInstance.id}">
                             
-                            <g:sortableColumn property="codigo" title="${message(code: 'tipoRelacion.codigo.label', default: 'Codigo')}" />
+                            <td>${fieldValue(bean: tipoRelacionInstance, field: "codigo")}</td>
                             
-                            <g:sortableColumn property="descripcion" title="${message(code: 'tipoRelacion.descripcion.label', default: 'Descripcion')}" />
+                            <td>${fieldValue(bean: tipoRelacionInstance, field: "descripcion")}</td>
                             
+                            <td>
+                                <a href="#" data-id="${tipoRelacionInstance.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver">
+                                    <i class="fa fa-laptop"></i>
+                                </a>
+                                <a href="#" data-id="${tipoRelacionInstance.id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a href="#" data-id="${tipoRelacionInstance.id}" class="btn btn-danger btn-sm btn-delete btn-ajax" title="Eliminar">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody id="tb-tipoRelacion">
-                        <g:each in="${tipoRelacionInstanceList}" status="i" var="tipoRelacionInstance">
-                            <tr class="${(i % 2) == 0 ? 'even' : 'odd'}" id="${tipoRelacionInstance.id}">
-                                
-                                <td>${fieldValue(bean: tipoRelacionInstance, field: "codigo")}</td>
-                                
-                                <td>${fieldValue(bean: tipoRelacionInstance, field: "descripcion")}</td>
-                                
-                            </tr>
-                        </g:each>
-                    </tbody>
-                </table>
-                <g:if test="${tipoRelacionInstanceList.size() < tipoRelacionInstanceTotal}">
-                    <div class="pagination">
-                        <g:paginate total="${tipoRelacionInstanceTotal}"  prev="Ant." next="Sig." />
-                    </div>
-                </g:if>
-            </div>
+                    </g:each>
+                </tbody>
+            </table>
         </div>
-
-        <ul id="menu-tipoRelacion" class="contextMenu">
-            <li class="show">
-                <a href="#show">Ver</a>
-            </li>
-            <li class="edit">
-                <a href="#edit">Editar</a>
-            </li>
-            <li class="delete">
-                <a href="#delete">Eliminar</a>
-            </li>
-        </ul>
-
-        <div id="dlg-tipoRelacion"></div>
-
-        <div id="dlgLoad" class="ui-helper-hidden" style="text-align:center;">
-            Cargando.....Por favor espere......<br/><br/>
-            <img src="${resource(dir: 'images', file: 'spinner64.gif')}" alt=""/>
-        </div>
+        <elm:pagination total="${tipoRelacionInstanceCount}" params="${params}"/>
 
         <script type="text/javascript">
-            function openDlg(url, id, cont, ajax, title, buttons) {
-                if (ajax) {
-                $("#dlgLoad").dialog("open");
+            var id = null;
+            function submitForm() {
+                var $form = $("#frmTipoRelacion");
+                var $btn = $("#dlgCreateEdit").find("#btnSave");
+                if ($form.valid()) {
+                    $btn.replaceWith(spinner);
+                    openLoader("Grabando");
                     $.ajax({
-                        async   : false,
                         type    : "POST",
-                        url     : url,
+                        url     : $form.attr("action"),
+                        data    : $form.serialize(),
+                            success : function (msg) {
+                        var parts = msg.split("_");
+                        log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                        if (parts[0] == "OK") {
+                            location.reload(true);
+                        } else {
+                            closeLoader();
+                            spinner.replaceWith($btn);
+                            return false;
+                        }
+                    }
+                });
+            } else {
+                return false;
+            } //else
+            }
+            function deleteRow(itemId) {
+                bootbox.dialog({
+                    title   : "Alerta",
+                    message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar el Tipo de Relación seleccionado? Esta acción no se puede deshacer.</p>",
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        eliminar : {
+                            label     : "<i class='fa fa-trash-o'></i> Eliminar",
+                            className : "btn-danger",
+                            callback  : function () {
+                                openLoader("Eliminando");
+                                $.ajax({
+                                    type    : "POST",
+                                    url     : '${createLink(action:'delete_ajax')}',
+                                    data    : {
+                                        id : itemId
+                                    },
+                                    success : function (msg) {
+                                        var parts = msg.split("_");
+                                        log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                                        if (parts[0] == "OK") {
+                                            location.reload(true);
+                                        } else {
+                                            closeLoader();
+                                            spinner.replaceWith($btn);
+                                            return false;
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            }
+            function createEditRow(id) {
+                var title = id ? "Editar" : "Crear";
+                var data = id ? { id: id } : {};
+                $.ajax({
+                    type    : "POST",
+                    url     : "${createLink(action:'form_ajax')}",
+                    data    : data,
+                    success : function (msg) {
+                        var b = bootbox.dialog({
+                            id      : "dlgCreateEdit",
+                            title   : title + " Tipo de Relación",
+                            message : msg,
+                            buttons : {
+                                cancelar : {
+                                    label     : "Cancelar",
+                                    className : "btn-primary",
+                                    callback  : function () {
+                                    }
+                                },
+                                guardar  : {
+                                    id        : "btnSave",
+                                    label     : "<i class='fa fa-save'></i> Guardar",
+                                    className : "btn-success",
+                                    callback  : function () {
+                                        return submitForm();
+                                    } //callback
+                                } //guardar
+                            } //buttons
+                        }); //dialog
+                        setTimeout(function () {
+                            b.find(".form-control").not(".datepicker").first().focus()
+                        }, 500);
+                    } //success
+                }); //ajax
+            } //createEdit
+
+            $(function () {
+
+                $(".btnCrear").click(function() {
+                    createEditRow();
+                    return false;
+                });
+
+                $(".btn-show").click(function () {
+                    var id = $(this).data("id");
+                    $.ajax({
+                        type    : "POST",
+                        url     : "${createLink(action:'show_ajax')}",
                         data    : {
                             id : id
                         },
                         success : function (msg) {
-                            $("#dlg-tipoRelacion").html(msg);
-                        },
-                        complete : function () {
-                            $("#dlgLoad").dialog("close");
-                        }
-                    });
-                    $("#dlg-tipoRelacion").dialog("option", "width", 420);
-                } else {
-                $("#dlg-tipoRelacion").html(cont);
-                }
-                $("#dlg-tipoRelacion").dialog("option", "title", title);
-                $("#dlg-tipoRelacion").dialog("option", "buttons", buttons);
-                $("#dlg-tipoRelacion").dialog("open");
-            }
-
-            function submitForm() {
-                if ($("#frm-tipoRelacion").valid()) {
-                    $("#dlgLoad").dialog("open");
-                    var data = $("#frm-tipoRelacion").serialize();
-                    var url = $("#frm-tipoRelacion").attr("action");
-
-                    $.ajax({
-                        type    : "POST",
-                        url     : url,
-                        data    : data,
-                        success : function (msg) {
-                            location.reload(true);
-                        }
-                    });
-                }
-            }
-
-            $(function () {
-                $("#dlgLoad").dialog({
-                    modal         : true,
-                    autoOpen      : false,
-                    closeOnEscape : false,
-                    draggable     : false,
-                    resizable     : false,
-                    zIndex        : 9000,
-                    open          : function (event, ui) {
-                        $(event.target).parent().find(".ui-dialog-titlebar-close").remove();
-                    }
-                });
-
-                $("#dlg-tipoRelacion").dialog({
-                    modal    : true,
-                    autoOpen : false,
-                    width    : 420,
-                    zIndex   : 1000,
-                    position : ["center", 10]
-                });
-
-                $("th").hover(function () {
-                    $(this).addClass("hover");
-                    var i = $(this).index();
-                    $("#tb-tipoRelacion").find("tr").each(function () {
-                        $(this).children().eq(i).addClass("hover");
-                    });
-                }, function () {
-                    $(".hover").removeClass("hover");
-                });
-
-                $("#tb-tipoRelacion").find("tr").hover(function () {
-                    $(this).addClass("hover");
-                }, function () {
-                    $(".hover").removeClass("hover");
-                });
-
-                $(".btnNew").button({
-                    icons : {
-                        primary : "ui-icon-document"
-                    }
-                }).click(function () {
-                            var id = $(this).attr("id");
-                            var url = $(this).attr("href");
-                            var title = "Crear TipoRelacion";
-                            var buttons = {
-                                "Guardar"  : function () {
-                                    submitForm();
-                                },
-                                "Cancelar" : function () {
-                                    $("#dlg-tipoRelacion").dialog("close");
+                            bootbox.dialog({
+                                title   : "Ver Tipo de Relación",
+                                message : msg,
+                                buttons : {
+                                    ok : {
+                                        label     : "Aceptar",
+                                        className : "btn-primary",
+                                        callback  : function () {
+                                        }
+                                    }
                                 }
-                            };
-                            openDlg(url, id, "", true, title, buttons);
-                            return false;
-                        });
+                            });
+                        }
+                    });
+                });
+                $(".btn-edit").click(function () {
+                    var id = $(this).data("id");
+                    createEditRow(id);
+                });
+                $(".btn-delete").click(function () {
+                    var id = $(this).data("id");
+                    deleteRow(id);
+                });
 
-                $("#tb-tipoRelacion").find("tr").contextMenu({
-                            menu : "menu-tipoRelacion"
-                        },
-                        function (action, el, pos) {
-                            $("#dlg-tipoRelacion").html("");
-                            var id = $(el).attr("id");
-                            var title, buttons, url, cont;
-                            switch (action) {
-                                case "edit":
-                                    title = "Editar TipoRelacion";
-                                    buttons = {
-                                        "Guardar"  : function () {
-                                            submitForm();
-                                        },
-                                        "Cancelar" : function () {
-                                            $("#dlg-tipoRelacion").dialog("close");
-                                        }
-                                    };
-                                    url = "${createLink(action:'edit')}/" + id;
-                                    break;
-                                case "show":
-                                    title = "Ver TipoRelacion";
-                                    buttons = {
-                                        "Aceptar" : function () {
-                                            $("#dlg-tipoRelacion").dialog("close");
-                                        }
-                                    };
-                                    url = "${createLink(action:'show')}/" + id;
-                                    break;
-                                case "delete":
-                                    title = "Eliminar TipoRelacion";
-                                    buttons = {
-                                        "Aceptar"  : function () {
-                                            $("#dlgLoad").dialog("open");
-                                            $.ajax({
-                                                type    : "POST",
-                                                url     : "${createLink(action:'delete')}",
-                                                data    : {
-                                                    id : id
-                                                },
-                                                success : function (msg) {
-                                                    location.reload(true);
-                                                }
-                                            });
-                                        },
-                                        "Cancelar" : function () {
-                                            $("#dlg-tipoRelacion").dialog("close");
-                                        }
-                                    };
-                                    cont = "<span style='font-size: 16px;'> Est&aacute; seguro de querer eliminar este TipoRelacion?";
-                                    cont += "<br/>Esta acci&oacute;n es definitiva.</span>"
-                                    $("#dlg-tipoRelacion").dialog("option", "width", 360);
-                                    break;
-                            }
-                            openDlg(url, id, cont, action != "delete", title, buttons);
-                        });
             });
         </script>
+
     </body>
 </html>

@@ -153,3 +153,4 @@ jQuery.validator.addMethod("cedula", function (value, element) {
     return false;
 
 }, jQuery.format("Por favor ingrese un número de cédula válido."));
+

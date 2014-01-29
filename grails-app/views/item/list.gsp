@@ -1,144 +1,192 @@
 
 <%@ page import="cratos.Item" %>
-<!doctype html>
+<!DOCTYPE html>
 <html>
     <head>
         <meta name="layout" content="main">
-        <title>Lista de Items</title>
-
-        <script type="text/javascript" src="${resource(dir: 'js/jquery/plugins/contextMenu', file: 'jquery.contextMenu.js')}"></script>
-        <link rel="stylesheet" href="${resource(dir: 'js/jquery/plugins/contextMenu', file: 'jquery.contextMenu.css')}" type="text/css">
-
-        <script type="text/javascript" src="${resource(dir: 'js/jquery/plugins/jquery-validation-1.9.0', file: 'jquery.validate.min.js')}"></script>
-        <script type="text/javascript" src="${resource(dir: 'js/jquery/plugins/jquery-validation-1.9.0', file: 'messages_es.js')}"></script>
-
+        <title>Lista de Item</title>
     </head>
     <body>
-    <div class="btn-toolbar toolbar">
-        <div class="btn-group">
-            <g:link action="form" class="btn btn-default btnCrear">
-                <i class="fa fa-file-o"></i> Crear
-            </g:link>
+
+        <elm:flashMessage tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
+
+    <!-- botones -->
+        <div class="btn-toolbar toolbar">
+            <div class="btn-group">
+                <g:link action="form" class="btn btn-default btnCrear">
+                    <i class="fa fa-file-o"></i> Crear
+                </g:link>
+            </div>
+            <div class="btn-group pull-right col-md-3">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Buscar">
+                    <span class="input-group-btn">
+                        <a href="#" class="btn btn-default" type="button">
+                            <i class="fa fa-search"></i>&nbsp;
+                        </a>
+                    </span>
+                </div><!-- /input-group -->
+            </div>
         </div>
 
-        <div class="btn-group pull-right col-md-3">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Buscar">
-                <span class="input-group-btn">
-                    <a href="#" class="btn btn-default" type="button">
-                        <i class="fa fa-search"></i>&nbsp;
-                    </a>
-                </span>
-            </div><!-- /input-group -->
-        </div>
-    </div>
+        <div class="vertical-container vertical-container-list">
+            <p class="css-vertical-text">Lista de Item</p>
 
-    <table id="tbl-item" class="table table-bordered table-condensed table-hover">
-                    <thead>
-                        <tr>
-                            
-                            %{--<g:sortableColumn property="iva" title="${message(code: 'item.iva.label', default: 'Iva')}" />--}%
+            <div class="linea"></div>
+            <table class="table table-condensed table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        
 
-                            <g:sortableColumn property="codigo" title="Código"/>
+                        <g:sortableColumn property="empresa" title="Empresa"/>
 
-                            <g:sortableColumn property="nombre" title="${message(code:'item.nombre.label', default: 'Nombre')}"/>
-                            
-                            %{--<g:sortableColumn property="peso" title="${message(code: 'item.peso.label', default: 'Peso')}" />--}%
-                            
-                            %{--<g:sortableColumn property="stockMaximo" title="${message(code: 'item.stockMaximo.label', default: 'Stock Maximo')}" />--}%
-                            
-                            <g:sortableColumn property="stock" title="${message(code: 'item.stock.label', default: 'Stock Mínimo')}" />
-                            
-                            <g:sortableColumn property="precioVenta" title="${message(code: 'item.precioVenta.label', default: 'Precio Venta')}" />
-                            
-                            <g:sortableColumn property="precioCosto" title="${message(code: 'item.precioCosto.label', default: 'Precio Costo')}" />
+                        <g:sortableColumn property="codigo" title="Código"/>
 
-                            <th style="width: 110px">Acciones</th>
+                        <g:sortableColumn title="Nombre" property="nombre"/>
+
+                        <g:sortableColumn property="precioUnitario" title="Precio Unitario"/>
+
+                        <g:sortableColumn property="precioVenta" title="Precio de Venta"/>
+
+                        <g:sortableColumn property="precioCosto" title="Precio de Costo"/>
+
+                        %{--<g:sortableColumn property="iva" title="Iva" />--}%
+                        %{----}%
+                        %{--<g:sortableColumn property="ice" title="Ice" />--}%
+                        
+                        <g:sortableColumn property="peso" title="Peso" />
+                        
+                        %{--<g:sortableColumn property="stockMaximo" title="Stock Maximo" />--}%
+                        
+                        <g:sortableColumn property="stock" title="Stock" />
+                        
+                        <th width="110">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <g:each in="${itemInstanceList}" status="i" var="itemInstance">
+                        <tr data-id="${itemInstance.id}">
+
+
+                            <td>${fieldValue(bean: itemInstance, field: "empresa")}</td>
+
+                            <td>${fieldValue(bean: itemInstance, field: 'codigo')}</td>
+
+                            <td>${fieldValue(bean: itemInstance, field: 'nombre')}</td>
+
+                            <td>${fieldValue(bean: itemInstance, field: 'precioUnitario')}</td>
+
+                            <td>${fieldValue(bean: itemInstance, field: 'precioVenta')}</td>
+
+                            <td>${fieldValue(bean: itemInstance, field: 'precioCosto')}</td>
+
+                            %{--<td>${fieldValue(bean: itemInstance, field: "iva")}</td>--}%
+                            %{----}%
+                            %{--<td>${fieldValue(bean: itemInstance, field: "ice")}</td>--}%
                             
+                            <td>${fieldValue(bean: itemInstance, field: "peso")}</td>
+                            
+                            %{--<td>${fieldValue(bean: itemInstance, field: "stockMaximo")}</td>--}%
+                            
+                            <td>${fieldValue(bean: itemInstance, field: "stock")}</td>
+                            
+                            <td>
+                                <a href="#" data-id="${itemInstance.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver">
+                                    <i class="fa fa-laptop"></i>
+                                </a>
+                                <a href="#" data-id="${itemInstance.id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a href="#" data-id="${itemInstance.id}" class="btn btn-danger btn-sm btn-delete btn-ajax" title="Eliminar">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody id="tb-item">
-                        <g:each in="${itemInstanceList}" status="i" var="itemInstance">
-                            <tr class="${(i % 2) == 0 ? 'even' : 'odd'}" id="${itemInstance.id}">
-                                
-                                %{--<td>${fieldValue(bean: itemInstance, field: "iva")}</td>--}%
-                                <td>${fieldValue(bean: itemInstance, field: "codigo")}</td>
-
-                                <td>${fieldValue(bean: itemInstance, field: "nombre")}</td>
-                                %{--<td>${fieldValue(bean: itemInstance, field: "peso")}</td>--}%
-                                
-                                %{--<td>${fieldValue(bean: itemInstance, field: "stockMaximo")}</td>--}%
-                                
-                                <td>${fieldValue(bean: itemInstance, field: "stock")}</td>
-                                
-                                <td>${fieldValue(bean: itemInstance, field: "precioVenta")}</td>
-                                
-                                <td>${fieldValue(bean: itemInstance, field: "precioCosto")}</td>
-
-                                <td>
-                                    <a class="btn btn-sm btn-info verItem" href="#" rel="tooltip" title="Ver">
-                                        <i class="fa fa-laptop"></i></a>
-
-                                    <a class="btn btn-sm btn-success editarItem" href="#" rel="tooltip" title="Editar">
-                                    <i class="fa fa-pencil"></i></a>
-
-                                    <a class="btn btn-sm btn-danger eliminarItem" href="#" rel="tooltip" title="Eliminar">
-                                        <i class="fa fa-trash-o"></i></a>
-                                </td>
-                                
-                            </tr>
-                        </g:each>
-                    </tbody>
-                </table>
-                %{--<g:if test="${itemInstanceList.size() < itemInstanceTotal}">--}%
-                    %{--<div class="pagination">--}%
-                        %{--<g:paginate total="${itemInstanceTotal}"  prev="Ant." next="Sig." />--}%
-                    %{--</div>--}%
-                %{--</g:if>--}%
-            %{--</div>--}%
-        %{--</div>--}%
-
-        %{--<ul id="menu-item" class="contextMenu">--}%
-            %{--<li class="show">--}%
-                %{--<a href="#show">Ver</a>--}%
-            %{--</li>--}%
-            %{--<li class="edit">--}%
-                %{--<a href="#edit">Editar</a>--}%
-            %{--</li>--}%
-            %{--<li class="delete">--}%
-                %{--<a href="#delete">Eliminar</a>--}%
-            %{--</li>--}%
-        %{--</ul>--}%
-
-        <div id="dlg-item" style="width: 960px; height: 380px"></div>
-
-        <div id="dlgLoad" class="ui-helper-hidden" style="text-align:center;">
-            Cargando.....Por favor espere......<br/><br/>
-            <img src="${resource(dir: 'images', file: 'spinner64.gif')}" alt=""/>
+                    </g:each>
+                </tbody>
+            </table>
         </div>
+        <elm:pagination total="${itemInstanceCount}" params="${params}"/>
 
         <script type="text/javascript">
-
-
-            //crear
-
-            $(".btnCrear").click(function() {
-                createEditRow();
+            var id = null;
+            function submitForm() {
+                var $form = $("#frmItem");
+                var $btn = $("#dlgCreateEdit").find("#btnSave");
+                if ($form.valid()) {
+                $btn.replaceWith(spinner);
+                    openLoader('Grabando');
+                    $.ajax({
+                        type    : "POST",
+                        url     : '${createLink(action:'save_ajax')}',
+                        data    : $form.serialize(),
+                            success : function (msg) {
+                        var parts = msg.split("_");
+                        log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                        if (parts[0] == "OK") {
+                            location.reload(true);
+                        } else {
+                            closeLoader();
+                            spinner.replaceWith($btn);
+                            return false;
+                        }
+                    }
+                });
+            } else {
                 return false;
-            });
-
-
+            } //else
+            }
+            function deleteRow(itemId) {
+                bootbox.dialog({
+                    title   : "Alerta",
+                    message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar el Item seleccionado? Esta acción no se puede deshacer.</p>",
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        eliminar : {
+                            label     : "<i class='fa fa-trash-o'></i> Eliminar",
+                            className : "btn-danger",
+                            callback  : function () {
+                                openLoader('Eliminando');
+                                $.ajax({
+                                    type    : "POST",
+                                    url     : '${createLink(action:'delete_ajax')}',
+                                    data    : {
+                                        id : itemId
+                                    },
+                                    success : function (msg) {
+                                        var parts = msg.split("_");
+                                        log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                                        if (parts[0] == "OK") {
+                                            location.reload(true);
+                                        }
+                                        else {
+                                            closeLoader();
+                                            spinner.replaceWith($btn);
+                                            return false;
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            }
             function createEditRow(id) {
                 var title = id ? "Editar" : "Crear";
                 var data = id ? { id: id } : {};
                 $.ajax({
                     type    : "POST",
-                    url     : "${createLink(action:'create')}",
+                    url     : "${createLink(action:'form_ajax')}",
                     data    : data,
                     success : function (msg) {
                         var b = bootbox.dialog({
                             id      : "dlgCreateEdit",
-                            title   : title + " Año",
+                            title   : title + " Item",
                             message : msg,
                             buttons : {
                                 cancelar : {
@@ -157,176 +205,55 @@
                                 } //guardar
                             } //buttons
                         }); //dialog
-                         setTimeout(function () {
-                        b.find(".form-control").not(".datepicker").first().focus()
-                    }, 500);
+                        setTimeout(function () {
+                            b.find(".form-control").not('.datepicker').first().focus()
+                        }, 500);
                     } //success
                 }); //ajax
             } //createEdit
 
+            $(function () {
 
+                $(".btnCrear").click(function() {
+                    createEditRow();
+                    return false;
+                });
 
-
-
-
-            function openDlg(url, id, cont, ajax, title, buttons) {
-                if (ajax) {
-                $("#dlgLoad").dialog("open");
+                $(".btn-show").click(function () {
+                    var id = $(this).data("id");
                     $.ajax({
-                        async   : false,
                         type    : "POST",
-                        url     : url,
+                        url     : "${createLink(action:'show_ajax')}",
                         data    : {
                             id : id
                         },
                         success : function (msg) {
-                            $("#dlg-item").html(msg);
-                        },
-                        complete : function () {
-                            $("#dlgLoad").dialog("close");
-                        }
-                    });
-                    $("#dlg-item").dialog("option", "width", 960);
-                } else {
-                $("#dlg-item").html(cont);
-                }
-                $("#dlg-item").dialog("option", "title", title);
-                $("#dlg-item").dialog("option", "buttons", buttons);
-                $("#dlg-item").dialog("open");
-            }
-
-            function submitForm() {
-                if ($("#frm-item").valid()) {
-                    $("#dlgLoad").dialog("open");
-                    var data = $("#frm-item").serialize();
-                    var url = $("#frm-item").attr("action");
-                              console.log(data)
-                    $.ajax({
-                        type    : "POST",
-                        url     : url,
-                        data    : data,
-                        success : function (msg) {
-                            location.reload(true);
-                        }
-                    });
-                }
-            }
-
-            $(function () {
-                $("#dlgLoad").dialog({
-                    modal         : true,
-                    autoOpen      : false,
-                    closeOnEscape : false,
-                    draggable     : false,
-                    resizable     : false,
-                    zIndex        : 9000,
-                    open          : function (event, ui) {
-                        $(event.target).parent().find(".ui-dialog-titlebar-close").remove();
-                    }
-                });
-
-                $("#dlg-item").dialog({
-                    modal    : true,
-                    autoOpen : false,
-                    width    : 960,
-                    zIndex   : 1000,
-                    position : "center"
-                });
-
-                $("th").hover(function () {
-                    $(this).addClass("hover");
-                    var i = $(this).index();
-                    $("#tb-item").find("tr").each(function () {
-                        $(this).children().eq(i).addClass("hover");
-                    });
-                }, function () {
-                    $(".hover").removeClass("hover");
-                });
-
-                $("#tb-item").find("tr").hover(function () {
-                    $(this).addClass("hover");
-                }, function () {
-                    $(".hover").removeClass("hover");
-                });
-
-//                $(".btnNew").button({
-                $(".btnCrear").button({
-                    icons : {
-                        primary : "ui-icon-document"
-                    }
-                }).click(function () {
-                            var id = $(this).attr("id");
-                            var url = $(this).attr("href");
-                            var title = "Crear Item";
-                            var buttons = {
-                                "Guardar"  : function () {
-                                    submitForm();
-                                },
-                                "Cancelar" : function () {
-                                    $("#dlg-item").dialog("close");
+                            bootbox.dialog({
+                                title   : "Ver Item",
+                                message : msg,
+                                buttons : {
+                                    ok : {
+                                        label     : "Aceptar",
+                                        className : "btn-primary",
+                                        callback  : function () {
+                                        }
+                                    }
                                 }
-                            };
-                            openDlg(url, id, "", true, title, buttons);
-                            return false;
-                        });
+                            });
+                        }
+                    });
+                });
+                $(".btn-edit").click(function () {
+                    var id = $(this).data("id");
+                    createEditRow(id);
+                });
+                $(".btn-delete").click(function () {
+                    var id = $(this).data("id");
+                    deleteRow(id);
+                });
 
-                $("#tb-item").find("tr").contextMenu({
-                            menu : "menu-item"
-                        },
-                        function (action, el, pos) {
-                            $("#dlg-item").html("");
-                            var id = $(el).attr("id");
-                            var title, buttons, url, cont;
-                            switch (action) {
-                                case "edit":
-                                    title = "Editar Item";
-                                    buttons = {
-                                        "Guardar"  : function () {
-                                            submitForm();
-                                        },
-                                        "Cancelar" : function () {
-                                            $("#dlg-item").dialog("close");
-                                        }
-                                    };
-                                    url = "${createLink(action:'edit')}/" + id;
-                                    break;
-                                case "show":
-                                    title = "Ver Item";
-                                    buttons = {
-                                        "Aceptar" : function () {
-                                            $("#dlg-item").dialog("close");
-                                        }
-                                    };
-                                    url = "${createLink(action:'show')}/" + id;
-                                    break;
-                                case "delete":
-                                    title = "Eliminar Item";
-                                    buttons = {
-                                        "Aceptar"  : function () {
-                                            $("#dlgLoad").dialog("open");
-                                            $.ajax({
-                                                type    : "POST",
-                                                url     : "${createLink(action:'delete')}",
-                                                data    : {
-                                                    id : id
-                                                },
-                                                success : function (msg) {
-                                                    location.reload(true);
-                                                }
-                                            });
-                                        },
-                                        "Cancelar" : function () {
-                                            $("#dlg-item").dialog("close");
-                                        }
-                                    };
-                                    cont = "<span style='font-size: 16px;'> Est&aacute; seguro de querer eliminar este Item?";
-                                    cont += "<br/>Esta acci&oacute;n es definitiva.</span>"
-                                    $("#dlg-item").dialog("option", "width", 360);
-                                    break;
-                            }
-                            openDlg(url, id, cont, action != "delete", title, buttons);
-                        });
             });
         </script>
+
     </body>
 </html>

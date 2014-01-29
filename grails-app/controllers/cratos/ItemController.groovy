@@ -24,10 +24,6 @@ class ItemController extends cratos.seguridad.Shield {
         redirect(action: "create", params: params)
     }
 
-    def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [itemInstanceList: Item.list(params), itemInstanceTotal: Item.count()]
-    }
 
     def create() {
         [itemInstance: new Item(params)]
@@ -185,4 +181,97 @@ class ItemController extends cratos.seguridad.Shield {
             redirect(action: "show", id: params.id)
         }
     }
+
+
+
+
+    /* ************************ COPIAR DESDE AQUI ****************************/
+
+    def list() {
+        params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+        def itemInstanceList = Item.list(params)
+        def itemInstanceCount = Item.count()
+        if (itemInstanceList.size() == 0 && params.offset && params.max) {
+            params.offset = params.offset - params.max
+        }
+        itemInstanceList = Item.list(params)
+        return [itemInstanceList: itemInstanceList, itemInstanceCount: itemInstanceCount]
+    } //list
+
+    def show_ajax() {
+        if (params.id) {
+            def itemInstance = Item.get(params.id)
+            if (!itemInstance) {
+                notFound_ajax()
+                return
+            }
+            return [itemInstance: itemInstance]
+        } else {
+            notFound_ajax()
+        }
+    } //show para cargar con ajax en un dialog
+
+    def form_ajax() {
+        def itemInstance = new Item(params)
+        if (params.id) {
+            itemInstance = Item.get(params.id)
+            if (!itemInstance) {
+                notFound_ajax()
+                return
+            }
+        }
+        return [itemInstance: itemInstance]
+    } //form para cargar con ajax en un dialog
+
+    def save_ajax() {
+
+//        params.each { k, v ->
+//            if (v != "date.struct" && v instanceof java.lang.String) {
+//                params[k] = v.toUpperCase()
+//            }
+//        }
+
+        def itemInstance = new Item()
+        if (params.id) {
+            itemInstance = Item.get(params.id)
+            if (!itemInstance) {
+                notFound_ajax()
+                return
+            }
+        } //update
+
+        itemInstance.properties = params
+
+        if (!itemInstance.save(flush: true)) {
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Item."
+            msg += renderErrors(bean: itemInstance)
+            render msg
+            return
+        }
+        render "OK_${params.id ? 'Actualización' : 'Creación'} de Item exitosa."
+    } //save para grabar desde ajax
+
+    def delete_ajax() {
+        if (params.id) {
+            def itemInstance = Item.get(params.id)
+            if (itemInstance) {
+                try {
+                    itemInstance.delete(flush: true)
+                    render "OK_Eliminación de Item exitosa."
+                } catch (e) {
+                    render "NO_No se pudo eliminar Item."
+                }
+            } else {
+                notFound_ajax()
+            }
+        } else {
+            notFound_ajax()
+        }
+    } //delete para eliminar via ajax
+
+    protected void notFound_ajax() {
+        render "NO_No se encontró Item."
+    } //notFound para ajax
+    
+    
 }
