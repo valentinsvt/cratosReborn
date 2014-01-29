@@ -71,7 +71,7 @@ class CuentaController extends cratos.seguridad.Shield {
             //root
             tree = "<li id='root' class='root hasChildren jstree-closed' data-jstree='{\"type\":\"root\"}' level='0' ><a href='#' class='label_arbol'>Plan de cuentas</a></li>"
         } else if (id == "root") {
-            hijos = Cuenta.findAllByNivel(Nivel.get(1), [sort: "numero"])
+            hijos = Cuenta.findAllByNivelAndEmpresa(Nivel.get(1), session.empresa, [sort: "numero"])
         } else {
 
             def parts = id.split("_")
@@ -79,7 +79,7 @@ class CuentaController extends cratos.seguridad.Shield {
 
             padre = Cuenta.get(node_id)
             if (padre) {
-                hijos = Cuenta.findAllByPadre(padre, [sort: "numero"])
+                hijos = Cuenta.findAllByPadreAndEmpresa(padre, session.empresa, [sort: "numero"])
             }
         }
 
@@ -87,7 +87,7 @@ class CuentaController extends cratos.seguridad.Shield {
             tree += "<ul>"
 
             hijos.each { hijo ->
-                def hijosH = Cuenta.findAllByPadre(hijo, [sort: "numero"])
+                def hijosH = Cuenta.findAllByPadreAndEmpresa(hijo, session.empresa, [sort: "numero"])
 
                 def gestores = Genera.findAllByCuenta(hijo)
                 def asientos = Asiento.findAllByCuenta(hijo)
@@ -417,6 +417,7 @@ class CuentaController extends cratos.seguridad.Shield {
             }
         }
         params.estado = 'A'
+//        params.empresa = session.empresa
         def cuentaInstance = new Cuenta()
         if (params.id) {
             cuentaInstance = Cuenta.get(params.id)

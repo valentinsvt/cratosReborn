@@ -1,259 +1,224 @@
 <%@ page import="cratos.Empresa" %>
-<!doctype html>
+<!DOCTYPE html>
 <html>
     <head>
         <meta name="layout" content="main">
-        <title>Lista de Empresas</title>
-
-        <script type="text/javascript" src="${resource(dir: 'js/jquery/plugins/contextMenu', file: 'jquery.contextMenu.js')}"></script>
-        <link rel="stylesheet" href="${resource(dir: 'js/jquery/plugins/contextMenu', file: 'jquery.contextMenu.css')}" type="text/css">
-
-        <script type="text/javascript" src="${resource(dir: 'js/jquery/plugins/jquery-validation-1.9.0', file: 'jquery.validate.min.js')}"></script>
-        <script type="text/javascript" src="${resource(dir: 'js/jquery/plugins/jquery-validation-1.9.0', file: 'messages_es.js')}"></script>
-
+        <title>Lista de Empresa</title>
     </head>
 
     <body>
-        <div class="ui-widget-content ui-corner-all cont">
-            <div class="ui-widget-header ui-corner-all titulo">
-                Lista de Empresas
-                <div class="fright">
-                    <g:link action="create" class="btnNew miniButton">Nuevo</g:link>
-                </div>
+
+        <elm:flashMessage tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
+
+        <!-- botones -->
+        <div class="btn-toolbar toolbar">
+            <div class="btn-group">
+                <g:link action="form" class="btn btn-default btnCrear">
+                    <i class="fa fa-file-o"></i> Crear
+                </g:link>
             </div>
 
-            <div id="list-empresa" class="content scaffold-list" role="main">
-                <g:if test="${flash.message}">
-                    <div class="message" role="status">${flash.message}</div>
-                </g:if>
-                <table id="tbl-empresa">
-                    <thead>
-                        <tr>
+            <div class="btn-group pull-right col-md-3">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Buscar">
+                    <span class="input-group-btn">
+                        <a href="#" class="btn btn-default" type="button">
+                            <i class="fa fa-search"></i>&nbsp;
+                        </a>
+                    </span>
+                </div><!-- /input-group -->
+            </div>
+        </div>
 
-                            <g:sortableColumn property="nombre" title="${message(code: 'empresa.nombre.label', default: 'Nombre')}"/>
+        <div class="vertical-container vertical-container-list">
+            <p class="css-vertical-text">Lista de Empresa</p>
 
-                            <g:sortableColumn property="ruc" title="${message(code: 'empresa.ruc.label', default: 'Ruc')}"/>
-
-                            <g:sortableColumn property="tipoEmpresa" title="${message(code: 'empresa.tipoEmpresa.label', default: 'TipoEmpresa')}"/>
-
-                            <g:sortableColumn property="telefono" title="${message(code: 'empresa.telefono.label', default: 'Telefono')}"/>
-
-                            <g:sortableColumn property="direccion" title="${message(code: 'empresa.direccion.label', default: 'Direccion')}"/>
-
-                            <g:sortableColumn property="ordenCompra" title="${message(code: 'empresa.ordenCompra.label', default: 'Ordenes de compra')}"/>
-
+            <div class="linea"></div>
+            <table class="table table-condensed table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <g:sortableColumn property="nombre" title="Nombre"/>
+                        <g:sortableColumn property="email" title="Email"/>
+                        <g:sortableColumn property="fechaInicio" title="Fecha Inicio"/>
+                        <g:sortableColumn property="fechaFin" title="Fecha Fin"/>
+                        <g:sortableColumn property="direccion" title="Dirección"/>
+                        <g:sortableColumn property="telefono" title="Teléfono"/>
+                        <th width="110">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <g:each in="${empresaInstanceList}" status="i" var="empresaInstance">
+                        <tr data-id="${empresaInstance.id}">
+                            <td>${fieldValue(bean: empresaInstance, field: "nombre")}</td>
+                            <td>${fieldValue(bean: empresaInstance, field: "email")}</td>
+                            <td><g:formatDate date="${empresaInstance.fechaInicio}" format="dd-MM-yyyy"/></td>
+                            <td><g:formatDate date="${empresaInstance.fechaFin}" format="dd-MM-yyyy"/></td>
+                            <td>${fieldValue(bean: empresaInstance, field: "direccion")}</td>
+                            <td>${fieldValue(bean: empresaInstance, field: "telefono")}</td>
+                            <td>
+                                <a href="#" data-id="${empresaInstance.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver">
+                                    <i class="fa fa-laptop"></i>
+                                </a>
+                                <a href="#" data-id="${empresaInstance.id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a href="#" data-id="${empresaInstance.id}" class="btn btn-danger btn-sm btn-delete btn-ajax" title="Eliminar">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody id="tb-empresa">
-                        <g:each in="${empresaInstanceList}" status="i" var="empresaInstance">
-                            <tr class="${(i % 2) == 0 ? 'even' : 'odd'}" id="${empresaInstance.id}">
-
-                                <td>${fieldValue(bean: empresaInstance, field: "nombre")}</td>
-
-                                <td>${fieldValue(bean: empresaInstance, field: "ruc")}</td>
-
-                                <td>${fieldValue(bean: empresaInstance, field: "tipoEmpresa")}</td>
-
-                                <td>${fieldValue(bean: empresaInstance, field: "telefono")}</td>
-
-                                <td>${fieldValue(bean: empresaInstance, field: "direccion")}</td>
-
-                                <td>
-                                    <g:formatBoolean boolean="${empresaInstance.ordenCompra == '1'}" true="Sí" false="No"/>
-                                </td>
-
-                            </tr>
-                        </g:each>
-                    </tbody>
-                </table>
-                <g:if test="${empresaInstanceList.size() < empresaInstanceTotal}">
-                    <div class="pagination">
-                        <g:paginate total="${empresaInstanceTotal}" prev="Ant." next="Sig."/>
-                    </div>
-                </g:if>
-            </div>
+                    </g:each>
+                </tbody>
+            </table>
         </div>
-
-        <ul id="menu-empresa" class="contextMenu">
-            <li class="show">
-                <a href="#show">Ver</a>
-            </li>
-            <li class="edit">
-                <a href="#edit">Editar</a>
-            </li>
-            <li class="delete">
-                <a href="#delete">Eliminar</a>
-            </li>
-        </ul>
-
-        <div id="dlg-empresa" style="width: 690px; height: 470px"></div>
-
-        <div id="dlgLoad" class="ui-helper-hidden" style="text-align:center;">
-            Cargando.....Por favor espere......<br/><br/>
-            <img src="${resource(dir: 'images', file: 'spinner64.gif')}" alt=""/>
-        </div>
+        <elm:pagination total="${empresaInstanceCount}" params="${params}"/>
 
         <script type="text/javascript">
-            function openDlg(url, id, cont, ajax, title, buttons) {
-                if (ajax) {
-                    $("#dlgLoad").dialog("open");
-                    $.ajax({
-                        async    : false,
-                        type     : "POST",
-                        url      : url,
-                        data     : {
-                            id : id
-                        },
-                        success  : function (msg) {
-                            $("#dlg-empresa").html(msg);
-                        },
-                        complete : function () {
-                            $("#dlgLoad").dialog("close");
-                        }
-                    });
-                    $("#dlg-empresa").dialog("option", "width", 690);
-                } else {
-                    $("#dlg-empresa").html(cont);
-                }
-                $("#dlg-empresa").dialog("option", "title", title);
-                $("#dlg-empresa").dialog("option", "buttons", buttons);
-                $("#dlg-empresa").dialog("open");
-            }
-
+            var id = null;
             function submitForm() {
-                if ($("#frm-empresa").valid()) {
-                    $("#dlgLoad").dialog("open");
-                    var data = $("#frm-empresa").serialize();
-                    var url = $("#frm-empresa").attr("action");
-
+                var $form = $("#frmEmpresa");
+                var $btn = $("#dlgCreateEdit").find("#btnSave");
+                if ($form.valid()) {
+                    $btn.replaceWith(spinner);
+                    openLoader("Grabando");
                     $.ajax({
                         type    : "POST",
-                        url     : url,
-                        data    : data,
+                        url     : $form.attr("action"),
+                        data    : $form.serialize(),
                         success : function (msg) {
-                            location.reload(true);
+                            var parts = msg.split("_");
+                            log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                            if (parts[0] == "OK") {
+                                location.reload(true);
+                            } else {
+                                closeLoader();
+                                spinner.replaceWith($btn);
+                                return false;
+                            }
                         }
                     });
-                }
+                } else {
+                    return false;
+                } //else
             }
+            function deleteRow(itemId) {
+                bootbox.dialog({
+                    title   : "Alerta",
+                    message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar el Empresa seleccionado? Esta acción no se puede deshacer.</p>",
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        eliminar : {
+                            label     : "<i class='fa fa-trash-o'></i> Eliminar",
+                            className : "btn-danger",
+                            callback  : function () {
+                                openLoader("Eliminando");
+                                $.ajax({
+                                    type    : "POST",
+                                    url     : '${createLink(action:'delete_ajax')}',
+                                    data    : {
+                                        id : itemId
+                                    },
+                                    success : function (msg) {
+                                        var parts = msg.split("_");
+                                        log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                                        if (parts[0] == "OK") {
+                                            location.reload(true);
+                                        } else {
+                                            closeLoader();
+                                            spinner.replaceWith($btn);
+                                            return false;
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            }
+            function createEditRow(id) {
+                var title = id ? "Editar" : "Crear";
+                var data = id ? { id : id } : {};
+                $.ajax({
+                    type    : "POST",
+                    url     : "${createLink(action:'form_ajax')}",
+                    data    : data,
+                    success : function (msg) {
+                        var b = bootbox.dialog({
+                            id      : "dlgCreateEdit",
+                            title   : title + " Empresa",
+                            class   : "long",
+                            message : msg,
+                            buttons : {
+                                cancelar : {
+                                    label     : "Cancelar",
+                                    className : "btn-primary",
+                                    callback  : function () {
+                                    }
+                                },
+                                guardar  : {
+                                    id        : "btnSave",
+                                    label     : "<i class='fa fa-save'></i> Guardar",
+                                    className : "btn-success",
+                                    callback  : function () {
+                                        return submitForm();
+                                    } //callback
+                                } //guardar
+                            } //buttons
+                        }); //dialog
+                        setTimeout(function () {
+                            b.find(".form-control").not(".datepicker").first().focus()
+                        }, 500);
+                    } //success
+                }); //ajax
+            } //createEdit
 
             $(function () {
-                $("#dlgLoad").dialog({
-                    modal         : true,
-                    autoOpen      : false,
-                    closeOnEscape : false,
-                    draggable     : false,
-                    resizable     : false,
-                    zIndex        : 9000,
-                    open          : function (event, ui) {
-                        $(event.target).parent().find(".ui-dialog-titlebar-close").remove();
-                    }
+
+                $(".btnCrear").click(function () {
+                    createEditRow();
+                    return false;
                 });
 
-                $("#dlg-empresa").dialog({
-                    modal    : true,
-                    autoOpen : false,
-                    width    : 690,
-                    zIndex   : 1000,
-                    position : "center"
-                });
-
-                $("th").hover(function () {
-                    $(this).addClass("hover");
-                    var i = $(this).index();
-                    $("#tb-empresa").find("tr").each(function () {
-                        $(this).children().eq(i).addClass("hover");
-                    });
-                }, function () {
-                    $(".hover").removeClass("hover");
-                });
-
-                $("#tb-empresa").find("tr").hover(function () {
-                    $(this).addClass("hover");
-                }, function () {
-                    $(".hover").removeClass("hover");
-                });
-
-                $(".btnNew").button({
-                    icons : {
-                        primary : "ui-icon-document"
-                    }
-                }).click(function () {
-                            var id = $(this).attr("id");
-                            var url = $(this).attr("href");
-                            var title = "Crear Empresa";
-                            var buttons = {
-                                "Guardar"  : function () {
-                                    submitForm();
-                                },
-                                "Cancelar" : function () {
-                                    $("#dlg-empresa").dialog("close");
-                                }
-                            };
-                            openDlg(url, id, "", true, title, buttons);
-                            return false;
-                        });
-
-                $("#tb-empresa").find("tr").contextMenu({
-                            menu : "menu-empresa"
+                $(".btn-show").click(function () {
+                    var id = $(this).data("id");
+                    $.ajax({
+                        type    : "POST",
+                        url     : "${createLink(action:'show_ajax')}",
+                        data    : {
+                            id : id
                         },
-                        function (action, el, pos) {
-                            $("#dlg-empresa").html("");
-                            var id = $(el).attr("id");
-                            var title, buttons, url, cont;
-                            switch (action) {
-                                case "edit":
-                                    title = "Editar Empresa";
-                                    buttons = {
-                                        "Guardar"  : function () {
-                                            submitForm();
-                                        },
-                                        "Cancelar" : function () {
-                                            $("#dlg-empresa").dialog("close");
+                        success : function (msg) {
+                            bootbox.dialog({
+                                title   : "Ver Empresa",
+                                message : msg,
+                                buttons : {
+                                    ok : {
+                                        label     : "Aceptar",
+                                        className : "btn-primary",
+                                        callback  : function () {
                                         }
-                                    };
-                                    url = "${createLink(action:'edit')}/" + id;
-                                    break;
-                                case "show":
-                                    title = "Ver Empresa";
-                                    buttons = {
-                                        "Aceptar" : function () {
-                                            $("#dlg-empresa").dialog("close");
-                                        }
-                                    };
-                                    url = "${createLink(action:'show')}/" + id;
-                                    break;
-                                case "delete":
-                                    title = "Eliminar Empresa";
-                                    buttons = {
-                                        "Aceptar" : function () {
-                                            $("#dlgLoad").dialog("open");
-                                            $.ajax({
-                                                type    : "POST",
-                                                url     : "${createLink(controller: 'empresa', action:'delete')}",
-                                                data    : {
-                                                    id : id
-                                                },
-                                                success : function (msg) {
-                                                    location.reload(true);
-                                                }
-                                            });
+                                    }
+                                }
+                            });
+                        }
+                    });
+                });
+                $(".btn-edit").click(function () {
+                    var id = $(this).data("id");
+                    createEditRow(id);
+                });
+                $(".btn-delete").click(function () {
+                    var id = $(this).data("id");
+                    deleteRow(id);
+                });
 
-                                        },
-
-                                        "Cancelar" : function () {
-                                            $("#dlg-empresa").dialog("close");
-                                        }
-                                    };
-                                    cont = "<span style='font-size: 16px;'> Est&aacute; seguro de querer eliminar este Empresa?";
-                                    cont += "<br/>Esta acci&oacute;n es definitiva.</span>"
-                                    $("#dlg-empresa").dialog("option", "width", 360);
-                                %{--url="${createLink(controller: 'empresa', action: 'delete')}"/ + id;--}%
-                                    break;
-                            }
-                            openDlg(url, id, cont, action != "delete", title, buttons);
-                        });
             });
         </script>
+
     </body>
 </html>
