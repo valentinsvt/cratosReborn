@@ -1,116 +1,143 @@
 package cratos
 
-import org.springframework.dao.DataIntegrityViolationException
-import java.text.SimpleDateFormat
 
 class EmpresaController extends cratos.seguridad.Shield {
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    static allowedMethods = [save: "POST", delete: "POST", save_ajax: "POST", delete_ajax: "POST"]
 
     def index() {
         redirect(action: "list", params: params)
-    }
+    } //index
 
     def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [empresaInstanceList: Empresa.list(params), empresaInstanceTotal: Empresa.count()]
-    }
-
-    def create() {
-        [empresaInstance: new Empresa(params)]
-    }
-
-    def save() {
-//        println("empresa" + params)
-        def empresaInstance = new Empresa()
-        if (params.fechaInicio) {
-            empresaInstance.fechaInicio = new Date().parse("dd-MM-yyyy", params.fechaInicio)
-            params.remove("fechaInicio")
+        params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+        def empresaInstanceList = Empresa.list(params)
+        def empresaInstanceCount = Empresa.count()
+        if (empresaInstanceList.size() == 0 && params.offset && params.max) {
+            params.offset = params.offset - params.max
         }
+        empresaInstanceList = Empresa.list(params)
+        return [empresaInstanceList: empresaInstanceList, empresaInstanceCount: empresaInstanceCount]
+    } //list
 
-        if (params.fechaFin) {
-            empresaInstance.fechaFin = new Date().parse("dd-MM-yyyy", params.fechaFin)
-            params.remove("fechaFin")
+    def show_ajax() {
+        if (params.id) {
+            def empresaInstance = Empresa.get(params.id)
+            if (!empresaInstance) {
+                notFound_ajax()
+                return
+            }
+            return [empresaInstance: empresaInstance]
+        } else {
+            notFound_ajax()
         }
+    } //show para cargar con ajax en un dialog
+
+    def form_ajax() {
+        def empresaInstance = new Empresa(params)
         if (params.id) {
             empresaInstance = Empresa.get(params.id)
-        }
-        empresaInstance.properties = params
-//        println "\t\t" + empresaInstance.ordenCompra
-        empresaInstance.ordenCompra = params.ordenCompra
-//        println "\t\t" + empresaInstance.ordenCompra
-        if (!empresaInstance.save(flush: true)) {
-            println(empresaInstance.errors)
-            if (params.id) {
-                render(view: "edit", model: [empresaInstance: empresaInstance])
-            } else {
-                render(view: "create", model: [empresaInstance: empresaInstance])
+            if (!empresaInstance) {
+                notFound_ajax()
+                return
             }
-            return
         }
+        return [empresaInstance: empresaInstance]
+    } //form para cargar con ajax en un dialog
 
+    def listAdmin() {
+        params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+        def empresaInstanceList = Empresa.list(params)
+        def empresaInstanceCount = Empresa.count()
+        if (empresaInstanceList.size() == 0 && params.offset && params.max) {
+            params.offset = params.offset - params.max
+        }
+        empresaInstanceList = Empresa.list(params)
+        return [empresaInstanceList: empresaInstanceList, empresaInstanceCount: empresaInstanceCount]
+    } //list
+
+    def showAdmin_ajax() {
         if (params.id) {
-            flash.message = "Empresa actualizado"
-            flash.clase = "success"
-            flash.ico = "ss_accept"
+            def empresaInstance = Empresa.get(params.id)
+            if (!empresaInstance) {
+                notFound_ajax()
+                return
+            }
+            return [empresaInstance: empresaInstance]
         } else {
-            flash.message = "Empresa creado"
-            flash.clase = "success"
-            flash.ico = "ss_accept"
+            notFound_ajax()
         }
-        redirect(action: "show", id: empresaInstance.id)
-    }
+    } //show para cargar con ajax en un dialog
 
-    def show() {
-        def empresaInstance = Empresa.get(params.id)
-        if (!empresaInstance) {
-            flash.message = "No se encontró Empresa con id " + params.id
-            flash.clase = "error"
-            flash.ico = "ss_delete"
-            redirect(action: "list")
+    def formAdmin_ajax() {
+        def empresaInstance = new Empresa(params)
+        if (params.id) {
+            empresaInstance = Empresa.get(params.id)
+            if (!empresaInstance) {
+                notFound_ajax()
+                return
+            }
+        }
+        return [empresaInstance: empresaInstance]
+    } //form para cargar con ajax en un dialog
+
+
+    def validarRuc_ajax() {
+        params.ruc = params.ruc.toString().trim()
+        if (params.id) {
+            def empr = Empresa.get(params.id)
+            if (empr.ruc == params.ruc) {
+                render true
+                return
+            } else {
+                render Empresa.countByRuc(params.ruc) == 0
+                return
+            }
+        } else {
+            render Empresa.countByRuc(params.ruc) == 0
             return
         }
-
-        [empresaInstance: empresaInstance]
     }
 
-    def edit() {
-        def empresaInstance = Empresa.get(params.id)
-        if (!empresaInstance) {
-            flash.message = "No se encontró Empresa con id " + params.id
-            flash.clase = "error"
-            flash.ico = "ss_delete"
-            redirect(action: "list")
+    def save_ajax() {
+        def empresaInstance = new Empresa()
+        if (params.id) {
+            empresaInstance = Empresa.get(params.id)
+            if (!empresaInstance) {
+                notFound_ajax()
+                return
+            }
+        } //update
+        empresaInstance.properties = params
+        if (!empresaInstance.save(flush: true)) {
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Empresa."
+            msg += renderErrors(bean: empresaInstance)
+            render msg
             return
         }
+        render "OK_${params.id ? 'Actualización' : 'Creación'} de Empresa exitosa."
+    } //save para grabar desde ajax
 
-        [empresaInstance: empresaInstance]
-    }
-
-    def delete() {
-
-        println("id: " + params.id)
-        def empresaInstance = Empresa.get(params.id)
-        if (!empresaInstance) {
-            flash.message = "No se encontró Empresa con id " + params.id
-            flash.clase = "error"
-            flash.ico = "ss_delete"
-            redirect(action: "list")
-            return
+    def delete_ajax() {
+        if (params.id) {
+            def empresaInstance = Empresa.get(params.id)
+            if (empresaInstance) {
+                try {
+                    empresaInstance.delete(flush: true)
+                    render "OK_Eliminación de Empresa exitosa."
+                } catch (e) {
+                    render "NO_No se pudo eliminar Empresa."
+                }
+            } else {
+                notFound_ajax()
+            }
+        } else {
+            notFound_ajax()
         }
+    } //delete para eliminar via ajax
 
-        try {
-            empresaInstance.delete(flush: true)
-            flash.message = "Empresa  con id " + params.id + " eliminado"
-            flash.clase = "success"
-            flash.ico = "ss_accept"
-            redirect(action: "list")
-        }
-        catch (DataIntegrityViolationException e) {
-            flash.message = "No se pudo eliminar Empresa con id " + params.id
-            flash.clase = "error"
-            flash.ico = "ss_delete"
-            redirect(action: "show", id: params.id)
-        }
-    }
+    protected void notFound_ajax() {
+        render "NO_No se encontró Empresa."
+    } //notFound para ajax
+
 }

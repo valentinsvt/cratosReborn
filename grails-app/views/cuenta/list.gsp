@@ -199,8 +199,7 @@
                                                     var parts = msg.split("_");
                                                     log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
                                                     if (parts[0] == "OK") {
-//                                            location.reload(true);
-                                                        $("#tree").jstree("remove", "#" + nodeStrId);
+                                                        $('#tree').jstree('delete_node', $('#' + nodeStrId));
                                                     } else {
                                                         closeLoader();
                                                         return false;
@@ -212,40 +211,40 @@
                                 }
                             });
                             %{--bootbox.dialog({--}%
-                                %{--title   : "Alerta",--}%
-                                %{--message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar la cuenta seleccionada? Esta acción no se puede deshacer.</p>",--}%
-                                %{--buttons : {--}%
-                                    %{--cancelar : {--}%
-                                        %{--label     : "Cancelar",--}%
-                                        %{--className : "btn-default",--}%
-                                        %{--callback  : function () {--}%
-                                        %{--}--}%
-                                    %{--},--}%
-                                    %{--eliminar : {--}%
-                                        %{--label     : "<i class='fa fa-trash-o'></i> Eliminar",--}%
-                                        %{--className : "btn-danger",--}%
-                                        %{--callback  : function () {--}%
-                                            %{--openLoader("Eliminando");--}%
-                                            %{--$.ajax({--}%
-                                                %{--type    : "POST",--}%
-                                                %{--url     : "${createLink(action: 'deleteCuenta')}",--}%
-                                                %{--data    : {--}%
-                                                    %{--id : nodeId--}%
-                                                %{--},--}%
-                                                %{--success : function (msg) {--}%
-                                                    %{--var parts = msg.split("_");--}%
-                                                    %{--log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)--}%
-                                                    %{--if (parts[0] == "OK") {--}%
-                                                        %{--$("#tree").jstree("remove", "#" + nodeStrId);--}%
-                                                    %{--} else {--}%
-                                                        %{--closeLoader();--}%
-                                                        %{--return false;--}%
-                                                    %{--}--}%
-                                                %{--}--}%
-                                            %{--});--}%
-                                        %{--}--}%
-                                    %{--}--}%
-                                %{--}--}%
+                            %{--title   : "Alerta",--}%
+                            %{--message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar la cuenta seleccionada? Esta acción no se puede deshacer.</p>",--}%
+                            %{--buttons : {--}%
+                            %{--cancelar : {--}%
+                            %{--label     : "Cancelar",--}%
+                            %{--className : "btn-default",--}%
+                            %{--callback  : function () {--}%
+                            %{--}--}%
+                            %{--},--}%
+                            %{--eliminar : {--}%
+                            %{--label     : "<i class='fa fa-trash-o'></i> Eliminar",--}%
+                            %{--className : "btn-danger",--}%
+                            %{--callback  : function () {--}%
+                            %{--openLoader("Eliminando");--}%
+                            %{--$.ajax({--}%
+                            %{--type    : "POST",--}%
+                            %{--url     : "${createLink(action: 'deleteCuenta')}",--}%
+                            %{--data    : {--}%
+                            %{--id : nodeId--}%
+                            %{--},--}%
+                            %{--success : function (msg) {--}%
+                            %{--var parts = msg.split("_");--}%
+                            %{--log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)--}%
+                            %{--if (parts[0] == "OK") {--}%
+                            %{--$("#tree").jstree("remove", "#" + nodeStrId);--}%
+                            %{--} else {--}%
+                            %{--closeLoader();--}%
+                            %{--return false;--}%
+                            %{--}--}%
+                            %{--}--}%
+                            %{--});--}%
+                            %{--}--}%
+                            %{--}--}%
+                            %{--}--}%
                             %{--});--}%
                         }
                     };

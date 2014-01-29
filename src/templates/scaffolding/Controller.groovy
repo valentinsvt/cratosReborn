@@ -45,6 +45,12 @@ class ${className}Controller extends <%=packageName.split("\\.")[0]%>.seguridad.
     } //form para cargar con ajax en un dialog
 
     def save_ajax() {
+        params.each { k, v ->
+            if (v != "date.struct" && v instanceof java.lang.String) {
+                params[k] = v.toUpperCase()
+            }
+        }
+
         def ${propertyName} = new ${className}()
         if(params.id) {
             ${propertyName} = ${className}.get(params.id)
