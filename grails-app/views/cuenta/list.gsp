@@ -19,6 +19,16 @@
         <div id="list-cuenta">
 
             <g:if test="${hh > 0}">
+
+                <!-- botones -->
+                <div class="btn-toolbar toolbar">
+                    <div class="btn-group">
+                        <g:link action="cuentaResultados" class="btn btn-default">
+                            <i class="fa fa-money"></i> Cuentas de resultados
+                        </g:link>
+                    </div>
+                </div>
+
                 <div id="loading" class="text-center">
                     <p>
                         Cargando el árbol del plan de cuentas
@@ -277,7 +287,7 @@
 
             $(function () {
 
-                $(".btnCopiar").click(function() {
+                $(".btnCopiar").click(function () {
                     openLoader("Copiando");
                 });
 

@@ -11,21 +11,52 @@ class CuentaController extends cratos.seguridad.Shield {
     }
 
     def cuentaResultados() {
-        def cuentas = Cuenta.findAllByNumeroLikeAndMovimiento("3%", "1", [sort: "numero"])
-        Cuenta.findAll("from Cuenta where numero like '3%' and movimiento='1' order by numero ")
+//        def cuentas = Cuenta.findAllByNumeroLikeAndMovimiento("3%", "1", [sort: "numero"])
+////        Cuenta.findAll("from Cuenta where numero like '3%' and movimiento='1' order by numero ")
+//        def cuentaS = Cuenta.findByResultadoAndEmpresa("S", session.empresa)
+//        def cuentaD = Cuenta.findByResultado("D", session.empresa)
+
+        def cuentas = Cuenta.withCriteria {
+            ilike("numero", "3%")
+            eq("movimiento", "1")
+            eq("empresa", session.empresa)
+        }
+
         def cuentaS = Cuenta.findByResultadoAndEmpresa("S", session.empresa)
-        def cuentaD = Cuenta.findByResultado("D", session.empresa)
-        [cuentas: cuentas, cuentaS: cuentaS, cuentaD: cuentaD]
+        def cuentaD = Cuenta.findByResultadoAndEmpresa("D", session.empresa)
+
+        return [cuentas: cuentas, cuentaS: cuentaS, cuentaD: cuentaD]
     }
 
     def grabarCuentaResultado() {
-        println "grabar cuentas resultado " + params
+//        println "grabar cuentas resultado " + params
+
+        def supOld = Cuenta.findByResultadoAndEmpresa("S", session.empresa)
+        def deficitOld = Cuenta.findByResultadoAndEmpresa("D", session.empresa)
+
         def sup = Cuenta.get(params.super)
+        if (sup.id != supOld.id) {
+            supOld.resultado = null
+            sup.resultado = "S"
+            if (!sup.save(flush: true)) {
+                println sup.errors
+            }
+            if (!supOld.save(flush: true)) {
+                println supOld.errors
+            }
+        }
+
         def deficit = Cuenta.get(params.deficit)
-        sup.resultado = "S"
-        deficit.resultado = "D"
-        sup.save(flush: true)
-        deficit.save(flush: true)
+        if (deficit.id != deficitOld.id) {
+            deficitOld.resultado = null
+            deficit.resultado = "D"
+            if (!deficit.save(flush: true)) {
+                println deficit.errors
+            }
+            if (!deficitOld.save(flush: true)) {
+                println deficitOld.errors
+            }
+        }
         flash.message = "Datos guardados"
         redirect(action: 'cuentaResultados')
     }

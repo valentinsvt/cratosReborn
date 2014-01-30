@@ -38,7 +38,9 @@
                 <div class="col-md-2">
                     <g:select name="anio" from="${anios}" class="form-control"/>
                 </div>
+            </div>
 
+            <div class="form-group">
                 <label for="mes" class="col-md-1 control-label">Mes</label>
 
                 <div class="col-md-2">
@@ -46,12 +48,13 @@
                         <g:select name="mes" class="form-control" from="${periodos}" optionKey="id" optionValue="val"/>
                     </span>
                 </div>
+            </div>
 
-                <div class="col-md-2">
+            <div class="row">
+                <div class="col-md-3 text-center">
                     <a href="#" class="btn btn-success" id="btnPrint">Generar</a>
                 </div>
             </div>
-
         </g:form>
 
 
