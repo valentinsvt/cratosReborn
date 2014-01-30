@@ -21,13 +21,14 @@
     </head>
 
     <body>
-        <div class="container entero ui-widget-content ui-corner-all">
-            <h1 class="titulo center ui-widget-header ui-corner-all" style="margin-bottom: 5px; margin-left: 8px;height: 30px;line-height: 30px;padding-left: 30px;margin-bottom: 20px;">
-                Conciliaci&oacute;n Bancaria
-            </h1>
+        <elm:flashMessage tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
 
-            <g:form action="validarPagoAux" name="frmValidarPagoAux">
-                <table border="1">
+        <g:form action="validarPagoAux" name="frmValidarPagoAux">
+            <div class="vertical-container vertical-container-list">
+                <p class="css-vertical-text">Conciliación bancaria</p>
+
+                <div class="linea"></div>
+                <table class="table table-condensed table-bordered table-striped table-hover">
                     <thead>
                         <tr>
                             <th>Fecha</th>
@@ -39,46 +40,55 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <g:each in="${pagos}" var="pago" status="i">
-                            <tr class="${i % 2 == 0 ? 'even' : 'odd'}">
-                                <td>
-                                    <g:formatDate date="${pago.fecha}" format="dd-MM-yyyy"/>
-                                </td>
-                                <td>
-                                    ${pago.factura}
-                                </td>
-                                <td>
-                                    ${pago.tipoDocumento.descripcion}
-                                </td>
-                                <td>
-                                    ${pago.referencia}
-                                </td>
-                                <td style="text-align:right;">
-                                    <g:formatNumber number="${pago.monto}" minFractionDigits="2" maxFractionDigits="2"/>
-                                </td>
-                                <td style="text-align:center;">
-                                    <g:checkBox name="${pago.id}"/>
-                                </td>
+                        <g:if test="${pagos.size() > 0}">
+                            <g:each in="${pagos}" var="pago" status="i">
+                                <tr>
+                                    <td>
+                                        <g:formatDate date="${pago.fecha}" format="dd-MM-yyyy"/>
+                                    </td>
+                                    <td>
+                                        ${pago.factura}
+                                    </td>
+                                    <td>
+                                        ${pago.tipoDocumento.descripcion}
+                                    </td>
+                                    <td>
+                                        ${pago.referencia}
+                                    </td>
+                                    <td style="text-align:right;">
+                                        <g:formatNumber number="${pago.monto}" minFractionDigits="2" maxFractionDigits="2"/>
+                                    </td>
+                                    <td style="text-align:center;">
+                                        <g:checkBox name="${pago.id}"/>
+                                    </td>
+                                </tr>
+                            </g:each>
+                        </g:if>
+                        <g:else>
+                            <tr class="danger text-center">
+                                <td colspan="6">No se encontraron pagos.</td>
                             </tr>
-                        </g:each>
+                        </g:else>
                     </tbody>
                 </table>
 
-                <div class="ui-widget-header buttons botones">
-                    <a href="#" class="btnGuardar">Guardar</a>
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <g:if test="${pagos.size() > 0}">
+                            <a href="#" class="btn btn-success btnGuardar"><i class="fa fa-save"></i> Guardar</a>
+                        </g:if>
+                    </div>
                 </div>
-            </g:form>
-        </div>
+            </div>
+        </g:form>
+
 
         <script type="text/javascript">
             $(function () {
-                $(".btnGuardar").button({
-                    icons : {
-                        primary : "ui-icon-check"
-                    }
-                }).click(function () {
-                            $("#frmValidarPagoAux").submit();
-                        });
+                $(".btnGuardar").click(function () {
+                    $("#frmValidarPagoAux").submit();
+                });
             });
         </script>
 

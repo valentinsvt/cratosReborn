@@ -1,91 +1,97 @@
 package cratos
 
-import org.springframework.dao.DataIntegrityViolationException
 
 class CargoController extends cratos.seguridad.Shield {
 
-static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    static allowedMethods = [save: "POST", delete: "POST", save_ajax: "POST", delete_ajax: "POST"]
 
-def index() {
-    redirect(action: "list", params: params)
-}
+    def index() {
+        redirect(action: "list", params: params)
+    } //index
 
-def list() {
-    params.max = Math.min(params.max ? params.int('max') : 10, 100)
-    [cargoInstanceList: Cargo.list(params), cargoInstanceTotal: Cargo.count()]
-}
+    def list() {
+        params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+        def cargoInstanceList = Cargo.findAllByEmpresa(session.empresa, params)
+        def cargoInstanceCount = Cargo.countByEmpresa(session.empresa)
+        if (cargoInstanceList.size() == 0 && params.offset && params.max) {
+            params.offset = params.offset - params.max
+        }
+        cargoInstanceList = Cargo.findAllByEmpresa(session.empresa, params)
+        return [cargoInstanceList: cargoInstanceList, cargoInstanceCount: cargoInstanceCount]
+    } //list
 
-def create() {
-    [cargoInstance: new Cargo(params)]
-}
+    def show_ajax() {
+        if (params.id) {
+            def cargoInstance = Cargo.get(params.id)
+            if (!cargoInstance) {
+                notFound_ajax()
+                return
+            }
+            return [cargoInstance: cargoInstance]
+        } else {
+            notFound_ajax()
+        }
+    } //show para cargar con ajax en un dialog
 
-def save() {
-    def cargoInstance
-    if(params.id) {
-        cargoInstance = Cargo.get(params.id)
-        if(!cargoInstance) {
-            flash.message = "No se encontr&oacute; Cargo a modificar"
-            render "NO"
+    def form_ajax() {
+        def cargoInstance = new Cargo(params)
+        if (params.id) {
+            cargoInstance = Cargo.get(params.id)
+            if (!cargoInstance) {
+                notFound_ajax()
+                return
+            }
+        }
+        return [cargoInstance: cargoInstance]
+    } //form para cargar con ajax en un dialog
+
+    def save_ajax() {
+        params.each { k, v ->
+            if (v != "date.struct" && v instanceof java.lang.String) {
+                params[k] = v.toUpperCase()
+            }
+        }
+
+        params.empresa = session.empresa
+
+        def cargoInstance = new Cargo()
+        if (params.id) {
+            cargoInstance = Cargo.get(params.id)
+            if (!cargoInstance) {
+                notFound_ajax()
+                return
+            }
+        } //update
+        cargoInstance.properties = params
+        if (!cargoInstance.save(flush: true)) {
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Cargo."
+            msg += renderErrors(bean: cargoInstance)
+            render msg
             return
         }
-        cargoInstance.properties = params
-    } else {
-        cargoInstance = new Cargo(params)
-    }
-    if (!cargoInstance.save(flush: true)) {
-        render "NO"
-        println cargoInstance.errors
-        flash.message = "Ha ocurrido un error al guardar Cargo"
-        return
-    }
+        render "OK_${params.id ? 'Actualización' : 'Creación'} de Cargo exitosa."
+    } //save para grabar desde ajax
 
-    flash.message = "Cargo guardado exitosamente"
-//    redirect(action: "show", id: cargoInstance.id)
-    render "OK"
-}
+    def delete_ajax() {
+        if (params.id) {
+            def cargoInstance = Cargo.get(params.id)
+            if (cargoInstance) {
+                try {
+                    cargoInstance.delete(flush: true)
+                    render "OK_Eliminación de Cargo exitosa."
+                } catch (e) {
+                    render "NO_No se pudo eliminar Cargo."
+                }
+            } else {
+                notFound_ajax()
+            }
+        } else {
+            notFound_ajax()
+        }
+    } //delete para eliminar via ajax
 
-def show() {
-    def cargoInstance = Cargo.get(params.id)
-    if (!cargoInstance) {
-        flash.message = "No se encontr&oacute; Cargo a mostrar"
-//            redirect(action: "list")
-        render "NO"
-        return
-    }
+    protected void notFound_ajax() {
+        render "NO_No se encontró Cargo."
+    } //notFound para ajax
 
-    [cargoInstance: cargoInstance]
-}
-
-def edit() {
-    def cargoInstance = Cargo.get(params.id)
-    if (!cargoInstance) {
-        flash.message = "No se encontr&oacute; Cargo a modificar"
-//            redirect(action: "list")
-        render "NO"
-        return
-    }
-
-    [cargoInstance: cargoInstance]
-}
-
-def delete() {
-    def cargoInstance = Cargo.get(params.id)
-    if (!cargoInstance) {
-        flash.message = "No se encontr&oacute; Cargo a eliminar"
-        render "NO"
-//            redirect(action: "list")
-        return
-    }
-
-    try {
-        cargoInstance.delete(flush: true)
-        flash.message = "Cargo eliminado exitosamente"
-        redirect(action: "list")
-    }
-    catch (DataIntegrityViolationException e) {
-        flash.message = "Ha ocurrido un error al eliminar Cargo"
-//            redirect(action: "show", id: params.id)
-    }
-    render "OK"
-}
 }

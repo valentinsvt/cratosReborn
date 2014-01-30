@@ -1,91 +1,95 @@
 package cratos
 
-import org.springframework.dao.DataIntegrityViolationException
 
 class FormaDePagoController extends cratos.seguridad.Shield {
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    static allowedMethods = [save: "POST", delete: "POST", save_ajax: "POST", delete_ajax: "POST"]
 
     def index() {
         redirect(action: "list", params: params)
-    }
+    } //index
 
     def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [formaDePagoInstanceList: FormaDePago.list(params), formaDePagoInstanceTotal: FormaDePago.count()]
-    }
+        params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+        def formaDePagoInstanceList = FormaDePago.list(params)
+        def formaDePagoInstanceCount = FormaDePago.count()
+        if(formaDePagoInstanceList.size() == 0 && params.offset && params.max) {
+            params.offset = params.offset - params.max
+        }
+        formaDePagoInstanceList = FormaDePago.list(params)
+        return [formaDePagoInstanceList: formaDePagoInstanceList, formaDePagoInstanceCount: formaDePagoInstanceCount]
+    } //list
 
-    def create() {
-        [formaDePagoInstance: new FormaDePago(params)]
-    }
-
-    def save() {
-        def formaDePagoInstance
-        if (params.id) {
-            formaDePagoInstance = FormaDePago.get(params.id)
-            if (!formaDePagoInstance) {
-                flash.message = "No se encontr&oacute; FormaDePago a modificar"
-                render "NO"
+    def show_ajax() {
+        if(params.id) {
+            def formaDePagoInstance = FormaDePago.get(params.id)
+            if(!formaDePagoInstance) {
+                notFound_ajax()
                 return
             }
-            formaDePagoInstance.properties = params
+            return [formaDePagoInstance: formaDePagoInstance]
         } else {
-            formaDePagoInstance = new FormaDePago(params)
+            notFound_ajax()
         }
-        if (!formaDePagoInstance.save(flush: true)) {
-            render "NO"
-            println formaDePagoInstance.errors
-            flash.message = "Ha ocurrido un error al guardar FormaDePago"
+    } //show para cargar con ajax en un dialog
+
+    def form_ajax() {
+        def formaDePagoInstance = new FormaDePago(params)
+        if(params.id) {
+            formaDePagoInstance = FormaDePago.get(params.id)
+            if(!formaDePagoInstance) {
+                notFound_ajax()
+                return
+            }
+        }
+        return [formaDePagoInstance: formaDePagoInstance]
+    } //form para cargar con ajax en un dialog
+
+    def save_ajax() {
+        params.each { k, v ->
+            if (v != "date.struct" && v instanceof java.lang.String) {
+                params[k] = v.toUpperCase()
+            }
+        }
+
+        def formaDePagoInstance = new FormaDePago()
+        if(params.id) {
+            formaDePagoInstance = FormaDePago.get(params.id)
+            if(!formaDePagoInstance) {
+                notFound_ajax()
+                return
+            }
+        } //update
+        formaDePagoInstance.properties = params
+        if(!formaDePagoInstance.save(flush:true)) {
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} FormaDePago."
+            msg += renderErrors(bean: formaDePagoInstance)
+            render msg
             return
         }
+        render "OK_${params.id ? 'Actualización' : 'Creación'} de FormaDePago exitosa."
+    } //save para grabar desde ajax
 
-        flash.message = "FormaDePago guardado exitosamente"
-//    redirect(action: "show", id: formaDePagoInstance.id)
-        render "OK"
-    }
-
-    def show() {
-        def formaDePagoInstance = FormaDePago.get(params.id)
-        if (!formaDePagoInstance) {
-            flash.message = "No se encontr&oacute; FormaDePago a mostrar"
-//            redirect(action: "list")
-            render "NO"
-            return
+    def delete_ajax() {
+        if(params.id) {
+            def formaDePagoInstance = FormaDePago.get(params.id)
+            if(formaDePagoInstance) {
+                try {
+                    formaDePagoInstance.delete(flush:true)
+                    render "OK_Eliminación de FormaDePago exitosa."
+                } catch (e) {
+                    render "NO_No se pudo eliminar FormaDePago."
+                }
+            } else {
+                notFound_ajax()
+            }
+        } else {
+            notFound_ajax()
         }
+    } //delete para eliminar via ajax
 
-        [formaDePagoInstance: formaDePagoInstance]
-    }
+    protected void notFound_ajax() {
+        render "NO_No se encontró FormaDePago."
+    } //notFound para ajax
 
-    def edit() {
-        def formaDePagoInstance = FormaDePago.get(params.id)
-        if (!formaDePagoInstance) {
-            flash.message = "No se encontr&oacute; FormaDePago a modificar"
-//            redirect(action: "list")
-            render "NO"
-            return
-        }
-
-        [formaDePagoInstance: formaDePagoInstance]
-    }
-
-    def delete() {
-        def formaDePagoInstance = FormaDePago.get(params.id)
-        if (!formaDePagoInstance) {
-            flash.message = "No se encontr&oacute; FormaDePago a eliminar"
-            render "NO"
-//            redirect(action: "list")
-            return
-        }
-
-        try {
-            formaDePagoInstance.delete(flush: true)
-            flash.message = "FormaDePago eliminado exitosamente"
-            redirect(action: "list")
-        }
-        catch (DataIntegrityViolationException e) {
-            flash.message = "Ha ocurrido un error al eliminar FormaDePago"
-//            redirect(action: "show", id: params.id)
-        }
-        render "OK"
-    }
 }

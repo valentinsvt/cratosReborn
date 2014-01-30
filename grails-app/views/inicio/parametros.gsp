@@ -185,7 +185,7 @@
                             <g:link controller="nacionalidad" action="list">Nacionalidad</g:link> del empelado.
                         </div><br>
                         <div class="item" texto="mess">
-                            <g:link controller="mes" action="arbol">Meses del año</g:link> para generar la nómina.
+                            <g:link controller="mes" action="list">Meses del año</g:link> para generar la nómina.
                         </div><br>
                         <div class="item" texto="base">
                             <g:link controller="base" action="list">Tabla de valores para declarar el impuesto a la renta</g:link>

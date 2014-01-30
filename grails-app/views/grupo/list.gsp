@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta name="layout" content="main">
-        <title>Lista de Grupos</title>
+        <title>Lista de Grupo</title>
     </head>
     <body>
 
@@ -30,7 +30,7 @@
         </div>
 
         <div class="vertical-container vertical-container-list">
-            <p class="css-vertical-text">Lista de Grupos</p>
+            <p class="css-vertical-text">Lista de Grupo</p>
 
             <div class="linea"></div>
             <table class="table table-condensed table-bordered table-striped table-hover">
@@ -41,7 +41,7 @@
                         
                         <th>Cuenta</th>
                         
-                        <g:sortableColumn property="descripcion" title="Descripción" />
+                        <g:sortableColumn property="descripcion" title="Descripcion" />
                         
                         <th width="110">Acciones</th>
                     </tr>
