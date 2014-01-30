@@ -29,7 +29,12 @@
                 </label>
 
                 <div class="col-md-6">
-                    <g:select id="cuenta" name="cuenta.id" from="${cratos.Cuenta.list()}" optionKey="id"
+                    %{--<g:select id="cuenta" name="cuenta.id" from="${cratos.Cuenta.list()}" optionKey="id"--}%
+                              %{--value="${grupoInstance?.cuenta?.id}" class="many-to-one form-control"--}%
+                              %{--noSelection="['null': '']"/>--}%
+
+
+                    <g:select id="cuenta" name="cuenta.id" from="${cuentas}" optionKey="id"
                               value="${grupoInstance?.cuenta?.id}" class="many-to-one form-control"
                               noSelection="['null': '']"/>
                 </div>

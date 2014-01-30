@@ -126,7 +126,13 @@ class GrupoController extends cratos.seguridad.Shield {
                 return
             }
         }
-        return [grupoInstance: grupoInstance]
+
+
+        def cuentas = Cuenta.findAllByNumeroLike('1%',);
+
+
+
+        return [grupoInstance: grupoInstance, cuentas: cuentas]
     } //form para cargar con ajax en un dialog
 
     def save_ajax() {
