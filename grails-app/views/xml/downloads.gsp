@@ -19,22 +19,29 @@
     </head>
 
     <body>
-        <div class="container entero ui-widget-content ui-corner-all">
-            <h1 class="titulo center ui-widget-header ui-corner-all" style="margin-bottom: 5px; margin-left: 8px;height: 30px;line-height: 30px;padding-left: 30px;margin-bottom: 20px;">
-                Archivos XML del Anexo Transaccional SRI
-            </h1>
 
-            <div style="margin-bottom: 10px;">
-                <g:link action="xml" class="btn">
-                    Regresar
+        <elm:flashMessage tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
+
+        <!-- botones -->
+        <div class="btn-toolbar toolbar">
+            <div class="btn-group">
+                <g:link action="xml" class="btn btn-default">
+                    <i class="fa fa-arrow-left"></i> Regresar
                 </g:link>
             </div>
+        </div>
 
-            <div>
+
+        <div class="vertical-container vertical-container-list">
+            <p class="css-vertical-text">Archivos XML del ATS</p>
+
+            <div class="linea"></div>
+
+            <p>
                 A continuación se presentan los archivos XML previamente generados. Haga click en el nombre del archivo para descargarlo.
-            </div>
+            </p>
 
-            <table border="1">
+            <table class="table table-condensed table-bordered table-striped table-hover">
                 <thead>
                     <tr>
                         <th>Mes</th>
@@ -58,14 +65,6 @@
                     </g:each>
                 </tbody>
             </table>
-
         </div>
-
-        <script type="text/javascript">
-            $(function () {
-                $(".btn").button();
-            });
-        </script>
-
     </body>
 </html>

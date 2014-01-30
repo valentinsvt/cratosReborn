@@ -57,9 +57,9 @@ class XmlController extends cratos.seguridad.Shield {
     }
 
     def getPeriodos() {
-        println "getPeriodos " + params
+//        println "getPeriodos " + params
         def periodos = getPeriodosByAnio(params.anio)
-        render g.select(name: "mes", from: periodos, optionKey: "id", optionValue: "val")
+        render g.select(name: "mes", from: periodos, optionKey: "id", optionValue: "val", class: "form-control")
     }
 
     def getPeriodosByAnio(anio) {

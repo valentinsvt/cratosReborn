@@ -20,35 +20,39 @@
     </head>
 
     <body>
-    <div class="container entero ui-widget-content ui-corner-all">
-        <h1 class="titulo center ui-widget-header ui-corner-all" style="margin-bottom: 5px; margin-left: 8px;height: 30px;line-height: 30px;padding-left: 30px;margin-bottom: 20px;">
-            XML del Anexo Transaccional SRI
-        </h1>
+        <elm:flashMessage tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
 
-        <div style="margin-bottom: 10px;">
-            <g:link action="downloads" class="btn">
-                Archivos
-            </g:link>
+        <!-- botones -->
+        <div class="btn-toolbar toolbar">
+            <div class="btn-group">
+                <g:link action="downloads" class="btn btn-default btnCrear">
+                    <i class="fa fa-files-o"></i> Archivos
+                </g:link>
+            </div>
         </div>
 
-        <g:form name="sriForm">
-            <div class="span-28" style="margin-left: 40px; margin-top: 10px; margin-bottom: 15px">
-                <label>Año</label>
-                <g:select name="anio" from="${anios}"/>
-                <label style="margin-left: 15px;">Mes</label>
-                <span id="spMes">
-                    <g:select name="mes" from="${periodos}" optionKey="id" optionValue="val"/>
-                </span>
+        <g:form class="form-horizontal" name="sriForm" role="form" action="save_ajax" method="POST">
+            <div class="form-group">
+                <label for="anio" class="col-md-1 control-label">Año</label>
 
-                <a href="#" class="btn ui-corner-all" style="margin-left: 15px;" id="btnPrint">Generar</a>
+                <div class="col-md-2">
+                    <g:select name="anio" from="${anios}" class="form-control"/>
+                </div>
+
+                <label for="mes" class="col-md-1 control-label">Mes</label>
+
+                <div class="col-md-2">
+                    <span id="spMes">
+                        <g:select name="mes" class="form-control" from="${periodos}" optionKey="id" optionValue="val"/>
+                    </span>
+                </div>
+
+                <div class="col-md-2">
+                    <a href="#" class="btn btn-success" id="btnPrint">Generar</a>
+                </div>
             </div>
-            </div>
+
         </g:form>
-
-        <div id="dialog-exists" title="Alerta">
-            <p id="pCont">
-            </p>
-        </div>
 
 
         <script type="text/javascript">
@@ -66,25 +70,9 @@
                 });
             }
             $(function () {
-                $("#anio").val("${new Date().format('yyyy')}");
+                var $anio = $("#anio");
+                $anio.val("${new Date().format('yyyy')}");
                 getPeriodos();
-                var $dlg = $("#dialog-exists");
-
-                $(".btn").button();
-
-                $("#dialog-exists").dialog({
-                    autoOpen      : false,
-                    modal         : true,
-                    draggable     : false,
-                    resizable     : false,
-                    closeOnEscape : false,
-                    width         : 640,
-                    buttons       : {
-                        Ok : function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                });
 
                 function crearXML(mes, anio, override) {
                     $.ajax({
@@ -99,47 +87,58 @@
                             var parts = msg.split("_");
                             if (parts[0] == "NO") {
                                 if (parts[1] == "1") {
-                                    $("#pCont").html("Ya existe un archivo XML para el periodo " + mes + "-" + anio + "." +
-                                                     "<ul><li>Si desea <strong>sobreescribir el archivo existente</strong>, haga click en el botón <strong>'Sobreescribir'</strong></li>" +
-                                                     "<li>Si desea <strong>descargar el archivo previamente generado</strong>, haga click en el botón <strong>'Descargar'</strong></li>" +
-                                                     "<li>Si desea <strong>ver la lista de archivos generados</strong>, haga cilck en el botón <strong>'Archivos'</strong></li></ul>");
-                                    $dlg.dialog("option", "width", 640);
-                                    $dlg.dialog("option", "title", "Alerta");
-                                    $dlg.dialog("option", "buttons", [
-                                        {
-                                            text : "Sobreescribir", click : function () {
-                                            crearXML(mes, anio, 1);
+                                    var msgs = "Ya existe un archivo XML para el periodo " + mes + "-" + anio + "." +
+                                               "<ul><li>Si desea <strong>sobreescribir el archivo existente</strong>, haga click en el botón <strong>'Sobreescribir'</strong></li>" +
+                                               "<li>Si desea <strong>descargar el archivo previamente generado</strong>, haga click en el botón <strong>'Descargar'</strong></li>" +
+                                               "<li>Si desea <strong>ver la lista de archivos generados</strong>, haga cilck en el botón <strong>'Archivos'</strong></li></ul>";
+                                    bootbox.dialog({
+                                        title   : "Alerta",
+                                        message : msgs,
+                                        buttons : {
+                                            sobreescribir : {
+                                                label     : "<i class='fa fa-pencil'></i> Sobreescribir",
+                                                className : "btn-primary",
+                                                callback  : function () {
+                                                    crearXML(mes, anio, 1);
+                                                }
+                                            },
+                                            descargar     : {
+                                                label     : "<i class='fa fa-download'></i> Descargar",
+                                                className : "btn-success",
+                                                callback  : function () {
+                                                    location.href = "${createLink(action:'downloadFile')}?mes=" + mes + "&anio=" + anio;
+                                                }
+                                            },
+                                            archivos      : {
+                                                label     : "<i class='fa fa-files-o'></i> Archivos",
+                                                className : "btn-default",
+                                                callback  : function () {
+                                                    location.href = "${createLink(action:'downloads')}";
+                                                }
+                                            },
+                                            cancelar      : {
+                                                label     : "Cancelar",
+                                                className : "btn-default",
+                                                callback  : function () {
+                                                }
+                                            }
                                         }
-                                        },
-                                        {
-                                            text : "Descargar", click : function () {
-                                            location.href = "${createLink(action:'downloadFile')}?mes=" + mes + "&anio=" + anio;
-                                        }
-                                        },
-                                        {
-                                            text : "Archivos", click : function () {
-                                            location.href = "${createLink(action:'downloads')}";
-                                        }
-                                        },
-                                        {
-                                            text : "Cancelar", click : function () {
-                                            $(this).dialog("close");
-                                        }
-                                        }
-                                    ]).dialog("open");
+                                    });
                                 }
                             } else if (parts[0] == "OK") {
-                                $("#pCont").html("Archivo generado exitosamente");
-                                $dlg.dialog("option", "width", 250);
-                                $dlg.dialog("option", "title", "Descargar archivo");
-                                $dlg.dialog("option", "buttons", [
-                                    {
-                                        text : "Descargar", click : function () {
-                                        location.href = "${createLink(action:'downloadFile')}?mes=" + mes + "&anio=" + anio;
-                                        $(this).dialog("close");
+                                bootbox.dialog({
+                                    title   : "Descargar archivo",
+                                    message : "Archivo generado exitosamente",
+                                    buttons : {
+                                        descargar : {
+                                            label     : "<i class='fa fa-download'> Descargar",
+                                            className : "btn-success",
+                                            callback  : function () {
+                                                location.href = "${createLink(action:'downloadFile')}?mes=" + mes + "&anio=" + anio;
+                                            }
+                                        }
                                     }
-                                    }
-                                ]).dialog("open");
+                                });
                             }
                         }
                     });
@@ -151,7 +150,7 @@
                     crearXML(mes, anio, 0);
                 });
 
-                $("#anio").change(function () {
+                $anio.change(function () {
                     getPeriodos();
                 });
             })
