@@ -153,11 +153,11 @@
                             item.total = total;
                             tdSubtotal.text(number_format(total, 2, ".", ""));
 
-                            %{--var pctIva = parseFloat("${iva}") / 100;--}%
-                            %{--item.iva = item.conIva * item.total * pctIva;--}%
-                            %{--item.ice = item.pctIce * item.total;--}%
+                        %{--var pctIva = parseFloat("${iva}") / 100;--}%
+                        %{--item.iva = item.conIva * item.total * pctIva;--}%
+                        %{--item.ice = item.pctIce * item.total;--}%
 
-                            %{--item.totalTodo = item.total + item.iva + item.ice;--}%
+                        %{--item.totalTodo = item.total + item.iva + item.ice;--}%
 
                             tdIva.text(number_format(item.iva, 2, ".", ""));
                             tdIce.text(number_format(item.ice, 2, ".", ""));

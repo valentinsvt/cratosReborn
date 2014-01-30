@@ -7,23 +7,115 @@ class AdquisicionesController extends cratos.seguridad.Shield {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST", delete: "GET"]
     def procesoService
 
+
+    /* ************************ COPIAR DESDE AQUI ****************************/
+
+    def list() {
+        params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+        def adquisicionesInstanceList = Adquisiciones.list(params)
+        def adquisicionesInstanceCount = Adquisiciones.count()
+        if (adquisicionesInstanceList.size() == 0 && params.offset && params.max) {
+            params.offset = params.offset - params.max
+        }
+        adquisicionesInstanceList = Adquisiciones.list(params)
+        return [adquisicionesInstanceList: adquisicionesInstanceList, adquisicionesInstanceCount: adquisicionesInstanceCount]
+    } //list
+
+    def show_ajax() {
+        if (params.id) {
+            def adquisicionesInstance = Adquisiciones.get(params.id)
+            if (!adquisicionesInstance) {
+                notFound_ajax()
+                return
+            }
+            return [adquisicionesInstance: adquisicionesInstance]
+        } else {
+            notFound_ajax()
+        }
+    } //show para cargar con ajax en un dialog
+
+    def form_ajax() {
+        def adquisicionesInstance = new Adquisiciones(params)
+        if (params.id) {
+            adquisicionesInstance = Adquisiciones.get(params.id)
+            if (!adquisicionesInstance) {
+                notFound_ajax()
+                return
+            }
+        }
+        return [adquisicionesInstance: adquisicionesInstance]
+    } //form para cargar con ajax en un dialog
+
+    def save_ajax() {
+
+        params.each { k, v ->
+            if (v != "date.struct" && v instanceof java.lang.String) {
+                params[k] = v.toUpperCase()
+            }
+        }
+
+        def adquisicionesInstance = new Adquisiciones()
+        if (params.id) {
+            adquisicionesInstance = Adquisiciones.get(params.id)
+            if (!adquisicionesInstance) {
+                notFound_ajax()
+                return
+            }
+        } //update
+
+        adquisicionesInstance.properties = params
+
+        if (!adquisicionesInstance.save(flush: true)) {
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Adquisiciones."
+            msg += renderErrors(bean: adquisicionesInstance)
+            render msg
+            return
+        }
+        render "OK_${params.id ? 'Actualización' : 'Creación'} de Adquisiciones exitosa."
+    } //save para grabar desde ajax
+
+    def delete_ajax() {
+        if (params.id) {
+            def adquisicionesInstance = Adquisiciones.get(params.id)
+            if (adquisicionesInstance) {
+                try {
+                    adquisicionesInstance.delete(flush: true)
+                    render "OK_Eliminación de Adquisiciones exitosa."
+                } catch (e) {
+                    render "NO_No se pudo eliminar Adquisiciones."
+                }
+            } else {
+                notFound_ajax()
+            }
+        } else {
+            notFound_ajax()
+        }
+    } //delete para eliminar via ajax
+
+    protected void notFound_ajax() {
+        render "NO_No se encontró Adquisiciones."
+    } //notFound para ajax
+    /* ************** copiado hasta aqui *****************************************/
+    
+    
+    
     def index() {
         redirect(action: "create", params: params)
 //
     }
 
-    def list() {
-
-
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        if (!params.sort) {
-            params.sort = "fecha"
-            params.order = "desc"
-        }
-
-
-        [adquisicionesInstanceList: Adquisiciones.list(params), adquisicionesInstanceTotal: Adquisiciones.count()]
-    }
+//    def list() {
+//
+//
+//        params.max = Math.min(params.max ? params.int('max') : 10, 100)
+//        if (!params.sort) {
+//            params.sort = "fecha"
+//            params.order = "desc"
+//        }
+//
+//
+//        [adquisicionesInstanceList: Adquisiciones.list(params), adquisicionesInstanceTotal: Adquisiciones.count()]
+//    }
 
     def datosSri() {
         def orden = OrdenCompra.get(params.ordenCompra)

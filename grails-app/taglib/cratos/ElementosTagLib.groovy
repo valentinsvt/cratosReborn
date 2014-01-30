@@ -9,6 +9,10 @@ class ElementosTagLib {
 
     static namespace = "elm"
 
+    def datePicker = { attrs->
+        out << "Este tag ya no existe...utilizar elm:datepicker en su lugar..."
+    }
+
     /**
      * crea un div para el not found (con el fantasmita)
      */

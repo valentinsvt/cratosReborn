@@ -18,23 +18,45 @@
     <body>
         <div id="list-cuenta">
 
-            <div id="loading" class="text-center">
-                <p>
-                    Cargando el árbol del plan de cuentas
-                </p>
+            <g:if test="${hh > 0}">
+                <div id="loading" class="text-center">
+                    <p>
+                        Cargando el árbol del plan de cuentas
+                    </p>
 
-                <p>
-                    <img src="${resource(dir: 'images/spinners', file: 'loading_new.GIF')}" alt='Cargando...'/>
-                </p>
+                    <p>
+                        <img src="${resource(dir: 'images/spinners', file: 'loading_new.GIF')}" alt='Cargando...'/>
+                    </p>
 
-                <p>
-                    Por favor espere
-                </p>
-            </div>
+                    <p>
+                        Por favor espere
+                    </p>
+                </div>
 
-            <div id="tree" class="hide" style="overflow-y: auto; height: 428px;">
+                <div id="tree" class="hide" style="overflow-y: auto; height: 428px;">
 
-            </div>
+                </div>
+            </g:if>
+            <g:else>
+                <div class="alert alert-danger">
+                    <i class="fa icon-ghost fa-4x pull-left"></i>
+
+                    <h3>Alerta</h3>
+
+                    <p>
+                        Su empresa no tiene un plan de cuentas configurado.
+                    </p>
+
+                    <p>
+                        Puede crear uno manualmente creando una cuenta ahora, o copiar el plan de cuentas por defecto.
+                    </p>
+
+                    <p>
+                        <a href="#" id="btnCreate" class="btn btn-success"><i class="fa fa-file-o"></i> Crear cuenta</a>
+                        <g:link action="copiarCuentas" class="btn btn-primary btnCopiar"><i class="fa fa-copy"></i> Copiar plan de cuentas</g:link>
+                    </p>
+                </div>
+            </g:else>
         </div>
 
         <script type="text/javascript">
@@ -254,6 +276,15 @@
             }
 
             $(function () {
+
+                $(".btnCopiar").click(function() {
+                    openLoader("Copiando");
+                });
+
+                $("#btnCreate").click(function () {
+                    createEditRow(null, 0, "Crear");
+                });
+
                 $('#tree').on("loaded.jstree",function () {
                     $("#loading").hide();
                     $("#tree").removeClass("hide").show();

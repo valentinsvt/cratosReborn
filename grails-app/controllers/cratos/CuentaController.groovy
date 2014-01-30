@@ -69,7 +69,11 @@ class CuentaController extends cratos.seguridad.Shield {
 
         if (id == "#") {
             //root
-            tree = "<li id='root' class='root hasChildren jstree-closed' data-jstree='{\"type\":\"root\"}' level='0' ><a href='#' class='label_arbol'>Plan de cuentas</a></li>"
+            def hh = Cuenta.countByNivelAndEmpresa(Nivel.get(1), session.empresa, [sort: "numero"])
+            if (hh > 0) {
+                clase = "hasChildren jstree-closed"
+            }
+            tree = "<li id='root' class='root ${clase}' data-jstree='{\"type\":\"root\"}' level='0' ><a href='#' class='label_arbol'>Plan de cuentas</a></li>"
         } else if (id == "root") {
             hijos = Cuenta.findAllByNivelAndEmpresa(Nivel.get(1), session.empresa, [sort: "numero"])
         } else {
@@ -148,7 +152,8 @@ class CuentaController extends cratos.seguridad.Shield {
     }
 
     def list() {
-
+        def hh = Cuenta.countByNivelAndEmpresa(Nivel.get(1), session.empresa, [sort: "numero"])
+        return [hh: hh]
     }
 
     def list_loadAll() {
@@ -350,6 +355,64 @@ class CuentaController extends cratos.seguridad.Shield {
         }
     }
 
+
+    def crearDefaults() {
+        def emp = Empresa.get(1)
+        recursivoCuentas2(null, null, emp, null)
+        render "DONE"
+    }
+
+    def recursivoCuentas2(padreOrigen, padreDestino, empresaOrigen, empresaDestino) {
+        def originales
+        if (padreOrigen) {
+            if (empresaOrigen) {
+                originales = Cuenta.findAllByPadreAndEmpresa(padreOrigen, empresaOrigen)
+            } else {
+                originales = Cuenta.findAllByPadreAndEmpresaIsNull(padreOrigen)
+            }
+        } else {
+            if (empresaOrigen) {
+                originales = Cuenta.findAllByNivelAndEmpresa(Nivel.get(1), empresaOrigen)
+            } else {
+                originales = Cuenta.findAllByNivelAndEmpresaIsNull(Nivel.get(1))
+            }
+        }
+
+        originales.each { cuenta ->
+            def esp = ""
+            (cuenta.nivelId - 1).times {
+                esp += "\t"
+            }
+            println esp + cuenta
+            def nueva = new Cuenta()
+            nueva.properties = cuenta.properties
+            if (empresaDestino) {
+                nueva.empresa = empresaDestino
+            } else {
+                nueva.empresa = null
+            }
+            if (padreDestino) {
+                nueva.padre = padreDestino
+            } else {
+                nueva.padre = null
+            }
+            if (nueva.save(flush: true)) {
+                recursivoCuentas2(cuenta, nueva, empresaOrigen, empresaDestino)
+            } else {
+                println nueva.errors
+            }
+        }
+    }
+
+    def copiarCuentas() {
+        def empresa = Empresa.get(session.empresa.id)
+
+        if (Cuenta.countByEmpresa(empresa) == 0) {
+            recursivoCuentas2(null, null, null, empresa)
+        }
+        redirect(action: 'list')
+    }
+
     def show_ajax() {
         if (params.id) {
             def cuentaInstance = Cuenta.get(params.id)
@@ -372,20 +435,25 @@ class CuentaController extends cratos.seguridad.Shield {
                 notFound_ajax()
                 return
             }
-            hijos = Cuenta.countByPadre(cuentaInstance)
+            hijos = Cuenta.countByPadreAndEmpresa(cuentaInstance, session.empresa)
         } else {
             cuentaInstance.padre = Cuenta.get(params.padre)
             cuentaInstance.nivel = Nivel.get(params.lvl.toInteger() + 1)
-            def last = Cuenta.findAllByPadre(cuentaInstance.padre, [sort: "numero"]).last()
-            def parts = last.numero.split("\\.")
-            if (parts.size() > 0) {
-                def next = parts.last().toInteger() + 1
-                def num = ""
-                for (def i = 0; i < parts.size() - 1; i++) {
-                    num += parts[i] + "."
+            def siblings = Cuenta.findAllByPadreAndEmpresa(cuentaInstance.padre, session.empresa, [sort: "numero"])
+            if (siblings) {
+                def last = siblings.last()
+                def parts = last.numero.split("\\.")
+                if (parts.size() > 0) {
+                    def next = parts.last().toInteger() + 1
+                    def num = ""
+                    for (def i = 0; i < parts.size() - 1; i++) {
+                        num += parts[i] + "."
+                    }
+                    num += next.toString().padLeft(2, "0")
+                    cuentaInstance.numero = num
                 }
-                num += next.toString().padLeft(2, "0")
-                cuentaInstance.numero = num
+            } else {
+                cuentaInstance.numero = "1"
             }
         }
         return [cuentaInstance: cuentaInstance, hijos: hijos]
@@ -400,11 +468,11 @@ class CuentaController extends cratos.seguridad.Shield {
                 render true
                 return
             } else {
-                render Cuenta.countByNumero(params.numero) == 0
+                render Cuenta.countByNumeroAndEmpresa(params.numero, session.empresa) == 0
                 return
             }
         } else {
-            render Cuenta.countByNumero(params.numero) == 0
+            render Cuenta.countByNumeroAndEmpresa(params.numero, session.empresa) == 0
             return
         }
     }
@@ -417,7 +485,7 @@ class CuentaController extends cratos.seguridad.Shield {
             }
         }
         params.estado = 'A'
-//        params.empresa = session.empresa
+        params.empresa = session.empresa
         def cuentaInstance = new Cuenta()
         if (params.id) {
             cuentaInstance = Cuenta.get(params.id)
