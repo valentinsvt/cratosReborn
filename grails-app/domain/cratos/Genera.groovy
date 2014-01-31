@@ -30,7 +30,7 @@ class Genera implements Serializable {
         porcentaje(blank: true, nullable: true, attributes: [title: 'porcentaje'])
         tipoComprobante(blank: false, attributes: [title: 'tipoProveedor'])
         cuenta(blank: true, nullable: true, attributes: [title: 'cuenta'])
-        gestor(blank: true, nullable: true, attributes: [title: 'gestor'])
+        gestor(blank: false, nullable: false, attributes: [title: 'gestor'])
         debeHaber(blank: false, maxSize: 1, attributes: [title: 'debe o haber'])
     }
 }

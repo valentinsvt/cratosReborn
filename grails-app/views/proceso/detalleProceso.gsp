@@ -8,7 +8,7 @@
             <g:if test="${comp.registrado != 'S'}">
                 <a href="#" class="btn registrar btn-success" id="reg_${comp?.id}" idComp="${comp?.id}" style="margin-bottom: 10px;">
                     <i class="fa fa-pencil-square-o"></i>
-                    Registrar comprobante
+                    Mayorizar
                 </a>
             </g:if>
             <g:else>
@@ -70,13 +70,15 @@
         <g:set var="aux" value="${asiento.suma()}"/>
         <g:if test="${asiento.comprobante == comp}">
             <tr>
-                <td style="width: 40px;" class="auxltd"><g:if test="${asiento.cuenta.auxiliar == 'S'}">
+                <td style="width: 40px;" class="auxltd">
+                    <g:if test="${asiento.cuenta.auxiliar == 'S' && proceso.tipoProceso!='P' && comp.registrado=='S' }">
                     <div style="float: left; margin-left: 15px;" class="auxbtn btnpq ui-state-default ui-corner-all" id="axul_${asiento.cuenta.id}"
                          idAs="${asiento.id}" reg="${comp.registrado}" max="${Math.abs(asiento.debe - asiento.haber)}" aux="${aux ?: 0}"
                          data-debe="${asiento.debe ?: 0}" data-haber="${asiento.haber ?: 0}">
                         <span class="ui-icon ui-icon-circle-plus"></span>
                     </div>
-                </g:if></td>
+                </g:if>
+                </td>
                 <td>
                     <input type="hidden" id="hid_${i}" name="idAsientos" value="${asiento.id}">
                     <g:if test="${asiento.comprobante.registrado == 'S'}">
@@ -138,69 +140,84 @@
 </g:each>
 
 <!-- Modal -->
-<div class="modal fade long" id="modal-auxiliares" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
+<div class="modal fade longModal" id="modal-auxiliares" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content ">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel-proveedor">Plan de pagos</h4>
+                <b>Plan de pagos</b>
             </div>
             <div class="modal-body">
                 <input type="hidden" id="idAsiento">
-                <div style="width: 900px;">
-                    <div id="cab" style="display: none">
-
-                        <div style="height: 60px;">
-                            <div style="width: 100px;float: left">
-                                <div class="etiqueta">Asiento <span class="spRazon"></span></div>
-                                <span id="spAsiento"></span>
-                            </div>
-
-                            <div style="width: 100px;float: left; margin-left: 10px;">
-                                <div class="etiqueta">Registrado</div>
-                                <span id="spAsignado"></span>
-                            </div>
-
-                            <div style="width: 100px;float: left; margin-left: 10px;">
-                                <div class="etiqueta">Por registrar</div>
-                                <span id="spAsignar"></span>
-                            </div>
-                        </div>
-
-                        <div id="contenido" style="width: 870px;">
-                            <div class="etiqueta">Descripción:</div>
-                            <textarea style="width: 700px;height: 40px;" name="descripcionAux" class="ui-corner-all"></textarea> <br>
-                            <g:if test="${proceso?.proveedor == null}">
-                                <div class="etiqueta">Proveedor:</div>  <g:select id="pr" name="proveedor.id" from="${cratos.Proveedor.list()}" label=" Proveedor: " value="" optionKey="id"></g:select><br>
-                            </g:if>
-                        </div>
-
-                        <div class="span-4" style="float: left;">
-                            <div class="etiqueta">Fecha de pago:</div>
-                            <elm:datepicker name="fecha"  title="Fecha de pago" class="datepicker form-control required" value=""  maxDate="new Date()" style="width: 80px; margin-left: 5px" />
-                            %{--<elm:datePicker class="field ui-corner-all" title="Fecha" name="fecha" id="axlr_fecha" style="width:100px;"/>  <br>--}%
-                        </div>
-
-
+                <div class="row">
+                    <div class="col-xs-2 negrilla">
+                        Asiento:
                     </div>
-
-                    <div style="width: 420px;float: left;">
-                        <div style="width: 145px;float: left">
-                            <div class="etiqueta">Valor <span class="spRazon"></span>:</div>
-                            <input type="text" class=" ui-widget-content ui-corner-all" name="valor" id="valor" style="width: 60px">
-                        </div>
-
-
-
-                        <div style="float: left;width: 70px; text-align: center;margin-top: 20px;margin-left: 0px;cursor: pointer;height: 20px;padding-top: 5px" class="agregarCuenta fg-button ui-state-default  ui-corner-all " id="agregar_axul">Agregar</div>
+                    <div class="col-xs-2 ">
+                        <span id="spAsiento"></span>
+                    </div>
+                    <div class="col-xs-2 negrilla">
+                        Registrado:
+                    </div>
+                    <div class="col-xs-2 ">
+                        <span id="spAsignado"></span>
+                    </div>
+                    <div class="col-xs-2 negrilla">
+                        Por registrar:
+                    </div>
+                    <div class="col-xs-2 ">
+                        <span id="spAsignar"></span>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-xs-2 negrilla">
+                        Descripción:
+                    </div>
+                    <div class="col-xs-8">
+                        <textarea style="height: 40px;" name="descripcionAux" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-2 negrilla">
+                        Fecha de pago:
+                    </div>
+                    <div class="col-xs-3 negrilla">
+                        %{--pilas con el ida de esta vaina--}%
+                        <elm:datepicker name="fecha-aux"  title="Fecha de pago" class="datepicker  axlr_fecha form-control required"  />
+                        %{--<elm:datePicker class="field ui-corner-all" title="Fecha" name="fecha" id="axlr_fecha" style="width:100px;"/>  <br>--}%
+                    </div>
+                    <div class="col-xs-2 negrilla">
+                        Proveedor:
+                    </div>
+                    <div class="col-xs-4 ">
+                        <g:if test="${!proceso?.proveedor}">
+                            <g:select id="pr" name="proveedor.id"  from="${cratos.Proveedor.findAllByEmpresa(session.empresa)}" label=" Proveedor: " class="form-control"  value="" optionKey="id"></g:select>
+                        </g:if>
+                        <g:else>
+                            <input type="hidden" id="pr" value="${proceso.proveedor.id}">
+                            ${proceso?.proveedor}
+                        </g:else>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-2 negrilla">
+                        Valor  <span class="spRazon"></span>:
+                    </div>
+                    <div class="col-xs-2">
+                        <input type="text" class=" form-control number required" name="valor" id="valor" value="0.00">
+                    </div>
+                    <div class="col-xs-2">
+                        <a href="#" id="agregar_axul" class="btn btn-azul" title="Agregar al plan de pagos">
+                            <i class="fa fa-plus"></i>
+                            Agregar
+                        </a>
+                    </div>
+                </div>
+                <div style="width: 800px;margin-top: 25px;margin-bottom: 15px;">
+                    <fieldset style="width: 780px;">
+                        <legend>Plan de pagos / cobros:</legend>
 
-                <div style="width: 900px;margin-top: 25px;float: left;margin-bottom: 15px;">
-                    <fieldset style="width: 880px;border: #FF8010 solid 1px">
-                        <legend>Auxiliares:</legend>
-
-                        <div id="listaAuxl" style="width:870px;">
+                        <div id="listaAuxl" style="width:770px;">
                             %{--<img src="${resource(dir: 'images', file: 'loading_bg.gif')}" alt="Cargando...."/>--}%
                         </div>
                     </fieldset>
@@ -334,18 +351,7 @@
         $(".registrar").click(function () {
             var id = $(this).attr("idComp");
             if (confirm("Esta seguro de mayorizar este comprobante? Esta acción modificará los saldos")) {
-                var coso = $.box({
-                    imageClass : "box_info",
-                    text       : "Por favor espere",
-                    title      : "Procesando",
-                    iconClose  : false,
-                    dialog     : {
-                        resizable     : false,
-                        draggable     : false,
-                        closeOnEscape : true,
-                        buttons       : { }
-                    }
-                });
+             openLoader("Mayorizando")
                 $.ajax({
                     type    : "POST",
                     url     : "${g.createLink(controller: 'proceso',action: 'registrarComprobante')}",
@@ -355,23 +361,8 @@
                         if (msg == "ok")
                             location.reload(true);
                         else {
-                            $.box({
-                                imageClass : "box_info",
-                                text       : msg,
-                                title      : "Error al mayorizar",
-                                iconClose  : false,
-                                dialog     : {
-                                    resizable     : false,
-                                    width         : 400,
-                                    draggable     : false,
-                                    closeOnEscape : true,
-                                    buttons       : {
-                                        "Cerrar" : function () {
-                                            $(this).dialog("close")
-                                        }
-                                    }
-                                }
-                            });
+                            closeLoader()
+                           bootbox.alert("Error al mayorizar")
                         }
                     }
                 });
@@ -457,7 +448,7 @@
 //            //console.log($(".auxbtn").data("debe"),$(".auxbtn").data("haber"),razon,$(this))
             var des = $.trim($("[name=descripcionAux]").val());
             var pro = $("#pr option:selected").val();
-            var fecha = $.trim($("#axlr_fecha").val());
+            var fecha = $.trim($("#fecha-aux_input").val());
             if (pro == undefined) {
                 pro = "-1";
             }
@@ -486,8 +477,8 @@
                 if (errores != "") {
                     errores += "<br/>";
                 }
-                errores += "<li>Ha sobrepasado el valor límite. La sumatoria de los auxiliares no debe exceder " + number_format(btnMax, 2, ".", "");
-                errores += "<br/>&nbsp;&nbsp;&nbsp(Valor máximo para este auxiliar: " + number_format(btnRestante, 2, ".", "") + ")</li>";
+                errores += "<li>Ha sobrepasado el valor límite. La sumatoria de los pagos progamados no debe exceder " + number_format(btnMax, 2, ".", "");
+                errores += "<br/>(Valor máximo para este asiento: " + number_format(btnRestante, 2, ".", "") + ")</li>";
             }
 
             if (isNaN(valor)) {
@@ -502,56 +493,31 @@
             }
 
             if (errores == "") {
-                $.box({
-                    id         : "loadingAux",
-                    imageClass : "box_loading",
-                    text       : "Por favor espere...",
-                    title      : "Cargando",
-                    iconClose  : false,
-                    dialog     : {
-                        draggable     : false,
-                        resizable     : false,
-                        closeOnEscape : false,
-                        buttons       : false
-                    }
-                });
+
+                openLoader()
                 $.ajax({
                     type    : "POST",
                     url     : "${g.createLink(controller: 'proceso',action: 'nuevoAuxiliar')}",
                     data    : "asiento.id=" + asientoId + "&tipoDocumento.id=" + td + "&valor=" + valor + "&razon=" + razon + "&descripcion=" + des + "&proceso=" + $("#idProceso").val() + "&proveedor.id=" + pro + "&fechaPago=" + fecha + "&referencia=" + referencia,
                     success : function (msg) {
-                        $("#loadingAux").dialog("close");
+                        closeLoader()
                         $("#listaAuxl").html("");
                         $("#listaAuxl").html(msg).show("slide", 700);
                         $("#td option:first").attr("selected", "selected");
-                        $("#valor").val("");
+                        $("#valor").val("0.00");
                         $('input[name=tipo]').attr('checked', true);
                         $("[name=descripcionAux]").val("");
                         $("#pr option:first").attr("selected", true);
-                        $("#axlr_fecha").val("");
+                        $("#fecha-aux_input").val("");
                         $btn.data("enAux", btnEnAux + parseFloat(valor));
                         $btn.data("restante", btnRestante - parseFloat(valor));
-
                         $("#spAsignado").text(number_format($btn.data("enAux"), 2, ".", ""));
                         $("#spAsignar").text(number_format($btn.data("restante"), 2, ".", ""));
                     }
                 });
             } else {
-                $.box({
-                    imageClass : "box_error",
-                    text       : "Por favor corrija lo siguiente:<br/><ul>" + errores + "</ul>",
-                    title      : "Error",
-                    iconClose  : false,
-                    dialog     : {
-                        draggable     : false,
-                        resizable     : false,
-                        closeOnEscape : false,
-                        buttons       : {
-                            "Aceptar" : function () {
-                            }
-                        }
-                    }
-                });
+                closeLoader()
+                bootbox.alert("Por favor corrija lo siguiente:<br/><ul>" + errores + "</ul>")
             }
 
         });

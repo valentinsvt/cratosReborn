@@ -34,10 +34,8 @@ class PagoAux implements Serializable {
         auxiliar(blank: false, nullable: false)
         fecha(nullable: true, blank: true)
         factura(nullable: true, blank: true, size: 1..30)
-
         tipoDocumento(blank: true, nullable: true, attributes: [title: 'tipoDocumento'])
-        referencia(blank: true, nullable: true, attributes: [title: 'documento de referencia'])
-
+        referencia(blank: true, nullable: true, attributes: [title: 'documento de referencia'],size:1..30)
         estado(blank: true, nullable: true)
     }
 }

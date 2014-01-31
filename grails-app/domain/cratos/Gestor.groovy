@@ -32,6 +32,6 @@ class Gestor implements Serializable {
         nombre(size: 1..127, blank: false, attributes: [title: 'nombre'])
         empresa(blank: true, nullable: true, attributes: [title: 'empresa'])
         fuente(blank: true, nullable: true, attributes: [title: 'fuente'])
-        observaciones(blank: true, maxSize: 127, attributes: [title: 'observaciones'])
+        observaciones(blank: true,nullable: true, maxSize: 127, attributes: [title: 'observaciones'])
     }
 }

@@ -127,6 +127,6 @@
 
     }
 
-   // paginar("paginate", "${(numRegistros)?numRegistros:0}" * 1)
+    paginar("paginate", "${(numRegistros)?numRegistros:0}" * 1)
 
 </script>

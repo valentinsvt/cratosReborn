@@ -96,7 +96,7 @@ class GestorContableController extends cratos.seguridad.Shield {
 
     def save() {
         params.movimientos = null
-        println "params save!!! " + params + " id " + params.id
+        println "params save gestor !!! " + params + " id " + params.id
         def p
         if (params.id == null || params.id == "") {
             // println "save "
@@ -109,11 +109,11 @@ class GestorContableController extends cratos.seguridad.Shield {
                 p.fecha = new Date()
                 p.empresa = session.empresa
                 p.save(flush: true)
-                //   println "errores gestor  " + p.properties.errors
+                println "errores gestor  " + p.errors
                 // println "empeiza genera"
                 if (session.movimientos.size() > 0) {
                     session.movimientos.each {
-                        println "  size!!!!!!  " + session.movimientos.size()
+                       // println "  size!!!!!!  " + session.movimientos.size()
                         it.gestor = p
                         println " save genera " + it + " " + it.save()
                         p.addToMovimientos(it)

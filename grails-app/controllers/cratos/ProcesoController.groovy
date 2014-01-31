@@ -145,6 +145,8 @@ class ProcesoController extends cratos.seguridad.Shield {
             redirect(controller: "shield", action: "ataques")
         }
     }
+
+    /*TODO Crear periodos y probar el mayorizar y desmayorizar... move on*/
     def registrarComprobante = {
         if (request.method == 'POST') {
 //            println "registrar comprobante " + params
@@ -287,7 +289,7 @@ class ProcesoController extends cratos.seguridad.Shield {
         def asiento = Asiento.get(params.id);
         def auxiliares = Auxiliar.findAllByAsiento(asiento)
         if (auxiliares.size() == 0) {
-            msn = "EL asiento no tiene auxiliares"
+            msn = "EL asiento no tiene registrado ningun plan de pagos"
         }
         def max = Math.abs(asiento.debe - asiento.haber)
         render(view: "detalleAuxiliares", model: [auxiliares: auxiliares, asiento: asiento, msn: msn, max: max])
@@ -326,12 +328,18 @@ class ProcesoController extends cratos.seguridad.Shield {
 
         if (request.method == 'POST') {
             println " borrar auxiliar " + params
-//            kerberosService.delete(params,Auxiliar,session.perfil,session.usuario)
             def aux = Auxiliar.get(params.id)
-            aux.delete(flush: true)
-            def asiento = Asiento.get(params.idAs)
-            def auxiliares = Auxiliar.findAllByAsiento(asiento)
-            render(view: "detalleAuxiliares", model: [auxiliares: auxiliares, asiento: asiento])
+            def pagos=PagoAux.findAllByAuxiliar(aux)
+            if(pagos.size()>0){
+                render "error"
+                return
+            }else{
+                aux.delete(flush: true)
+                def asiento = Asiento.get(params.idAs)
+                def auxiliares = Auxiliar.findAllByAsiento(asiento)
+                render(view: "detalleAuxiliares", model: [auxiliares: auxiliares, asiento: asiento])
+            }
+
         } else {
             redirect(controller: "shield", action: "ataques")
         }
@@ -370,17 +378,20 @@ class ProcesoController extends cratos.seguridad.Shield {
             def proceso = new Proceso()
             proceso.gestor = Gestor.get(params.gestor)
             proceso.contabilidad = session.contabilidad
-            proceso.descripcion = "Pago de auxiliar " + new Date().format("dd/MM/yyyy hh:mm") + " Monto: " + pago.monto + " Proveedor: " + pago.auxiliar?.asiento?.comprobante?.proceso?.proveedor
+            proceso.descripcion = "Pago de auxiliar " + new Date().format("dd-MM-yyyy hh:mm") + " Monto: " + pago.monto + " Proveedor: " + pago.auxiliar?.asiento?.comprobante?.proceso?.proveedor
             proceso.estado = "R"
             proceso.fecha = new Date()
             proceso.proveedor = pago.auxiliar.asiento.comprobante.proceso.proveedor
             proceso.tipoPago = pago.auxiliar.asiento.comprobante.proceso.tipoPago
             proceso.usuario = session.usuario
-            proceso.tipoComprobanteId = TipoComprobanteId.get(3)
+            /*TODO preguntar que es esto?*/
+            //proceso.tipoComprobanteId = TipoComprobanteId.get(3)
             proceso.valor = pago.monto
             proceso.impuesto = 0
-            proceso.documento = pago.factura
+            proceso.documento = pago.referencia
             proceso.pagoAux = pago
+            proceso.tipoProceso="P"
+            proceso.empresa=session.empresa
             println "valor " + proceso.valor + " inp " + proceso.impuesto
             if (proceso.save(flush: true)) {
                 procesoService.registrar(proceso, session.perfil, session.usuario)
@@ -391,6 +402,7 @@ class ProcesoController extends cratos.seguridad.Shield {
             }
 
         } else {
+            render "error"
             println "error save pago " + pago.errors
         }
     }
