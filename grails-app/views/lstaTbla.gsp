@@ -68,7 +68,7 @@
 </g:else>
 
 <script type="text/javascript">
-
+/*todo arreglar esto que esta dando error, aparentemente cuando hay solo 1*/
     function paginar(id, mostrar) {
 
         var tbody = $("#" + id)
@@ -127,6 +127,6 @@
 
     }
 
-    paginar("paginate", "${(numRegistros)?numRegistros:0}" * 1)
+   // paginar("paginate", "${(numRegistros)?numRegistros:0}" * 1)
 
 </script>

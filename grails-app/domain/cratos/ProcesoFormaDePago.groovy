@@ -3,7 +3,7 @@ package cratos
 class ProcesoFormaDePago {
 
     Proceso proceso
-    FormaDePago formaDePago
+    TipoPago tipoPago
 
     static mapping = {
         table 'prfp'
@@ -12,13 +12,13 @@ class ProcesoFormaDePago {
         id generator: 'identity'
         version false
         columns {
-           proceso column: 'prcs__id'
-            formaDePago column: 'frpg__id'
+            proceso column: 'prcs__id'
+            tipoPago column: 'tppg__id'
         }
     }
 
     static constraints = {
         proceso(blank:false,nullable: false)
-        formaDePago(blank:false,nullable: false)
+        tipoPago(blank:false,nullable: false)
     }
 }

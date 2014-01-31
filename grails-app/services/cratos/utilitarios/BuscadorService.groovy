@@ -218,6 +218,7 @@ class BuscadorService {
         }
         println "sql " + sql  + orderby+" --> pars "+res
         lista = dominio.findAll((sql+orderby).toString(), res,[max: 200])
+        println "lista "+lista
         lista.add(lista.size())
         if (lista.size() < 1 && tipo != "excluyente") {
             res = filtro("or", parametros, common, mapa, ignoreCase)
@@ -228,119 +229,4 @@ class BuscadorService {
         }
         return lista
     }
-
-    List buscarSQL(qry, qrwh = 'w', campos, orden, tpOrdn, numero, qord) {
-        def m = []
-        def cn = dbConnectionService.getConnection()
-        def i = 0
-        def sql = qry
-        def orderby = ""
-        def cc = campos.size() + 1
-        def reg = []
-
-        println "incio de buscarSQL"
-
-        if (qord.size() > 0) {
-            orderby = " order by " + qord
-        }
-        if (orden.size() > 4) {
-            if (orderby == "") {
-                orderby = " order by "
-            } else {
-                orderby += ","
-            }
-            orderby += "${orden} ${tpOrdn}"
-        }
-
-        println "----------orden ${orden}, tipo:${tpOrdn}"
-        if (qrwh?.size() > 0) {
-            sql = qry
-            sql += ' ' + qrwh
-            sql += ' and '
-            campos.eachWithIndex { campo, posC ->
-                sql += condicion(campo)
-                if (posC < campos.size() - 1) {
-                    sql += ' and '
-                }
-            }
-            sql += orderby
-        } else {
-            sql = qry
-            sql += ' where '
-            campos.eachWithIndex { campo, posC ->
-                sql += condicion(campo)
-                if (posC < campos.size() - 1) {
-                    sql += ' and '
-                }
-            }
-            sql += orderby
-        }
-
-        println "sql..........:" + sql
-
-        cn.getDb().eachRow(sql) { d ->
-            //m.add([d[0],d[1],d[2]])
-            //println "registro: " + d[4]
-            reg = []
-            numero.times() {  //número de campos a retornar
-                reg.add(d[it])
-            }
-            //println "registro:" + reg
-            m.add(reg)
-            i++
-        }
-        cn.disconnect()
-        m.add(i)
-        return m
-    }
-
-    String condicion(mapa) {
-        println "condicion: ${mapa}"
-        def where = ""
-        switch (mapa['op']) {
-            case "igual":
-            case "=":
-                where += mapa['cmpo'] + " = " + mapa['vlor']
-                break
-
-            case "mayor":
-            case ">":
-                where += mapa['cmpo'] + " > " + mapa['vlor']
-                break
-
-            case "menor":
-            case "<":
-                where += mapa['cmpo'] + " < " + mapa['vlor']
-                break
-
-            case "like":
-                where += "lower(" + mapa['cmpo'] + ")" + " like '%" + mapa['vlor'].toLowerCase() + "%'"
-                break
-
-            case "not like":
-                where += "lower(" + mapa['cmpo'] + ")" + " not like '%" + mapa['vlor'].toLowerCase() + "%'"
-                break
-
-            case "like izq":
-                where += "lower(" + mapa['cmpo'] + ")" + " like '%" + mapa['vlor'].toLowerCase() + "'"
-                break
-
-            case "like der":
-                where += "lower(" + mapa['cmpo'] + ")" + " like '" + mapa['vlor'].toLowerCase() + "%'"
-                break
-
-            case "not like izq":
-                where += "lower(" + mapa['cmpo'] + ")" + " not like '%" + mapa['vlor'].toLowerCase() + "'"
-                break
-
-            default:
-                where += mapa['cmpo'] + " = '" + mapa['vlor'] + "'"
-                break
-
-        }
-        return where
-
-    }
-
-
 }

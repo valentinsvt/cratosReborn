@@ -81,9 +81,9 @@
             </a>
         </g:if>
         <g:if test="${params.id}">
-            <g:if test="${proceso.adquisicion == null && proceso.fact == null && proceso.transferencia == null}">
+            <g:if test="${proceso.adquisicion == null && proceso.fact == null && proceso.transferencia == null && !registro}">
                 <a href="#" class="btn btn-success" id="registrarProceso">
-                    <i class="fa fa-register"></i>
+                    <i class="fa fa-pencil-square-o"></i>
                     Registrar
                 </a>
             </g:if>
@@ -93,12 +93,22 @@
         </g:link>
         <g:if test="${proceso}">
         %{--todo cambiar esto para que no solo sea por link--}%
-            <g:link class="btn btn-danger" id="${proceso?.id}" action="borrarProceso">
-                <i class="fa fa-basket"></i>
-                Borrar Proceso
-            </g:link>
+            <g:form action="borrarProceso" class="br_prcs" style="margin:0px;display: inline" >
+                <input type="hidden" name="id" value="${proceso?.id}">
+                <a class="btn btn-danger" id="btn-br-prcs" action="borrarProceso">
+                    <i class="fa fa-basket"></i>
+                    Borrar Proceso
+                </a>
+            </g:form>
         </g:if>
     </div>
+</div>
+<div style="padding: 0.7em; margin-top:5px; display: none;" class="alert alert-danger ui-corner-all" id="divErrores">
+    %{--<span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-alert"></span>--}%
+    <i class="fa fa-exclamation-triangle"> </i>
+    <span style="" id="spanError">Se encontraron los siguientes errores:</span>
+
+    <ul id="listaErrores"></ul>
 </div>
 <g:form name="procesoForm" action="save" method="post" class="frmProceso">
     <div class="vertical-container" style="margin-top: 25px;color: black;padding-bottom: 10px">
@@ -109,46 +119,45 @@
         <input type="hidden" name="empleado.id" value="${session.usuario.id}"/>
         <input type="hidden" name="periodoContable.id" value="${session?.contabilidad?.id}"/>
         <input type="hidden" name="data" id="data" value="${session?.contabilidad?.id}"/>
-        <div style="padding: 0.7em; margin-top:5px; display: none;" class="ui-state-error ui-corner-all" id="divErrores">
-            <span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-alert"></span>
-            <span style="font-weight: solid;" id="spanError">Se encontraron los siguientes errores:</span>
-
-            <ul id="listaErrores"></ul>
-        </div>
-
-
         <div class="row">
             <div class="col-xs-2 negrilla">
                 Gestor:
             </div>
             <div class="col-xs-3 negrilla">
                 <g:select class="form-control required" name="gestor.id" from="${cratos.Gestor.findAllByEstadoAndEmpresa('A', session.empresa, [sort: 'nombre'])}"
-                          label="Proceso tipo: " value="${proceso?.gestor?.id}" optionKey="id" optionValue="nombre" title="Proceso tipo"/>
+                          label="Proceso tipo: " value="${proceso?.gestor?.id}" optionKey="id" optionValue="nombre" title="Proceso tipo" disabled="${registro?true:false}" />
             </div>
             <div class="col-xs-2 negrilla">
                 Tipo de transacción:
             </div>
             <div class="col-xs-3 negrilla">
                 <g:select class="form-control required cmbRequired" name="tipoProceso"  id="tipoProceso" from="${tiposProceso}"
-                          label="Proceso tipo: " value="${proceso?.tipoProceso}" optionKey="key" optionValue="value" title="Tipo de la transacción"/>
+                          label="Proceso tipo: " value="${proceso?.tipoProceso}" optionKey="key" optionValue="value" title="Tipo de la transacción"  disabled="${registro?true:false}"/>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-2 negrilla">
                 Fecha:
             </div>
-            <div class="col-xs-3 negrilla">
-                <elm:datepicker name="fecha"  title="Fecha de registro a la contabilidad " class="datepicker form-control required" value="${proceso?.fecha}"  maxDate="new Date()" style="width: 80px; margin-left: 5px" />
+            <div class="col-xs-3 ">
+                <g:if test="${registro}">
+                    ${proceso?.fecha.format("dd-MM-yyyy")}
+                </g:if>
+                <g:else>
+                    <elm:datepicker name="fecha"  title="Fecha de registro a la contabilidad " class="datepicker form-control required" value="${proceso?.fecha}"  maxDate="new Date()" style="width: 80px; margin-left: 5px" />
+                </g:else>
             </div>
             <div class="col-xs-2 negrilla">
                 Proveedor:
             </div>
             <div class="col-xs-4 negrilla">
                 <input type="text" name="proveedor.ruc" class="form-control  label-shared" id="prov" disabled="true" value="${proceso?.proveedor?.ruc}" title="El proveedor o cliente"/>
-                <a href="#" id="btn_buscar" class="btn btn-azul">
-                    <i class="fa fa-search"></i>
-                    Buscar
-                </a>
+                <g:if test="${!registro}">
+                    <a href="#" id="btn_buscar" class="btn btn-azul">
+                        <i class="fa fa-search"></i>
+                        Buscar
+                    </a>
+                </g:if>
                 <input type="hidden" name="proveedor.id" id="prov_id" value="${proceso?.proveedor?.id}">
             </div>
         </div>
@@ -157,7 +166,7 @@
                 Sustento Tributario:
             </div>
             <div class="col-xs-5 negrilla">
-                <g:select class=" form-control required cmbRequired" name="sustentoTributario.id" id="sustento" from="${SustentoTributario.list([sort:'codigo'])}" title="Necesario solo si la transacción debe reportarse al S.R.I." optionKey="id" optionValue="descripcion"   noSelection="${['-1':'No aplica']}" />
+                <g:select class=" form-control required cmbRequired" name="sustentoTributario.id" id="sustento" from="${SustentoTributario.list([sort:'codigo'])}" title="Necesario solo si la transacción debe reportarse al S.R.I." optionKey="id" optionValue="descripcion"  value="${proceso?.sustentoTributario?.id}"  noSelection="${['-1':'No aplica']}" disabled="${registro?true:false}" />
             </div>
             <div class="col-xs-2 " style="font-size: 10px;">
                 Necesario solo si la transacción debe reportarse al S.R.I.
@@ -168,7 +177,7 @@
                 Tipo de documento:
             </div>
             <div class="col-xs-5 negrilla">
-                <g:select class="form-control cmbRequired" name="tipoComprobanteSri.id" id="tipoComprobante" from="${TipoComprobanteSri.list([sort:'codigo'])}" optionKey="id" title="Tipo del documento a registrar" optionValue="descripcion"  noSelection="${['-1':'No aplica']}" />
+                <g:select class="form-control cmbRequired" name="tipoComprobanteSri.id" id="tipoComprobante" from="${TipoComprobanteSri.list([sort:'codigo'])}" optionKey="id" title="Tipo del documento a registrar" optionValue="descripcion"  noSelection="${['-1':'No aplica']}" value="${proceso?.tipoComprobanteSri?.id}" disabled="${registro?true:false}" />
             </div>
             <div class="col-xs-2 " style="font-size: 10px">
                 Tipo del documento a registrar.
@@ -179,7 +188,7 @@
                 Descripción:
             </div>
             <div class="col-xs-3 negrilla">
-                <textArea style='height:40px;width: 700px;resize: none' maxlength="255" name="descripcion" id="descripcion" title="La descripción de la transacción contable" class="form-control required cmbRequired"  >${proceso?.descripcion}</textArea>
+                <textArea style='height:80px;width: 700px;resize: none' maxlength="255" name="descripcion" id="descripcion" title="La descripción de la transacción contable" class="form-control required cmbRequired" ${registro?'disabled':''} >${proceso?.descripcion}</textArea>
             </div>
         </div>
     </div>
@@ -192,19 +201,19 @@
                 Base imponible IVA ${iva}%:
             </div>
             <div class="col-xs-2 negrilla">
-                <input type="text" name="baseImponibleIva" id="baseImponibleIva" size="7" value="${proceso?.baseImponibleIva ?: 0.00}" class="required  number form-control" validate="required number"/>
+                <input type="text" name="baseImponibleIva" id="iva12" size="7" value="${proceso?.baseImponibleIva ?: 0.00}" class="required  number form-control" validate="required number" ${registro?'disabled':''} />
             </div>
             <div class="col-xs-2 negrilla" style="width: 120px">
                 Base imponible IVA 0%:
             </div>
             <div class="col-xs-2 negrilla">
-                <input type="text" name="baseImponibleIva0" size="7" value="${proceso?.baseImponibleIva0 ?: 0.00}" class="required number form-control" validate="required number"/>
+                <input type="text" name="baseImponibleIva0" size="7" id="iva0" value="${proceso?.baseImponibleIva0 ?: 0.00}" class="required number form-control" validate="required number" ${registro?'disabled':''} />
             </div>
             <div class="col-xs-2 negrilla" style="width: 120px">
                 Base imponible no aplica IVA:
             </div>
             <div class="col-xs-2 negrilla">
-                <input type="text" name="baseImponibleNoIva" size="7" value="${proceso?.baseImponibleNoIva ?: 0.00}" class="required number form-control" validate="required number"/>
+                <input type="text" name="baseImponibleNoIva" id="noIva" size="7" value="${proceso?.baseImponibleNoIva ?: 0.00}" class="required number form-control" validate="required number" ${registro?'disabled':''} />
             </div>
         </div>
 
@@ -214,26 +223,26 @@
                 IVA generado:
             </div>
             <div class="col-xs-2 negrilla">
-                <input type="text" name="ivaGenerado" id="ivaGenerado"  value="${proceso?.ivaGenerado}" class="required number form-control" validate="required number"/>
+                <input type="text" name="ivaGenerado" id="ivaGenerado"  value="${proceso?.ivaGenerado}" class="required number form-control" validate="required number" ${registro?'disabled':''} />
             </div>
             <div class="col-xs-2 negrilla" style="width: 120px">
                 ICE generado:
             </div>
             <div class="col-xs-2 negrilla"  >
-                <input type="text" name="iceGenerado"  value="${proceso?.iceGenerado ?: 0.00}" class="required number form-control" validate="required number"/>
+                <input type="text" name="iceGenerado"  id="iceGenerado" value="${proceso?.iceGenerado ?: 0.00}" class="required number form-control" validate="required number" ${registro?'disabled':''} />
             </div>
         </div>
         <div class="row" style="font-size: 12px">
-            <div class="col-xs-2 negrilla" style="width: 140px">
+            <div class="col-xs-2 negrilla" style="width: 120px">
                 Documento:
             </div>
             <div class="col-xs-4 negrilla">
                 <input type="text" name="facturaEstablecimiento" id="establecimiento" size="3" maxlength="3" value="${proceso?.facturaEstablecimiento}" class=" digits form-control label-shared " validate=" number"
-                       title="El número de establecimiento del documento "/>
+                       title="El número de establecimiento del documento " ${registro?'disabled':''} />
                 <input type="text" name="facturaPuntoEmision" id="emision" size="3" maxlength="3" value="${proceso?.facturaPuntoEmision}" class=" digits form-control label-shared " validate=" number"
-                       title="El número de punto de emisión del documento"/>
-                <input type="text" name="facturaSecuencial" id="secuencial" size="10" maxlength="9" value="${proceso?.facturaSecuencial}" class=" digits form-control label-shared " validate=" number"
-                       title="El número de secuencia del documento" />
+                       title="El número de punto de emisión del documento" ${registro?'disabled':''} />
+                <input type="text" name="facturaSecuencial" id="secuencial" size="10" maxlength="9" value="${proceso?.facturaSecuencial}" class=" digits form-control label-shared  " validate=" number"
+                       title="El número de secuencia del documento"  ${registro?'disabled':''} />
             </div>
             <div class="col-xs-3 negrilla" style="width: 140px">
                 <a href="#" id="abrir-fp" class="btn btn-azul">
@@ -246,10 +255,10 @@
     </div>
 </g:form>
 <g:if test="${proceso}">
-    <div class="vertical-container" style="margin-top: 25px;color: black;min-height: 250px">
-        <p class="css-vertical-text">Asientos contables</p>
+    <div class="vertical-container" style="margin-top: 25px;color: black;min-height: 250px;margin-bottom: 20px">
+        <p class="css-vertical-text">Comprobante</p>
         <div class="linea"></div>
-        <div id="registro" style="float:left; margin-left: 40px;border: black solid 1px; margin-bottom: 25px;padding: 10px;display: none;margin-top: 15px;">
+        <div id="registro" style=" margin-left: 40px;margin-bottom: 10px ;padding: 10px;display: none;margin-top: 5px;width: 850px;">
         </div>
     </div>
 </g:if>
@@ -271,13 +280,24 @@
                         <g:select name="tipoPago.id" id="comboFP" class=" form-control" from="${cratos.TipoPago.list()}" label="Tipo de pago: " optionKey="id"  optionValue="descripcion" />
                     </div>
                     <div class="col-xs-1 negrilla" style="width: 140px">
-                        <a href="#" id="agregarFP" class="btn btn-azul">
-                            <i class="fa fa-plus"></i>
-                            Agregar
-                        </a>
+                        <g:if test="${!registro}">
+                            <a href="#" id="agregarFP" class="btn btn-azul">
+                                <i class="fa fa-plus"></i>
+                                Agregar
+                            </a>
+                        </g:if>
                     </div>
                 </div>
-                <div class="ui-corner-all" style="height: 170px;border: 1px solid #000000;width: 80%;margin-left: 5px;margin-top: 20px" id="detalle-fp"></div>
+                <div class="ui-corner-all" style="height: 170px;border: 1px solid #000000;width: 80%;margin-left: 5px;margin-top: 20px" id="detalle-fp">
+                    <g:each in="${fps}" var="f">
+                        <div class="filaFP ui-corner-all fp-${f.tipoPago.id}" fp="${f.tipoPago.id}" >
+                            <g:if test="${!registro}">
+                                <span class='span-eliminar ui-corner-all' title='Click para eliminar'>Eliminar</span>
+                            </g:if>
+                            ${f.tipoPago.descripcion}
+                        </div>
+                    </g:each>
+                </div>
 
             </div>
             <div class="modal-footer">
@@ -325,18 +345,9 @@
 
 <script type="text/javascript">
 
-    function validateNum($elm) {
-        var val = parseFloat($elm.val());
-        $elm.val(number_format(val, 2, ".", ""));
-    }
-    function validateInt($elm) {
-        var val = parseInt($elm.val());
-        $elm.val(val);
-    }
-
     function calculaIva() {
         var iva = ${iva};
-        var val = parseFloat($("#baseImponibleIva").val());
+        var val = parseFloat($("#iva12").val());
 
         var total = (iva / 100) * val;
 
@@ -344,6 +355,25 @@
     }
 
     $(function () {
+
+        $("#btn-br-prcs").click(function(){
+            bootbox.confirm("Esta seguro? si esta transacción tiene un comprobante, este será anulado. Esta acción es irreversible",function(){$(".br_prcs").submit()})
+        });
+
+        $("#tipoProceso").change(function(){
+            if($(this).val()=="A"){
+                bootbox.alert('Para realizar un ajuste, ponga el valor total dentro del campo "Base imponible no aplica IVA" y asegurese de seleccionar el gestor contable correcto')
+                $("#iva0").val("0.00").attr("disabled",true)
+                $("#iva12").val("0.00").attr("disabled",true)
+                $("#ivaGenerado").val("0.00").attr("disabled",true)
+                $("#iceGenerado").val("0.00").attr("disabled",true)
+            }else{
+                $("#iva0").attr("disabled",false)
+                $("#iva12").attr("disabled",false)
+                $("#ivaGenerado").attr("disabled",false)
+                $("#iceGenerado").attr("disabled",false)
+            }
+        })
 
         $("#abrir-fp").click(function(){
             $('#modal-formas-pago').modal('show')
@@ -379,18 +409,21 @@
                 bootbox.alert(message)
             }
         });
-        /*todo cambiar la validacion del form que esta haciendo huevadas, gaurdar proceso..... move on*/
+        $(".span-eliminar").bind("click", function () {
+            $(this).parent().remove()
+        })
+        /*todo guardar proceso..... move on*/
         $("#guardarProceso").click(function() {
+            console.log("save")
             openLoader("Validando")
-            var bandData
-            var band
+            var bandData=true
             var error=""
             var info=""
             $("#listaErrores").html("")
             if($("#fecha_input").val().length<10){
                 error+="<li>Seleccione la fecha de registro</li>"
             }
-            if($("#descripcion").val().length<10){
+            if($("#descripcion").val().length<1){
                 error+="<li>Llene el campo Descripción</li>"
             }
             if($("#tipoProceso").val()=="-1"){
@@ -405,14 +438,58 @@
                         error+="<li>Seleccione el tipo de documento a registrar (Necesario si el tipo de transacción es Compras o Ventas)</li>"
                     }else{
                         if($("#establecimiento").val().length<3){
-                            error+="<li>Ingrese el número de establecimiento del documento</li>"
+                            error+="<li>Ingrese el número de establecimiento del documento (Primera parte del campo documento) </li>"
                         }
                         if($("#emision").val().length<3){
-                            error+="<li>Ingrese el número de emisión del documento</li>"
+                            error+="<li>Ingrese el número de emisión del documento (Segunda parte del campo documento)</li>"
                         }
                         if($("#secuencial").val().length<1){
-                            error+="<li>Ingrese el número de secuencia del documento</li>"
+                            error+="<li>Ingrese el número de secuencia del documento (Tercera parte del campo documento)</li>"
                         }
+                    }
+                }
+            }
+            var iva0=$("#iva0").val()
+            var iva12=$("#iva12").val()
+            var noIva=$("#noIva").val()
+            if(isNaN(iva12)){
+                iva12=-1
+            }
+            if(isNaN(noIva)){
+                noIva=-1
+            }
+            if(isNaN(iva0)){
+                iva0=-1
+            }
+            if(iva12*1<0 ){
+                error+="<li>La base imponible iva ${iva}% debe ser un número positivo</li>"
+            }
+            if(iva0*1<0 ){
+                error+="<li>La base imponible iva 0% debe ser un número positivo</li>"
+            }
+            if(noIva*1<0 ){
+                error+="<li>La base imponible no aplica iva debe ser un número positivo</li>"
+            }
+            var base=iva0*1+iva12*1+noIva*1
+            if(base<=0){
+                error+="<li>La suma de las bases imponibles no puede ser cero</li>"
+            }else{
+                var impIva=$("#ivaGenerado").val()
+                var impIce=$("#iceGenerado").val()
+                if(isNaN(impIva)){
+                    impIva=-1
+                }
+                if(isNaN(impIce)){
+                    impIce=-1
+                }
+                if(impIva*1>0 && iva12*1<=0){
+                    error+="<li>No se puede generar IVA si la base imponible iva ${iva}% es cero</li>"
+                }
+                if(impIce*1*impIva*1<0){
+                    error+="<li>Los impuestos generados no pueden ser negativos</li>"
+                }else{
+                    if((impIce*1+impIva*1)>base){
+                        error+="<li>Los impuestos generados no pueden ser superiores a la suma de las bases imponibles</li>"
                     }
                 }
             }
@@ -423,80 +500,42 @@
             if(bandData){
                 var data =""
                 $(".filaFP").each(function(){
+                    console.log($(this))
                     data+=$(this).attr("fp")+";"
 
                 })
                 $("#data").val(data)
-
             }
             if(error!=""){
                 $("#listaErrores").append(error)
                 $("#listaErrores").show()
                 $("#divErrores").show()
+            }else{
+                if(info!=""){
+                    info+=" Esta seguro de continuar?"
+                    bootbox.confirm(info,function(){
+                        $(".frmProceso").submit();
+                    })
+                }else{
+                    $(".frmProceso").submit();
+                }
             }
 
             closeLoader()
 
-//            else{
-//                msg+="</b>"
-//                bootbox.alert(msg)
-//            }
-//                $(".frmProceso").submit();
-
-
         });
         calculaIva();
 
-        $("#baseImponibleIva").keyup(function () {
+        $("#iva12").keyup(function () {
             calculaIva();
         });
 
-//                $(".digits").keyup(function () {
-//                    validateInt($(this));
-//                });
-
-        $(".number").keyup(function () {
-            validateNum($(this));
+        $(".number").blur(function () {
+            if(isNaN($(this).val()))
+                $(this).val("0.00")
+            if($(this).val()=="")
+                $(this).val("0.00")
         });
-
-        $("#procesoForm").validate({
-            errorLabelContainer : "#listaErrores",
-            wrapper             : "li",
-            invalidHandler      : function (form, validator) {
-                var errors = validator.numberOfInvalids();
-//                        console.log("**" + errors);
-                if (errors) {
-                    var message = errors == 1
-                            ? 'Se encontró 1 error.'
-                            : 'Se encontraron ' + errors + ' errores';
-                    $("#divErrores").show();
-                    $("#spanError").html(message);
-
-                } else {
-                    $("#divErrores").hide();
-
-                }
-            }
-        });
-
-//        $("#guardarProceso").click(function () {
-//            if ($("#procesoForm").valid()) {
-//                $.box({
-//                    imageClass : "box_info",
-//                    text       : "Por favor espere",
-//                    title      : "Procesando",
-//                    iconClose  : false,
-//                    dialog     : {
-//                        resizable     : false,
-//                        draggable     : false,
-//                        closeOnEscape : false,
-//                        buttons       : { }
-//                    }
-//                });
-//            }
-//        });
-
-
 
         $("#buscar").click(function () {
 
@@ -514,70 +553,42 @@
         });
 
         $("#registrarProceso").click(function () {
-            if (confirm("Está seguro?")) {
-                var d = $.box({
-                    imageClass : "box_info",
-                    text       : "Por favor espere",
-                    title      : "Procesando",
-                    iconClose  : false,
-                    dialog     : {
-                        resizable     : false,
-                        draggable     : false,
-                        closeOnEscape : false,
-                        buttons       : { }
-                    }
-                });
+            bootbox.confirm("Esta seguro?.<br>Una vez registrada la transacción no se podrá hacer modificaciones.",function(){
+                openLoader()
                 $.ajax({
                     type    : "POST",
                     url     : "${g.createLink(controller: 'proceso',action: 'registrar')}",
                     data    : "id=" + $("#idProceso").val(),
                     success : function (msg) {
-                        //$("#registro").html(msg).show("slide");
-                        $("#auth").dialog("close");
+                        // $("#registro").html(msg).show("slide");
+                        closeLoader()
                         location.reload(true);
                     },
                     error   : function () {
-                        $.box({
-                            imageClass : "box_info",
-                            text       : "Ha ocurrido un error. Por favor revise el gestor y los valores del proceso.",
-                            title      : "Alerta",
-                            iconClose  : false,
-                            dialog     : {
-                                resizable     : false,
-                                draggable     : false,
-                                closeOnEscape : false,
-                                buttons       : {
-                                    "Aceptar" : function () {
-                                        d.dialog("close");
-                                    }
-                                }
-                            }
-                        });
-
+                        bootbox.alert("Ha ocurrido un error. Por favor revise el gestor y los valores del proceso.")
                     }
                 });
-
-            }
+            })
         });
-    });
-</script>
 
-
-<g:if test="${proceso}">
-    <script type="text/javascript">
+        <g:if test="${proceso}">
         //                console.log("entro")
-
+        openLoader("Cargando")
         $.ajax({
             type    : "POST",
             url     : "${g.createLink(action: 'cargaComprobantes')}",
             data    : "proceso=" + $("#idProceso").val(),
             success : function (msg) {
                 $("#registro").html(msg).show("slide");
+                closeLoader()
             }
         });
 
-    </script>
-</g:if>
+        </g:if>
+
+    });
+</script>
+
 </body>
 
 </html>

@@ -141,6 +141,7 @@ class BuscadorTagLib {
         salida += 'data: data,'
 
         salida += 'success: function(msg){'
+        salida += 'console.log($(".contenidoBuscador"),msg);'
         salida += '$(".contenidoBuscador").html(msg).show("slide");'
         salida += 'closeLoader();'
         salida += '}'

@@ -24,7 +24,7 @@ class ProcesoController extends cratos.seguridad.Shield {
         if (params.id) {
             def proceso = Proceso.get(params.id)
             def registro = (Comprobante.findAllByProceso(proceso)?.size() == 0) ? false : true
-            println "registro " + registro
+            //println "registro " + registro
             render(view: "procesoForm", model: [proceso: proceso, registro: registro,tiposProceso:tiposProceso])
         } else
             render(view: "procesoForm", model: [registro: false,tiposProceso:tiposProceso])
@@ -32,36 +32,50 @@ class ProcesoController extends cratos.seguridad.Shield {
 
     def save = {
         if (request.method == 'POST') {
-//            println "save proceso "+params
+            // println "save proceso "+params
             def p
             params.controllerName = controllerName
             params.actionName = actionName
             if (params.proveedor.id == "null")
                 params.proveedor.id = null
+            if (params.sustentoTributario.id == "-1")
+                params.sustentoTributario.id = null
+            if (params.tipoComprobanteSri.id == "-1")
+                params.tipoComprobanteSri.id = null
             params.estado = "N"
-            println "params " + params
-            if (!params.fecha) {
-                params.fecha = new Date()
-            } else {
-                params.fecha = Date.parse("yyyy-MM-dd", params.fecha);
-            }
-
             params.valor = params.baseImponibleIva0.toDouble() + params.baseImponibleIva.toDouble() + params.baseImponibleNoIva.toDouble()
             params.impuesto = params.ivaGenerado.toDouble() + params.iceGenerado.toDouble()
             params.documento = params.facturaEstablecimiento + "-" + params.facturaPuntoEmision + "-" + params.facturaSecuencial
             params.fechaIngresoSistema = new Date()
-            if (params.id)
+            if (params.id){
                 p = Proceso.get(params.id)
-            else
+                ProcesoFormaDePago.findAllByProceso(p).each{
+                    it.delete(flush: true)
+                }
+            }else{
                 p = new Proceso()
+            }
             p.properties = params
             p.contabilidad = session.contabilidad
             p.empresa=session.empresa
             p.save(flush: true)
             println "errores proceso " + p.errors
-            if (p.errors.getErrorCount() == 0)
+            if (p.errors.getErrorCount() == 0){
+                if(params.data!=""){
+                    def data=params.data.split(";")
+                    // println "data "+data
+                    data.each{
+                        if(it!=""){
+                            def fp = new ProcesoFormaDePago()
+                            fp.proceso=p
+                            fp.tipoPago=TipoPago.get(it)
+                            fp.save(flush: true)
+                        }
+                    }
+                }
+
                 redirect(action: 'show', id: p.id)
-            else
+            }else
                 render(view: 'procesoForm', model: ['proceso': p], error: true)
         } else {
             redirect(controller: "shield", action: "ataques")
@@ -106,7 +120,7 @@ class ProcesoController extends cratos.seguridad.Shield {
 
     def valorAsiento = {
         if (request.method == 'POST') {
-//            println "cambiar Valor Asiento "+params
+            println "cambiar Valor Asiento "+params
             def vd = params.vd.toDouble()
             def vh = params.vh.toDouble()
             // println "vd "+vd +" vh  "+vh
@@ -119,8 +133,6 @@ class ProcesoController extends cratos.seguridad.Shield {
             }
             params.controllerName = controllerName
             params.actionName = actionName
-            // kerberosService.generarEntradaAuditoria(params,Asiento,"debe",vd,asiento.debe,session.perfil,session.usuario)
-            //kerberosService.generarEntradaAuditoria(params,Asiento,"haber",vh,asiento.haber,session.perfil,session.usuario)
             asiento.debe = vd
             asiento.haber = vh
             asiento.cuenta = Cuenta.get(params.cnta)
@@ -231,10 +243,14 @@ class ProcesoController extends cratos.seguridad.Shield {
             if (it.estado != "B")
                 lista.add(it)
         }
+
+        def numRegistros=lista.size()
         if (!params.reporte) {
-            render(view: '../lstaTbla', model: [listaTitulos: listaTitulos, listaCampos: listaCampos, lista: lista, link: link, funciones: funciones, url: url])
+            println "no reporte"
+            render(view: '../lstaTbla', model: [listaTitulos: listaTitulos, listaCampos: listaCampos, lista: lista, link: link, funciones: funciones, url: url,numRegistros:numRegistros])
         } else {
             /*De esto solo cambiar el dominio, el parametro tabla, el paramtero titulo y el tamaño de las columnas (anchos)*/
+            println "si reporte"
             session.dominio = Proceso
             session.funciones = funciones
             def anchos = [16, 70, 14] /*el ancho de las columnas en porcentajes*/
@@ -245,15 +261,13 @@ class ProcesoController extends cratos.seguridad.Shield {
 
     def show = {
         def proceso = Proceso.get(params.id)
-
+        def tiposProceso = ["-1":"Seleccione","C":"Compras","V":"Ventas","O":"Otros","A":"Ajustes"]
         def comprobante = Comprobante.findByProceso(proceso)
-
         def registro = (Comprobante.findAllByProceso(proceso)?.size() == 0) ? false : true
+        def fps=ProcesoFormaDePago.findAllByProceso(proceso)
 //        println "registro "+registro
-        if (registro)
-            [proceso: proceso, registro: registro, comprobante: comprobante]
-        else
-            render(view: "procesoForm", model: [proceso: proceso, registro: registro, comprobante: comprobante])
+
+        render(view: "procesoForm", model: [proceso: proceso, registro: registro, comprobante: comprobante,tiposProceso:tiposProceso,fps:fps,registro:registro])
     }
 
     def comprobarPassword = {

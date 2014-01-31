@@ -8,7 +8,7 @@
     <g:set var="totalH" value="${0}"/>
 
 
-    <table width="400px" border="1px">
+    <table width="400px" class="table table-striped" border="1px">
     <thead>
 
       <tr style="background: #818A91;">
@@ -105,7 +105,8 @@
                     <label>Fecha:</label>
                 </td>
                 <td>
-                    <elm:datePicker class="required field ui-corner-all" title="Fecha" name="fecha" id="pgo_fecha" style="width:90px;"/>
+                    <elm:datepicker name="pgo_fecha"  title="Fecha" class="datepicker form-control required"   minDate="new Date()" style="width: 80px; margin-left: 5px" />
+                    %{--<elm:datePicker class="required field ui-corner-all" title="Fecha" name="fecha" id="pgo_fecha" style="width:90px;"/>--}%
                 </td>
                 <td>
                     <label>Monto:</label>
@@ -141,7 +142,7 @@
         </div>
 
         <div id="pgo_ajax" style="width: 700px;margin: auto;overflow: auto;height: 380px;margin-top: 10px">
-            <img src="${resource(dir: 'images', file: 'loading_bg.gif')}" alt="Cargando...."/>
+            %{--<img src="${resource(dir: 'images', file: 'loading_bg.gif')}" alt="Cargando...."/>--}%
         </div>
     </fieldset>
 </div>

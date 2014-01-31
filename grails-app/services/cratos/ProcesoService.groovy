@@ -47,7 +47,7 @@ class ProcesoService {
                 ca.put(razon, it.valor)
             } else {
 
-                //println "porcentaje !!! "+it.porcentaje+"   valor  "+p.valor
+                println "porcentaje !!! "+it.porcentaje+"   valor  "+p.valor
                 if (it.porcentaje > 0) {
                     valor += p.valor * (it.porcentaje / 100)
                     base = p.valor
@@ -179,14 +179,18 @@ class ProcesoService {
                         }
                     }
 
-                    //println "asientos!! "+datosAsientos[pos]+" pos "+pos+" size "+datosAsientos.size()+" dif "+dif
+                    println "asientos!! "+datosAsientos[pos]+" pos "+pos+" size "+datosAsientos.size()+" dif "
 
 
                 }
                 datosAsientos.each {
+                    println "datos asiento "+it
+                    it.put("comprobante",it["comprobante.id"])
+                    it.put("cuenta",it["cuenta.id"])
                     def asiento = new Asiento(it)
+                    asiento.properties=it
                     asiento.save(flush: true)
-                    // println "errores asiento "+asiento.errors
+                    println "errores asiento "+asiento.errors
                     if (asiento.errors.getErrorCount() != 0)
                         lista[0] = false
                     else
