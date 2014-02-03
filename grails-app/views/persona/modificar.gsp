@@ -48,19 +48,19 @@
                     <g:hiddenField name="id" value="${personaInstance?.id}"/>
 
                     <div class="keeptogether">
-                        <div class="form-group keeptogether  ${hasErrors(bean: personaInstance, field: 'empresa', 'error')} ">
-                            <span class="grupo">
-                                <label for="empresa" class="col-md-3 control-label text-info">
-                                    Empresa
-                                </label>
+                        %{--<div class="form-group keeptogether  ${hasErrors(bean: personaInstance, field: 'empresa', 'error')} ">--}%
+                        %{--<span class="grupo">--}%
+                        %{--<label for="empresa" class="col-md-3 control-label text-info">--}%
+                        %{--Empresa--}%
+                        %{--</label>--}%
 
-                                <div class="col-md-6">
-                                    <g:select id="empresa" name="empresa.id" from="${cratos.Empresa.list()}" optionKey="id" value="${personaInstance?.empresa?.id}"
-                                              class="required many-to-one form-control"/>
-                                </div>
-                                *
-                            </span>
-                        </div>
+                        %{--<div class="col-md-6">--}%
+                        %{--<g:select id="empresa" name="empresa.id" from="${cratos.Empresa.list()}" optionKey="id" value="${personaInstance?.empresa?.id}"--}%
+                        %{--class="required many-to-one form-control"/>--}%
+                        %{--</div>--}%
+                        %{--*--}%
+                        %{--</span>--}%
+                        %{--</div>--}%
 
                         <div class="form-group keeptogether  ${hasErrors(bean: personaInstance, field: 'cedula', 'error')} required">
                             <span class="grupo">
@@ -299,39 +299,44 @@
             </div>
 
             <script type="text/javascript">
-                $(function () {
-                    var $form = $("#frmPersona");
-                    var $btnSave = $("#btnSave");
 
-                    function doSave(data) {
-                        $btnSave.hide().after(spinner);
-                        openLoader("Grabando");
-                        $.ajax({
-                            type    : "POST",
-                            url     : $form.attr("action"),
-                            data    : data,
-                            success : function (msg) {
-                                closeLoader();
-                                var parts = msg.split("_");
-                                log(parts[1], parts[0] == "OK" ? "success" : "error");
-                                spinner.remove();
-                                $btnSave.show();
-                            }
-                        });
-                    }
+                var $form = $("#frmPersona");
+                var $btnSave = $("#btnSave");
+
+                function submitFormPass() {
+                    var $form2 = $("#frmPass");
+                    var $btn = $("#dlgPass").find("#btnSave");
+                    if ($form2.valid()) {
+                        doSave($form2.serialize(), $form2, $btn);
+                        return true;
+                    } else {
+                        return false;
+                    } //else
+                }
+
+                function doSave(data, $frm, $btn) {
+                    $btn.hide().after(spinner);
+                    openLoader("Grabando");
+                    $.ajax({
+                        type    : "POST",
+                        url     : $frm.attr("action"),
+                        data    : data,
+                        success : function (msg) {
+                            closeLoader();
+                            var parts = msg.split("_");
+                            log(parts[1], parts[0] == "OK" ? "success" : "error");
+                            spinner.remove();
+                            $btn.show();
+                            bootbox.hideAll();
+                        }
+                    });
+                }
+                $(function () {
 
                     function submitForm() {
                         if ($form.valid()) {
-                            doSave($form.serialize());
-                        } else {
-                            return false;
-                        } //else
-                    }
-
-                    function submitFormPass() {
-                        var $form2 = $("#frmPersonaPass");
-                        if ($form2.valid()) {
-                            doSave($form2.serialize());
+                            doSave($form.serialize(), $form, $btnSave);
+                            return true;
                         } else {
                             return false;
                         } //else

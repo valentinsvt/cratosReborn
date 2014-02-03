@@ -1,6 +1,6 @@
 <script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>
 
-<g:form class="form-horizontal" name="frmPersona" role="form" action="save" method="POST">
+<g:form class="form-horizontal" name="frmPass" role="form" action="savePass_ajax" method="POST">
     <g:hiddenField name="id" value="${personaInstance?.id}"/>
     <g:hiddenField name="tipo" value="${tipo}"/>
 
@@ -54,7 +54,7 @@
 </g:form>
 
 <script type="text/javascript">
-    var validator = $("#frmPersona").validate({
+    var validator = $("#frmPass").validate({
         errorClass     : "help-block",
         errorPlacement : function (error, element) {
             if (element.parent().hasClass("input-group")) {
@@ -86,7 +86,7 @@
     });
     $(".form-control").keydown(function (ev) {
         if (ev.keyCode == 13) {
-            submitForm();
+            submitFormPass();
             return false;
         }
         return true;

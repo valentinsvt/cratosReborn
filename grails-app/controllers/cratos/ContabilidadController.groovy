@@ -63,6 +63,10 @@ class ContabilidadController extends cratos.seguridad.Shield {
             }
         } //update
 
+        if (params.anio) {
+            params.fechaInicio = new Date().parse("dd-MM-yyyy", '01-01-' + params.anio)
+            params.fechaCierre = new Date().parse("dd-MM-yyyy", '31-12-' + params.anio)
+        }
         contabilidadInstance.properties = params
         contabilidadInstance.presupuesto = contabilidadInstance.fechaInicio
 
@@ -73,20 +77,22 @@ class ContabilidadController extends cratos.seguridad.Shield {
             return
         }
 
-        12.times {
-            def ini = new Date().parse("dd-MM-yyyy", "01-" + ((it + 1).toString().padLeft(2, '0')) + "-" + contabilidadInstance.fechaInicio.format("yyyy"))
-            def fin = getLastDayOfMonth(ini)
-            def periodoInstance = new Periodo()
+        if (Periodo.countByContabilidad(contabilidadInstance) == 0) {
+            12.times {
+                def ini = new Date().parse("dd-MM-yyyy", "01-" + ((it + 1).toString().padLeft(2, '0')) + "-" + contabilidadInstance.fechaInicio.format("yyyy"))
+                def fin = getLastDayOfMonth(ini)
+                def periodoInstance = new Periodo()
 
-            if (periodoInstance.save(flush: true)) {
+                if (periodoInstance.save(flush: true)) {
 
-                periodoInstance.contabilidad = contabilidadInstance
-                periodoInstance.fechaInicio = ini
-                periodoInstance.fechaFin = fin
-                periodoInstance.numero = it + 1
-            } else {
+                    periodoInstance.contabilidad = contabilidadInstance
+                    periodoInstance.fechaInicio = ini
+                    periodoInstance.fechaFin = fin
+                    periodoInstance.numero = it + 1
+                } else {
 
-                render "Error al grabar períodos"
+                    render "Error al grabar períodos"
+                }
             }
         }
 

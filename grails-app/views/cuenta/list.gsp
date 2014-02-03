@@ -10,7 +10,12 @@
         <link rel="stylesheet" href="${resource(dir: 'css/custom', file: 'tree_context.css')}"/>
 
         <style type="text/css">
-
+        #tree {
+            background : #DEDEDE;
+            overflow-y : auto;
+            width      : 550px;
+            height     : 700px;
+        }
         </style>
 
     </head>
@@ -43,7 +48,7 @@
                     </p>
                 </div>
 
-                <div id="tree" class="hide" style="overflow-y: auto; height: 428px;">
+                <div id="tree" class="hide">
 
                 </div>
             </g:if>

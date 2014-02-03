@@ -32,6 +32,24 @@ class PersonaController extends cratos.seguridad.Shield {
         render false
     }
 
+    def savePass_ajax() {
+        def yo = Persona.get(session.usuario.id)
+        def pass = params.nuevo.toString().trim().encodeAsMD5()
+        switch (params.tipo) {
+            case "pass":
+                yo.password = pass
+                break;
+            case "auto":
+                yo.autorizacion = pass
+                break;
+        }
+        if (yo.save(flush: true)) {
+            render "OK_${params.tipo == 'pass' ? 'Password actualizado' : 'Clave de autorización actualizada'}"
+        } else {
+            render "NO_Ha ocurrido un error al atualizar ${params.tipo == 'pass' ? 'el password' : 'la clave de autorización'}"
+        }
+    }
+
     def index() {
         redirect(action: "list", params: params)
     } //index
