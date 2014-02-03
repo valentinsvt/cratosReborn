@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta name="layout" content="main">
-        <title>Lista de Empleado</title>
+        <title>Lista de Empleados</title>
     </head>
     <body>
 
@@ -30,7 +30,7 @@
         </div>
 
         <div class="vertical-container vertical-container-list">
-            <p class="css-vertical-text">Lista de Empleado</p>
+            <p class="css-vertical-text">Lista de Empleados</p>
 
             <div class="linea"></div>
             <table class="table table-condensed table-bordered table-striped table-hover">

@@ -51,6 +51,10 @@
         width: 250px;
         margin-top: 10px;
         }
+
+        .fila {
+            height: 40px;
+        }
         </style>
 
     </head>
@@ -411,12 +415,12 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title" id="myModalLabel">Plan de Cuentas - Elegir Contabilidad</h4>
                 </div>
-                <div class="modal-body">
-                     Contabilidad:
+                <div class="modal-body fila" style="margin-bottom: 30px">
+                    <label class="uno">Contabilidad:</label>
                     <g:select name="contCuentas" id="contCuentas"
                               from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
                               optionKey="id" optionValue="descripcion"
-                              class="ui-widget-content ui-corner-all"/>
+                              class="ui-widget-content ui-corner-all dos"/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
@@ -435,12 +439,12 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title" id="modalGestor">Gestor Contable - Elegir Contabilidad</h4>
                 </div>
-                <div class="modal-body">
-                    Contabilidad:
+                <div class="modal-body fila" style="margin-bottom: 30px">
+                   <label class="uno">Contabilidad:</label>
                     <g:select name="contContable" id="contContable"
                               from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
                               optionKey="id" optionValue="descripcion"
-                              class="ui-widget-content ui-corner-all"/>
+                              class="ui-widget-content ui-corner-all dos"/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
@@ -460,17 +464,24 @@
                     <h4 class="modal-title" id="modalComprobante">Comprobante</h4>
                 </div>
                 <div class="modal-body">
-                    Contabilidad:
+                    <div class="fila">
+                   <label class="uno">Contabilidad:</label>
+
                     <g:select name="contComp" id="contComp"
                               from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
                               optionKey="id" optionValue="descripcion"
-                              class="ui-widget-content ui-corner-all"/>
+                              class="ui-widget-content ui-corner-all dos"/>
+                    </div>
+                    <div class="fila">
 
-                   <div style="margin-top: 20px">
-                    Tipo: <g:select name="compTipo" from="${cratos.TipoComprobante.list()}" optionKey="id" optionValue="descripcion"/>
-                   </div>
-                    <div style="margin-top: 20px">
-                        Número: <g:textField type="text" class="ui-widget-content ui-corner-all" name="compNum"/>
+                    <label class="uno">Tipo:</label>
+
+                    <g:select class="dos" name="compTipo" from="${cratos.TipoComprobante.list()}" optionKey="id" optionValue="descripcion"/>
+                    </div>
+
+                    <div class="fila">
+                        <label class="uno">Número:</label>
+                         <g:textField type="text" class="ui-widget-content ui-corner-all dos" name="compNum"/>
                     </div>
 
                 </div>
@@ -491,16 +502,17 @@
                     <h4 class="modal-title" id="modalBalance">Balance</h4>
                 </div>
                 <div class="modal-body" id="bodyBalance">
-                    <div>
-                        Contabilidad:
+                    <div class="fila">
+                        <label class="uno">Contabilidad:</label>
                         <g:select name="contP" id="contP"
                                   from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
                                   optionKey="id" optionValue="descripcion"
-                                  class="ui-widget-content ui-corner-all"/>
+                                  class="ui-widget-content ui-corner-all dos"/>
                     </div>
 
-                    <div id="divPeriodo">
-                        Período:
+                    <div id="divPeriodo" class="fila">
+                        <label class="uno">Período:</label>
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -521,16 +533,16 @@
                     <h4 class="modal-title" id="modalSituacion">Situación Financiera</h4>
                 </div>
                 <div class="modal-body" id="bodySituacion">
-                    <div>
-                        Contabilidad:
+                    <div class="fila">
+                        <label class="uno">Contabilidad:</label>
                         <g:select name="contP8" id="contP8"
                                   from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
                                   optionKey="id" optionValue="descripcion"
-                                  class="ui-widget-content ui-corner-all"/>
+                                  class="ui-widget-content ui-corner-all dos"/>
                     </div>
 
-                    <div id="divPeriodo8">
-                        Período:
+                    <div id="divPeriodo8" class="fila">
+                       <label class="uno">Período:</label>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -552,16 +564,17 @@
                     <h4 class="modal-title" id="modalIntegral">Estado del Resultado Integral</h4>
                 </div>
                 <div class="modal-body" id="bodyIntegral">
-                    <div>
-                        Contabilidad:
+                    <div class="fila">
+                        <label class="uno">Contabilidad:</label>
+
                         <g:select name="contP9" id="contP9"
                                   from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
                                   optionKey="id" optionValue="descripcion"
-                                  class="ui-widget-content ui-corner-all"/>
+                                  class="ui-widget-content ui-corner-all dos"/>
                     </div>
 
-                    <div id="divPeriodo9">
-                        Período:
+                    <div id="divPeriodo9" class="fila">
+                       <label class="uno">Período:</label>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -584,24 +597,24 @@
                     <h4 class="modal-title" id="modalAuxiliar">Estado del Resultado Integral</h4>
                 </div>
                 <div class="modal-body" id="bodyAuxiliar">
-                    <div>
-                        Contabilidad:
+                    <div class="fila">
+                        <label class="uno">Contabilidad:</label>
+
                         <g:select name="contP3" id="contP3"
                                   from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
                                   optionKey="id" optionValue="descripcion"
-                                  class="ui-widget-content ui-corner-all"/>
+                                  class="ui-widget-content ui-corner-all dos"/>
                     </div>
 
-                    <div id="divPeriodo3">
-                        Periodo:
+                    <div id="divPeriodo3" class="fila">
+                     <label class="uno"> Periodo:</label>
 
                     </div>
 
-                    <div id="divCuenta3">
-                        Cuenta:
+                    <div id="divCuenta3" class="fila">
+                        <label class="uno">Cuenta:</label>
                         <g:select name="cnta3" from="${cratos.Cuenta.findAllByEmpresa(session.empresa, [sort: 'numero'])}"
-                                  optionKey="id" style="width: 750px;"
-                                  class="ui-widget-content ui-corner-all"/>
+                                  optionKey="id" class="ui-widget-content ui-corner-all dos"/>
 
                     </div>
                 <div class="modal-footer">
@@ -624,22 +637,20 @@
                     <h4 class="modal-title" id="modalAuxCliente">Auxiliar por Cliente</h4>
                 </div>
                 <div class="modal-body" id="bodyAuxCliente">
-                    <div>
-                        Contabilidad:
+                    <div class="fila">
+                        <label class="uno">Contabilidad:</label>
                         <g:select name="contP4" id="contP4"
                                   from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
                                   optionKey="id" optionValue="descripcion"
-                                  class="ui-widget-content ui-corner-all"/>
+                                  class="ui-widget-content ui-corner-all dos"/>
                     </div>
-                    <div id="divPeriodo4">
-                        Periodo:
+                    <div id="divPeriodo4" class="fila">
+                        <label class="uno">Periodo:</label>
                     </div>
 
-                    <div id="divCliente">
-                        %{--<bsc:buscador name="proveedor.id" value="" accion="listarClientes" campos="${camposCliente}" label="Proveedor" tipo="buscador"/>--}%
-                        %{--<a href="#" id="btnTodosPrv">Todos</a>--}%
-                        Clientes:
-                        <g:select name="listaClientes" from="${clientes}" optionValue="nombre" optionKey="id" />
+                    <div id="divCliente" class="fila">
+                        <label class="uno">Clientes:</label>
+                        <g:select name="listaClientes" from="${clientes}" optionValue="nombre" optionKey="id" class="dos" />
 
 
                     </div>
@@ -665,16 +676,16 @@
                 <div class="modal-body" id="bodyBalanceAux">
 
 
-                    <div>
-                    Contabilidad:
+                    <div class="fila">
+                    <label class="uno">Contabilidad:</label>
                     <g:select name="contP0" id="contP0"
                     from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
                     optionKey="id" optionValue="descripcion"
-                    class="ui-widget-content ui-corner-all"/>
+                    class="ui-widget-content ui-corner-all dos"/>
                     </div>
 
-                    <div id="divPeriodo0">
-                    Periodo:
+                    <div id="divPeriodo0" class="fila">
+                    <label class="uno">Periodo:</label>
                     </div>
 
                 </div>
@@ -769,34 +780,36 @@
                     <div style="margin-bottom: 10px;">
                         Antes de generar este reporte asegurese de configurar las cuentas para el cálculo de resultados <a href="${g.createLink(controller: 'cuenta',action: 'cuentaResultados')}" style="color: blue">Aquí</a>
                     </div>
-                    <div>
-                        Contabilidad:
+                    <div class="fila">
+                        <label class="uno">Contabilidad:</label>
                         <g:select name="contP6" id="contP6"
                                   from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
                                   optionKey="id" optionValue="descripcion"
-                                  class="ui-widget-content ui-corner-all"/>
+                                  class="ui-widget-content ui-corner-all dos"/>
                     </div>
 
-                    <div id="divPeriodo6">
-                        Periodo:
+                    <div id="divPeriodo6" class="fila">
+                       <label class="uno">Periodo:</label>
                     </div>
-                    <div>
-                        Nivel:
-                        <select id="nivel">
+                    <div class="fila">
+                        <label class="uno">Nivel:</label>
+                        <select id="nivel" class="dos">
                             <option value="1,2">DOS</option>
                             <option value="1,2,3">TRES</option>
                             <option value="1,2,3,4">CUATRO</option>
                             <option value="1,2,3,4,5">CINCO</option>
                         </select>
                     </div>
-                    <div>
+                    <div class="fila">
                         Mostrar cuentas con saldo cero? <input type="checkbox" id="cero" value="1" checked="true">
                     </div>
-                    <div>
-                        Firma: <input type="text" id="firma1">
+                    <div class="fila">
+                        <label class="uno">Firma:</label>
+                        <input type="text" id="firma1" class="dos">
                     </div>
-                    <div>
-                        Firma: <input type="text" id="firma2">
+                    <div class="fila">
+                        <label class="uno">Firma:</label>
+                        <input type="text" id="firma2" class="dos">
                     </div>
 
 

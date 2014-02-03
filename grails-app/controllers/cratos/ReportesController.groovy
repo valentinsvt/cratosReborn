@@ -96,11 +96,11 @@ class ReportesController {
         // class="ui-widget-content ui-corner-all"/>
         def sel
         if(cont)
-            sel = g.select(name: "periodo" + params.cual, from: periodos, optionKey: "id", "class": "ui-widget-content ui-corner-all",noSelection: ["-1":"Todos"])
+            sel = g.select(name: "periodo" + params.cual, from: periodos, optionKey: "id", "class": "ui-widget-content ui-corner-all dos",noSelection: ["-1":"Todos"])
         else
-            sel = g.select(name: "periodo" + params.cual, from: periodos, optionKey: "id", "class": "ui-widget-content ui-corner-all",noSelection: ["-1":"Todos"])
+            sel = g.select(name: "periodo" + params.cual, from: periodos, optionKey: "id", "class": "ui-widget-content ui-corner-all dos",noSelection: ["-1":"Todos"])
 
-        def html = "Periodo: " + sel
+        def html = "<label class='uno'>Periodo:</label>" + sel
 
         def js = ""
         if (params.cual == "2") {
