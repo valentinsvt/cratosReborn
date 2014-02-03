@@ -12,7 +12,7 @@
         }
 
         .lista {
-            width : 615px;
+            width : 700px;
         }
 
         .desc {
@@ -37,6 +37,20 @@
         .linkHover {
             text-decoration : overline underline;
         }
+
+        .uno{
+
+            float: left;
+            width: 150px;
+            margin-top: 10px;
+        }
+
+        .dos{
+
+        float: left;
+        width: 250px;
+        margin-top: 10px;
+        }
         </style>
 
     </head>
@@ -44,9 +58,7 @@
     <body>
         <div id="list-empresa" class="content scaffold-list" role="main">
             <div class="nav navegacion" style="background: #ffffff; box-shadow: none;">
-                %{--<ul style="margin-bottom:0;">--}%
-                %{--<li text=""><g:link class="create linkButton" action="create">Crear Empresa</g:link></li>--}%
-                %{--</ul>--}%
+
             </div>
             <g:if test="${msn}">
                 <div style="width: 800px;line-height: 30px;height: 30px;padding-left: 10px;">
@@ -67,135 +79,186 @@
                 <div class="ui-widget-content ui-corner-all lista">
                     <ul class="noBullet">
                         <li text="plcn">
-                            <g:link controller="reportes" action="planDeCuentas" file="Plan_de_Cuentas.pdf" class="link"
-                                    dialog="dlgContabilidad">
-                                Plan de cuentas
-                            </g:link>
+                            %{--<g:link controller="reportes" action="planDeCuentas"  file="Plan_de_Cuentas.pdf" class="link"--}%
+                                    %{--dialog="dlgContabilidad">--}%
+                                %{--Plan de cuentas--}%
+                            %{--</g:link>--}%
+
+                            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#planCuentas">
+                                Plan de Cuentas
+                            </a>
+
                             Plan de cuentas o catálogo de cuentas de la contabilidad.
                         </li>
 
                         <li text="gscn">
-                            <g:link controller="reportes" action="gestorContable" file="Gestor_Contable.pdf" class="link"
-                                    dialog="dlgContabilidad">
-                                Gestor contable
-                            </g:link>
+                            %{--<g:link controller="reportes" action="gestorContable" file="Gestor_Contable.pdf" class="link"--}%
+                                    %{--dialog="dlgContabilidad">--}%
+                                %{--Gestor contable--}%
+                            %{--</g:link>--}%
+
+                            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#gestorContable">
+                            Gestor Contable
+                            </a>
+
                             Sirve para determinar las cuentas que son afectadas en un proceso contable
+
                         </li>
 
-                        %{--<li text="prsp">--}%
-                        %{--<g:link controller="reportes" action="presupuesto" file="Presupuesto.pdf" class="link"--}%
-                        %{--dialog="dlgContabilidad">--}%
-                        %{--Presupuesto--}%
-                        %{--</g:link>--}%
-                        %{--Reporta el presupuesto anual.--}%
-                        %{--</li>--}%
-
                         <li text="cmpr">
-                            <g:link controller="reportes" action="comprobante" file="Comprobante.pdf" class="link"
-                                    dialog="dlgComprobante">
-                                Comprobante
-                            </g:link>
+                            %{--<g:link controller="reportes" action="comprobante" file="Comprobante.pdf" class="link"--}%
+                                    %{--dialog="dlgComprobante">--}%
+                                %{--Comprobante--}%
+                            %{--</g:link>--}%
+
+                            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#comprobante">
+                            Comprobante
+                            </a>
+
                             Permite imprimir un comprobante
+
                         </li>
 
                         <li text="blcm">
-                            <g:link controller="reportes" action="balanceComprobacion" file="Balance_Comprobacion.pdf" class="link"
-                                    dialog="dlgContabilidadPeriodo">
-                                Balance de comprobaci&oacute;n
-                            </g:link>
+                            %{--<g:link controller="reportes" action="balanceComprobacion" file="Balance_Comprobacion.pdf" class="link"--}%
+                                    %{--dialog="dlgContabilidadPeriodo">--}%
+                                %{--Balance de comprobaci&oacute;n--}%
+                            %{--</g:link>--}%
+
+                            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#balance">
+                                Balance de Comprobación
+                            </a>
                             Muestra el balance de comprobaci&oacute;n en detalle a todos los niveles
                         </li>
 
                         <li text="stfn">
-                            <g:link controller="reportes2" action="situacionFinanciera" file="Situacion_Financiera.pdf" class="link"
-                                    dialog="dlgContabilidadPeriodo">
-                                Estado de situaci&oacute;n financiera
-                            </g:link>
+                            %{--<g:link controller="reportes2" action="situacionFinanciera" file="Situacion_Financiera.pdf" class="link"--}%
+                                    %{--dialog="dlgContabilidadPeriodo">--}%
+                                %{--Estado de situaci&oacute;n financiera--}%
+                            %{--</g:link>--}%
+
+                            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#situacion">
+                            Estado de Situación Financiera
+                            </a>
+
+
                             Conocido anteriormente como Balance General
                         </li>
 
                         <li text="rsin">
-                            <g:link controller="reportes2" action="estadoDeResultados" file="Estado_Resultado_Integral.pdf" class="link"
-                                    dialog="dlgContabilidadPeriodo">
-                                Estado del resultado integral
-                            </g:link>
+                            %{--<g:link controller="reportes2" action="estadoDeResultados" file="Estado_Resultado_Integral.pdf" class="link"--}%
+                                    %{--dialog="dlgContabilidadPeriodo">--}%
+                                %{--Estado del resultado integral--}%
+                            %{--</g:link>--}%
+
+                            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#integral">
+                            Estado del Resultado Integral
+                            </a>
+
                             Este reporte se conocía como Estado de Pérdidas y Ganancias
                         </li>
 
-                        <li text="fldf">
-                            <g:link controller="reportes" action="flujoEfectivo" file="Estado_Flujos_Efectivo.pdf" class="link"
-                                    dialog="dlgContabilidadPeriodo">
-                                Estado de flujos de efectivo
-                            </g:link>
-                            Estado de flujo defectivo en función del año anterior
-                        </li>
 
-                        <li text="patr">
-                            <g:link controller="reportes" action="cambiosPatrimonio" file="Estado_Cambios_Patrimonio.pdf" class="link"
-                                    dialog="dlgContabilidadPeriodo">
-                                Estado de Cambios en el Patrimonio
-                            </g:link>
-                            Estado de cambios en el patrimonio durante el ejercicio fiscal
-                        </li>
 
-                        <li text="pags">
-                        <g:link controller="reportes2" action="reportePagos" file="Pagos.pdf" class="link"
-                        dialog="dlgPagos">
-                        Pagos
-                        </g:link>
-                        Pagos
-                        </li>
 
-                        %{--<li text="vnts">--}%
-                        %{--<g:link controller="reportes" action="cambiosPatrimonio" file="Estado_Cambios_Patrimonio.pdf" class="link"--}%
-                        %{--dialog="dlgVentas">--}%
-                        %{--Ventas--}%
-                        %{--</g:link>--}%
-                        %{--Ventas--}%
+                        %{--<li text="fldf">--}%
+                            %{--<g:link controller="reportes" action="flujoEfectivo" file="Estado_Flujos_Efectivo.pdf" class="link"--}%
+                                    %{--dialog="dlgContabilidadPeriodo">--}%
+                                %{--Estado de flujos de efectivo--}%
+                            %{--</g:link>--}%
+
+                            %{--<a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#flujo">--}%
+                            %{--Estado de flujos de efectivo--}%
+                            %{--</a>--}%
+
+                            %{--Estado de flujo de efectivo en función del año anterior--}%
                         %{--</li>--}%
+
+                        %{--<li text="patr">--}%
+                            %{--<g:link controller="reportes" action="cambiosPatrimonio" file="Estado_Cambios_Patrimonio.pdf" class="link"--}%
+                                    %{--dialog="dlgContabilidadPeriodo">--}%
+                                %{--Estado de Cambios en el Patrimonio--}%
+                            %{--</g:link>--}%
+
+                           %{--<a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#patrimonio">--}%
+                            %{--Estado de Cambios en el Patrimonio--}%
+                           %{--</a>--}%
+
+
+
+                            %{--Estado de cambios en el patrimonio durante el ejercicio fiscal--}%
+                        %{--</li>--}%
+
+                        %{--<li text="pags">--}%
+                        %{--<g:link controller="reportes2" action="reportePagos" file="Pagos.pdf" class="link"--}%
+                        %{--dialog="dlgPagos">--}%
+                        %{--Pagos--}%
+                        %{--</g:link>--}%
+                        %{--Pagos--}%
+                        %{--</li>--}%
+
                         <li text="auct">
-                            <g:link controller="reportes" action="auxiliaresContables" file="Auxiliar_Contable.pdf" class="link"
-                                    dialog="dlgAuxiliarContable">
-                                Libro mayor
-                            </g:link>
+                            %{--<g:link controller="reportes" action="auxiliaresContables" file="Auxiliar_Contable.pdf" class="link"--}%
+                                    %{--dialog="dlgAuxiliarContable">--}%
+                                %{--Libro mayor--}%
+                            %{--</g:link>--}%
+                            <a href="#" class="link btn btn-info btn-ajax" data-target="#auxiliar" data-toggle="modal">
+                             Libro Mayor
+                            </a>
                             Auxiliar Contable
                         </li>
+
                         <li text="axcl">
-                            <g:link controller="reportes3" action="auxiliarPorCliente" file="Auxiliar_Cliente.pdf" class="link"
-                                    dialog="dlgAuxiliarCliente">
-                                Auxiliar por Cliente
-                            </g:link>
+                            %{--<g:link controller="reportes3" action="auxiliarPorCliente" file="Auxiliar_Cliente.pdf" class="link"--}%
+                                    %{--dialog="dlgAuxiliarCliente">--}%
+                                %{--Auxiliar por Cliente--}%
+                            %{--</g:link>--}%
+                            <a href="#" class="link btn btn-info btn-ajax" data-target="#cliente" data-toggle="modal">
+                            Auxiliar por Cliente
+                            </a>
                             Auxiliar por cliente
                         </li>
+
                         <li text="blgn">
-                            <g:link controller="reportes3" action="balanceGeneralAuxiliares" file="Balance_general.pdf" class="link"
-                                    dialog="dlgContabilidadPeriodo">
-                                Balance general con auxiliares
-                            </g:link>
+                            %{--<g:link controller="reportes3" action="balanceGeneralAuxiliares" file="Balance_general.pdf" class="link"--}%
+                                    %{--dialog="dlgContabilidadPeriodo">--}%
+                                %{--Balance general con auxiliares--}%
+                            %{--</g:link>--}%
+                            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#balanceAuxiliares">
+                            Balance general con auxiliares
+                            </a>
                             Balance general con auxiliares, o Estado de situación financiera
                         </li>
-                        <li text="fact">
 
-                            <g:link controller="reportes" action="reporteFacturacion" file="Reporte_Ventas_Facturacion.pdf" class="link" dialog="dlgVentasFacturacion">
+                        %{--<li text="fact">--}%
 
-                                Ventas Facturación
-                            </g:link>
+                            %{--<g:link controller="reportes" action="reporteFacturacion" file="Reporte_Ventas_Facturacion.pdf" class="link" dialog="dlgVentasFacturacion">--}%
 
-                            Reporte de Ventas Facturación
+                                %{--Ventas Facturación--}%
+                            %{--</g:link>--}%
 
-                        </li>
-                        <li text="vnts">
-                            <g:link controller="reportes3" action="reporteCxP" file="Cuentas_por_pagar.pdf" class="link"
-                                    dialog="dlgcxp">
-                                Cuentas por pagar
-                            </g:link>
-                            Reporte de cuentas por pagar
-                        </li>
+                            %{--Reporte de Ventas Facturación--}%
+
+                        %{--</li>--}%
+
+                        %{--<li text="vnts">--}%
+                            %{--<g:link controller="reportes3" action="reporteCxP" file="Cuentas_por_pagar.pdf" class="link"--}%
+                                    %{--dialog="dlgcxp">--}%
+                                %{--Cuentas por pagar--}%
+                            %{--</g:link>--}%
+                            %{--Reporte de cuentas por pagar--}%
+                        %{--</li>--}%
+
                         <li text="balg">
-                            <g:link controller="reportes" action="balanceG" file="balanceG.pdf" class="link"
-                                    dialog="balanceDialog">
-                                Balance
-                            </g:link>
+                            %{--<g:link controller="reportes" action="balanceG" file="balanceG.pdf" class="link"--}%
+                                    %{--dialog="balanceDialog">--}%
+                                %{--Balance--}%
+                            %{--</g:link>--}%
+
+                            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#general">
+                            Balance General
+                            </a>
+
                             Balance General
                         </li>
 
@@ -336,26 +399,442 @@
             </div>
         </div>
 
-        <div id="dlgContabilidad" class="ui-helper-hidden">
-            Contabilidad:
-            <g:select name="cont" from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                      optionKey="id" optionValue="descripcion"
-                      class="ui-widget-content ui-corner-all"/>
-        </div>
 
-        <div id="dlgComprobante" class="ui-helper-hidden">
-            Contabilidad:
-            <g:select name="compCont" from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                      optionKey="id" optionValue="descripcion"
-                      class="ui-widget-content ui-corner-all"/><br/>
-            Tipo: <g:select name="compTipo" from="${cratos.TipoComprobante.list()}" optionKey="id" optionValue="descripcion"/>
-            Número: <g:textField type="text" class="ui-widget-content ui-corner-all" name="compNum"/>
-        </div>
 
-        <div id="dlgcxp">
-            Desde: <elm:datePicker class="field ui-corner-all" title="Desde" name="fechaIncio" format="yyyy-MM-dd"
+
+%{--//dialog de contabilidad--}%
+
+    <div class="modal fade" id="planCuentas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Plan de Cuentas - Elegir Contabilidad</h4>
+                </div>
+                <div class="modal-body">
+                     Contabilidad:
+                    <g:select name="contCuentas" id="contCuentas"
+                              from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
+                              optionKey="id" optionValue="descripcion"
+                              class="ui-widget-content ui-corner-all"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+                    <button type="button" class="btn btnAceptarPlan btn-success"><i class="fa fa-print"></i> Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    %{--dialog de gestor contable--}%
+
+    <div class="modal fade" id="gestorContable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modalGestor">Gestor Contable - Elegir Contabilidad</h4>
+                </div>
+                <div class="modal-body">
+                    Contabilidad:
+                    <g:select name="contContable" id="contContable"
+                              from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
+                              optionKey="id" optionValue="descripcion"
+                              class="ui-widget-content ui-corner-all"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+                    <button type="button" class="btn btnAceptarGestor btn-success"><i class="fa fa-print"></i> Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    %{--dialog comprobante--}%
+
+    <div class="modal fade" id="comprobante" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modalComprobante">Comprobante</h4>
+                </div>
+                <div class="modal-body">
+                    Contabilidad:
+                    <g:select name="contComp" id="contComp"
+                              from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
+                              optionKey="id" optionValue="descripcion"
+                              class="ui-widget-content ui-corner-all"/>
+
+                   <div style="margin-top: 20px">
+                    Tipo: <g:select name="compTipo" from="${cratos.TipoComprobante.list()}" optionKey="id" optionValue="descripcion"/>
+                   </div>
+                    <div style="margin-top: 20px">
+                        Número: <g:textField type="text" class="ui-widget-content ui-corner-all" name="compNum"/>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+                    <button type="button" class="btn btnAceptarComprobante btn-success"><i class="fa fa-print"></i> Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   %{--dialog balance--}%
+    <div class="modal fade" id="balance" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modalBalance">Balance</h4>
+                </div>
+                <div class="modal-body" id="bodyBalance">
+                    <div>
+                        Contabilidad:
+                        <g:select name="contP" id="contP"
+                                  from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
+                                  optionKey="id" optionValue="descripcion"
+                                  class="ui-widget-content ui-corner-all"/>
+                    </div>
+
+                    <div id="divPeriodo">
+                        Período:
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+                    <button type="button" class="btn btnAceptarBalance btn-success"><i class="fa fa-print"></i> Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    %{--dialog situacion financiera--}%
+   <div class="modal fade" id="situacion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modalSituacion">Situación Financiera</h4>
+                </div>
+                <div class="modal-body" id="bodySituacion">
+                    <div>
+                        Contabilidad:
+                        <g:select name="contP8" id="contP8"
+                                  from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
+                                  optionKey="id" optionValue="descripcion"
+                                  class="ui-widget-content ui-corner-all"/>
+                    </div>
+
+                    <div id="divPeriodo8">
+                        Período:
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+                    <button type="button" class="btn btnAceptarSituacion btn-success"><i class="fa fa-print"></i> Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  %{--dialog resultado Integral--}%
+
+
+    <div class="modal fade" id="integral" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modalIntegral">Estado del Resultado Integral</h4>
+                </div>
+                <div class="modal-body" id="bodyIntegral">
+                    <div>
+                        Contabilidad:
+                        <g:select name="contP9" id="contP9"
+                                  from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
+                                  optionKey="id" optionValue="descripcion"
+                                  class="ui-widget-content ui-corner-all"/>
+                    </div>
+
+                    <div id="divPeriodo9">
+                        Período:
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+                    <button type="button" class="btn btnAceptarIntegral btn-success"><i class="fa fa-print"></i> Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    %{--dialog auxiliar contable--}%
+
+
+    <div class="modal fade" id="auxiliar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modalAuxiliar">Estado del Resultado Integral</h4>
+                </div>
+                <div class="modal-body" id="bodyAuxiliar">
+                    <div>
+                        Contabilidad:
+                        <g:select name="contP3" id="contP3"
+                                  from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
+                                  optionKey="id" optionValue="descripcion"
+                                  class="ui-widget-content ui-corner-all"/>
+                    </div>
+
+                    <div id="divPeriodo3">
+                        Periodo:
+
+                    </div>
+
+                    <div id="divCuenta3">
+                        Cuenta:
+                        <g:select name="cnta3" from="${cratos.Cuenta.findAllByEmpresa(session.empresa, [sort: 'numero'])}"
+                                  optionKey="id" style="width: 750px;"
+                                  class="ui-widget-content ui-corner-all"/>
+
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+                    <button type="button" class="btn btnAceptarAuxiliar btn-success"><i class="fa fa-print"></i> Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    %{--dialog auxiliar por cliente--}%
+
+
+    <div class="modal fade" id="cliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modalAuxCliente">Auxiliar por Cliente</h4>
+                </div>
+                <div class="modal-body" id="bodyAuxCliente">
+                    <div>
+                        Contabilidad:
+                        <g:select name="contP4" id="contP4"
+                                  from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
+                                  optionKey="id" optionValue="descripcion"
+                                  class="ui-widget-content ui-corner-all"/>
+                    </div>
+                    <div id="divPeriodo4">
+                        Periodo:
+                    </div>
+
+                    <div id="divCliente">
+                        %{--<bsc:buscador name="proveedor.id" value="" accion="listarClientes" campos="${camposCliente}" label="Proveedor" tipo="buscador"/>--}%
+                        %{--<a href="#" id="btnTodosPrv">Todos</a>--}%
+                        Clientes:
+                        <g:select name="listaClientes" from="${clientes}" optionValue="nombre" optionKey="id" />
+
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+                    <button type="button" class="btn btnAceptarAuxCliente btn-success"><i class="fa fa-print"></i> Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    %{--dialog balance x auxiliares--}%
+
+    <div class="modal fade" id="balanceAuxiliares" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modalBalanceAux">Auxiliar por Cliente</h4>
+                </div>
+                <div class="modal-body" id="bodyBalanceAux">
+
+
+                    <div>
+                    Contabilidad:
+                    <g:select name="contP0" id="contP0"
+                    from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
+                    optionKey="id" optionValue="descripcion"
+                    class="ui-widget-content ui-corner-all"/>
+                    </div>
+
+                    <div id="divPeriodo0">
+                    Periodo:
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+                    <button type="button" class="btn btnAceptarBalanceAux btn-success"><i class="fa fa-print"></i> Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    %{--dialog flujo efectivo--}%
+
+
+    %{--<div class="modal fade" id="flujo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">--}%
+        %{--<div class="modal-dialog">--}%
+            %{--<div class="modal-content">--}%
+                %{--<div class="modal-header">--}%
+                    %{--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>--}%
+                    %{--<h4 class="modal-title" id="modalFlujo">Estado de Flujos de Efectivo</h4>--}%
+                %{--</div>--}%
+                %{--<div class="modal-body" id="bodyFlujo">--}%
+                    %{--<div>--}%
+                        %{--Contabilidad:--}%
+                        %{--<g:select name="contP7" id="contP7"--}%
+                                  %{--from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"--}%
+                                  %{--optionKey="id" optionValue="descripcion"--}%
+                                  %{--class="ui-widget-content ui-corner-all"/>--}%
+                    %{--</div>--}%
+
+                    %{--<div id="divPeriodo7">--}%
+                        %{--Período:--}%
+                    %{--</div>--}%
+                %{--</div>--}%
+                %{--<div class="modal-footer">--}%
+                    %{--<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>--}%
+                    %{--<button type="button" class="btn btnAceptarFlujo btn-success"><i class="fa fa-print"></i> Aceptar</button>--}%
+                %{--</div>--}%
+            %{--</div>--}%
+        %{--</div>--}%
+    %{--</div>--}%
+
+    %{--dialog patrimonio--}%
+
+
+    %{--<div class="modal fade" id="patrimonio" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">--}%
+        %{--<div class="modal-dialog">--}%
+            %{--<div class="modal-content">--}%
+                %{--<div class="modal-header">--}%
+                    %{--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>--}%
+                    %{--<h4 class="modal-title" id="modalPatrimonio">Estado de Flujos de Efectivo</h4>--}%
+                %{--</div>--}%
+                %{--<div class="modal-body" id="bodyPatrimonio">--}%
+                    %{--<div>--}%
+                        %{--Contabilidad:--}%
+                        %{--<g:select name="contP7" id="contP7"--}%
+                                  %{--from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"--}%
+                                  %{--optionKey="id" optionValue="descripcion"--}%
+                                  %{--class="ui-widget-content ui-corner-all"/>--}%
+                    %{--</div>--}%
+
+                    %{--<div id="divPeriodo7">--}%
+                        %{--Período:--}%
+                    %{--</div>--}%
+                %{--</div>--}%
+                %{--<div class="modal-footer">--}%
+                    %{--<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>--}%
+                    %{--<button type="button" class="btn btnAceptarPatrimonio btn-success"><i class="fa fa-print"></i> Aceptar</button>--}%
+                %{--</div>--}%
+            %{--</div>--}%
+        %{--</div>--}%
+    %{--</div>--}%
+
+    %{--dialog balance general--}%
+
+    <div class="modal fade" id="general" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modalGeneral">Balance General</h4>
+                </div>
+                <div class="modal-body" id="bodyGeneral">
+
+                    <div style="margin-bottom: 10px;">
+                        Antes de generar este reporte asegurese de configurar las cuentas para el cálculo de resultados <a href="${g.createLink(controller: 'cuenta',action: 'cuentaResultados')}" style="color: blue">Aquí</a>
+                    </div>
+                    <div>
+                        Contabilidad:
+                        <g:select name="contP6" id="contP6"
+                                  from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
+                                  optionKey="id" optionValue="descripcion"
+                                  class="ui-widget-content ui-corner-all"/>
+                    </div>
+
+                    <div id="divPeriodo6">
+                        Periodo:
+                    </div>
+                    <div>
+                        Nivel:
+                        <select id="nivel">
+                            <option value="1,2">DOS</option>
+                            <option value="1,2,3">TRES</option>
+                            <option value="1,2,3,4">CUATRO</option>
+                            <option value="1,2,3,4,5">CINCO</option>
+                        </select>
+                    </div>
+                    <div>
+                        Mostrar cuentas con saldo cero? <input type="checkbox" id="cero" value="1" checked="true">
+                    </div>
+                    <div>
+                        Firma: <input type="text" id="firma1">
+                    </div>
+                    <div>
+                        Firma: <input type="text" id="firma2">
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+                    <button type="button" class="btn btnAceptarGeneral btn-success"><i class="fa fa-print"></i> Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+        %{--<div id="dlgContabilidad" class="ui-helper-hidden">--}%
+            %{--Contabilidad:--}%
+            %{--<g:select name="cont" from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"--}%
+                      %{--optionKey="id" optionValue="descripcion"--}%
+                      %{--class="ui-widget-content ui-corner-all"/>--}%
+        %{--</div>--}%
+
+        %{--<div id="dlgComprobante" class="ui-helper-hidden">--}%
+            %{--Contabilidad:--}%
+            %{--<g:select name="compCont" from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"--}%
+                      %{--optionKey="id" optionValue="descripcion"--}%
+                      %{--class="ui-widget-content ui-corner-all"/><br/>--}%
+            %{--Tipo: <g:select name="compTipo" from="${cratos.TipoComprobante.list()}" optionKey="id" optionValue="descripcion"/>--}%
+            %{--Número: <g:textField type="text" class="ui-widget-content ui-corner-all" name="compNum"/>--}%
+        %{--</div>--}%
+
+        <div id="dlgcxp" class="ui-helper-hidden">
+
+            Desde: <elm:datepicker class="field ui-corner-all" title="Desde" name="fechaIncio" format="yyyy-MM-dd"
                                    style="width: 80px" id="desde"/>
-            Hasta: <elm:datePicker class="field ui-corner-all" title="Hasta" name="fechaFin" format="yyyy-MM-dd"
+            Hasta: <elm:datepicker class="field ui-corner-all" title="Hasta" name="fechaFin" format="yyyy-MM-dd"
                                    style="width: 80px" id="hasta"/>
         </div>
 
@@ -368,9 +847,9 @@
 
         </div>
 
-        Desde: <elm:datePicker class="field ui-corner-all" title="Desde" name="fechaIncio" format="yyyy-MM-dd"
+        Desde: <elm:datepicker class="field ui-corner-all" title="Desde" name="fechaIncio" format="yyyy-MM-dd"
                                style="width: 80px" id="desdePagos"/>
-        Hasta: <elm:datePicker class="field ui-corner-all" title="Hasta" name="fechaFin" format="yyyy-MM-dd"
+        Hasta: <elm:datepicker class="field ui-corner-all" title="Hasta" name="fechaFin" format="yyyy-MM-dd"
                                style="width: 80px" id="hastaPagos"/>
 
     </div>
@@ -378,19 +857,19 @@
 
 
 
-        <div id="dlgContabilidadPeriodo" class="ui-helper-hidden">
-            <div>
-                Contabilidad:
-                <g:select name="contP" id="contP"
-                          from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                          optionKey="id" optionValue="descripcion"
-                          class="ui-widget-content ui-corner-all"/>
-            </div>
+        %{--<div id="dlgContabilidadPeriodo" class="ui-helper-hidden">--}%
+            %{--<div>--}%
+                %{--Contabilidad:--}%
+                %{--<g:select name="contP" id="contP"--}%
+                          %{--from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"--}%
+                          %{--optionKey="id" optionValue="descripcion"--}%
+                          %{--class="ui-widget-content ui-corner-all"/>--}%
+            %{--</div>--}%
 
-            <div id="divPeriodo">
-                Periodo:
-            </div>
-        </div>
+            %{--<div id="divPeriodo">--}%
+                %{--Periodo:--}%
+            %{--</div>--}%
+        %{--</div>--}%
 
         <div id="dlgContabilidadPeriodoCuenta" class="ui-helper-hidden">
             <div>
@@ -411,47 +890,47 @@
             </div>
         </div>
 
-        <div id="dlgAuxiliarContable" class="ui-helper-hidden">
-            <div>
-                Contabilidad:
-                <g:select name="contP3" id="contP3"
-                          from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                          optionKey="id" optionValue="descripcion"
-                          class="ui-widget-content ui-corner-all"/>
-            </div>
+        %{--<div id="dlgAuxiliarContable" class="ui-helper-hidden">--}%
+            %{--<div>--}%
+                %{--Contabilidad:--}%
+                %{--<g:select name="contP3" id="contP3"--}%
+                          %{--from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"--}%
+                          %{--optionKey="id" optionValue="descripcion"--}%
+                          %{--class="ui-widget-content ui-corner-all"/>--}%
+            %{--</div>--}%
 
-            <div id="divPeriodo3">
-                Periodo:
+            %{--<div id="divPeriodo3">--}%
+                %{--Periodo:--}%
 
-            </div>
+            %{--</div>--}%
 
-            <div id="divCuenta3">
-                Cuenta:
-                <g:select name="cnta3" from="${cratos.Cuenta.findAllByEmpresa(session.empresa, [sort: 'numero'])}"
-                          optionKey="id" style="width: 750px;"
-                          class="ui-widget-content ui-corner-all"/>
+            %{--<div id="divCuenta3">--}%
+                %{--Cuenta:--}%
+                %{--<g:select name="cnta3" from="${cratos.Cuenta.findAllByEmpresa(session.empresa, [sort: 'numero'])}"--}%
+                          %{--optionKey="id" style="width: 750px;"--}%
+                          %{--class="ui-widget-content ui-corner-all"/>--}%
 
-            </div>
-        </div>
+            %{--</div>--}%
+        %{--</div>--}%
 
-        <div id="dlgAuxiliarCliente" class="ui-helper-hidden">
-            <div>
-                Contabilidad:
-                <g:select name="contP4" id="contP4"
-                          from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                          optionKey="id" optionValue="descripcion"
-                          class="ui-widget-content ui-corner-all"/>
-            </div>
+        %{--<div id="dlgAuxiliarCliente" class="ui-helper-hidden">--}%
+            %{--<div>--}%
+                %{--Contabilidad:--}%
+                %{--<g:select name="contP4" id="contP4"--}%
+                          %{--from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"--}%
+                          %{--optionKey="id" optionValue="descripcion"--}%
+                          %{--class="ui-widget-content ui-corner-all"/>--}%
+            %{--</div>--}%
 
-            <div id="divPeriodo4">
-                Periodo:
-            </div>
+            %{--<div id="divPeriodo4">--}%
+                %{--Periodo:--}%
+            %{--</div>--}%
 
-            <div id="divCliente">
-                <bsc:buscador name="proveedor.id" value="" accion="listarClientes" campos="${camposCliente}" label="Proveedor" tipo="buscador"/>
-                <a href="#" id="btnTodosPrv">Todos</a>
-            </div>
-        </div>
+            %{--<div id="divCliente">--}%
+                %{--<bsc:buscador name="proveedor.id" value="" accion="listarClientes" campos="${camposCliente}" label="Proveedor" tipo="buscador"/>--}%
+                %{--<a href="#" id="btnTodosPrv">Todos</a>--}%
+            %{--</div>--}%
+        %{--</div>--}%
 
 
         <div id="dlgVentasFacturacion" class="ui-helper-hidden">
@@ -480,40 +959,40 @@
 
             </div>
 
-            <div id="balanceDialog" class="ui-helper-hidden">
-                <div style="margin-bottom: 10px;">
-                    Antes de generar este reporte asegurese de configurar las cuentas para el cálculo de resultados <a href="${g.createLink(controller: 'cuenta',action: 'cuentaResultados')}" style="color: blue">Aquí</a>
-                </div>
-                <div>
-                    Contabilidad:
-                    <g:select name="contP6" id="contP6"
-                              from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                              optionKey="id" optionValue="descripcion"
-                              class="ui-widget-content ui-corner-all"/>
-                </div>
+            %{--<div id="balanceDialog" class="ui-helper-hidden">--}%
+                %{--<div style="margin-bottom: 10px;">--}%
+                    %{--Antes de generar este reporte asegurese de configurar las cuentas para el cálculo de resultados <a href="${g.createLink(controller: 'cuenta',action: 'cuentaResultados')}" style="color: blue">Aquí</a>--}%
+                %{--</div>--}%
+                %{--<div>--}%
+                    %{--Contabilidad:--}%
+                    %{--<g:select name="contP6" id="contP6"--}%
+                              %{--from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"--}%
+                              %{--optionKey="id" optionValue="descripcion"--}%
+                              %{--class="ui-widget-content ui-corner-all"/>--}%
+                %{--</div>--}%
 
-                <div id="divPeriodo6">
-                    Periodo:
-                </div>
-                <div>
-                    Nivel:
-                    <select id="nivel">
-                    <option value="1,2">DOS</option>
-                    <option value="1,2,3">TRES</option>
-                    <option value="1,2,3,4">CUATRO</option>
-                    <option value="1,2,3,4,5">CINCO</option>
-                    </select>
-                </div>
-                <div>
-                Mostrar cuentas con saldo cero? <input type="checkbox" id="cero" value="1" checked="true">
-                </div>
-                <div>
-                    Firma: <input type="text" id="firma1">
-                </div>
-                <div>
-                    Firma: <input type="text" id="firma2">
-                </div>
-            </div>
+                %{--<div id="divPeriodo6">--}%
+                    %{--Periodo:--}%
+                %{--</div>--}%
+                %{--<div>--}%
+                    %{--Nivel:--}%
+                    %{--<select id="nivel">--}%
+                    %{--<option value="1,2">DOS</option>--}%
+                    %{--<option value="1,2,3">TRES</option>--}%
+                    %{--<option value="1,2,3,4">CUATRO</option>--}%
+                    %{--<option value="1,2,3,4,5">CINCO</option>--}%
+                    %{--</select>--}%
+                %{--</div>--}%
+                %{--<div>--}%
+                %{--Mostrar cuentas con saldo cero? <input type="checkbox" id="cero" value="1" checked="true">--}%
+                %{--</div>--}%
+                %{--<div>--}%
+                    %{--Firma: <input type="text" id="firma1">--}%
+                %{--</div>--}%
+                %{--<div>--}%
+                    %{--Firma: <input type="text" id="firma2">--}%
+                %{--</div>--}%
+            %{--</div>--}%
 
 
 
@@ -523,6 +1002,14 @@
 
         <script type="text/javascript">
 
+        //nuevo
+
+
+
+
+
+
+//antiguo
             var actionUrl = "";
 
             function updateCuenta() {
@@ -543,7 +1030,7 @@
             function updatePeriodo(cual) {
                 var cont = $("#contP" + cual).val();
 
-//                console.log("cont" + cont);
+                console.log("cont" + cont);
 
                 $.ajax({
                     type    : "POST",
@@ -575,9 +1062,9 @@
                             var url = $(this).attr("href");
                             var file = $(this).attr("file");
 
-                            var dialog = trim($(this).attr("dialog"));
+                            var dialog = $.trim($(this).attr("dialog"));
 
-                            var cont = trim($(this).text());
+                            var cont = $.trim($(this).text());
 
                             $("#" + dialog).dialog("option", "title", cont);
                             $("#" + dialog).dialog("open");
@@ -609,33 +1096,178 @@
                 });
                 $("#contP5").change(function () {
                     updatePeriodo("5");
-
                 });
                 $("#contP6").change(function () {
                     updatePeriodo("6");
+                });
+
+                $("#contP7").change(function () {
+                    updatePeriodo("7");
+                });
+                $("#contP8").change(function () {
+                    updatePeriodo("8");
+                });
+                $("#contP9").change(function () {
+                    updatePeriodo("9");
+                });
+
+                $("#contP0").change(function () {
+                    updatePeriodo("0");
+                });
+
+
+                $(".btnAceptarPlan").click(function () {
+
+                    var cont = $("#contCuentas").val()
+
+                    url = "${g.createLink(controller:'reportes' , action: 'planDeCuentas')}?cont=" + cont + "Wempresa=${session.empresa.id}";
+                    location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=plan de cuentas.pdf"
 
                 });
 
-                $("#dlgContabilidad").dialog({
-                    modal     : true,
-                    resizable : false,
-                    autoOpen  : false,
-                    buttons   : {
-                        "Aceptar"  : function () {
-                            var cont = $("#cont").val();
-                            var url = actionUrl + "?cont=" + cont + "Wemp=${session.empresa.id}";
-//                            console.group("URL");
-//                            console.log(actionUrl);
-//                            console.log(url);
-//                            console.groupEnd();
-
-                            location.href = url;
+                $(".btnAceptarGestor").click(function () {
+                    var cont = $("#contContable").val()
+                    url = "${g.createLink(controller:'reportes' , action: 'gestorContable')}?cont=" + cont + "Wempresa=${session.empresa.id}";
+                    location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=gestor contable.pdf"
+                });
+                $(".btnAceptarComprobante").click(function () {
+                    var cont = $("#contComp").val()
+                    var tipo = $("#compTipo").val();
+                    var num = $("#compNum").val();
+                    $.ajax({
+                        type    : "POST",
+                        url     : "${createLink(controller: 'reportes3', action: 'reporteComprobante')}",
+                        data    : {
+                            cont : cont,
+                            tipo : tipo,
+                            num  : num
                         },
-                        "Cancelar" : function () {
-                            $("#dlgContabilidad").dialog("close");
+                        success : function (msg) {
+                            var parts = msg.split("_");
+                            if (parts[0] != "NO") {
+                                var url = actionUrl + "?id=" + msg;
+                                location.href = url;
+                            } else {
+                                alert(parts[1]);
+                            }
                         }
+                    });
+                });
+
+                $(".btnAceptarBalance").click(function () {
+                    var cont = $("#contP").val();
+                    var per = $("#periodo").val();
+                    url = "${g.createLink(controller:'reportes' , action: 'balanceComprobacion')}?cont=" + cont + "Wempresa=${session.empresa.id}" + "Wper=" + per;
+                    location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=balanceComprobacion.pdf"
+                });
+
+                $(".btnAceptarSituacion").click(function () {
+
+                    var cont = $("#contP8").val();
+                    var per = $("#periodo8").val();
+                    url = "${g.createLink(controller:'reportes2' , action: 'situacionFinanciera')}?cont=" + cont + "Wempresa=${session.empresa.id}" + "Wper=" + per;
+                    location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=situacionFinanciera.pdf"
+                });
+
+
+                $(".btnAceptarIntegral").click(function () {
+
+                    var cont = $("#contP9").val();
+                    var per = $("#periodo9").val();
+                    url = "${g.createLink(controller:'reportes2' , action: 'estadoDeResultados')}?cont=" + cont + "Wempresa=${session.empresa.id}" + "Wper=" + per;
+                    location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=resultadoIntegral.pdf"
+
+                });
+
+                %{--$(".btnAceptarFlujo").click(function () {--}%
+
+                    %{--var cont = $("#contP7").val();--}%
+                    %{--var per = $("#periodo7").val();--}%
+                    %{--url = "${g.createLink(controller:'reportes' , action: 'flujoEfectivo')}?cont=" + cont + "Wempresa=${session.empresa.id}" + "Wper=" + per;--}%
+                    %{--location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=resultadoIntegral.pdf"--}%
+
+                %{--});--}%
+
+                %{--$(".btnAceptarPatrimonio").click(function () {--}%
+
+                    %{--var cont = $("#contP7").val();--}%
+                    %{--var per = $("#periodo7").val();--}%
+                    %{--url = "${g.createLink(controller:'reportes' , action: 'cambiosPatrimonio')}?cont=" + cont + "Wempresa=${session.empresa.id}" + "Wper=" + per;--}%
+                    %{--location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=patrimonio.pdf"--}%
+
+                %{--});--}%
+
+                $(".btnAceptarAuxiliar").click(function () {
+                    var cont = $("#contP3").val();
+                    var per = $("#periodo3").val();
+                    var cnta = $("#cnta3").val();
+                    if (per != null) {
+                        url = "${g.createLink(controller:'reportes' , action: 'auxiliaresContables')}?cont=" + cont + "Wemp=${session.empresa.id}" + "Wper=" + per + "Wcnta=" + cnta;
+                        location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=auxiliares.pdf"
                     }
                 });
+
+
+                $(".btnAceptarAuxCliente").click(function () {
+                    var cont = $("#contP4").val();
+                    var per = $("#periodo4").val();
+                    var cli = $("#listaClientes").val();
+                    url = "${g.createLink(controller:'reportes3' , action: 'auxiliarPorCliente')}?cont=" + cont + "Wemp=${session.empresa.id}" + "Wper=" + per + "Wcli=" + cli;
+                    location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=auxiliaresXcliente.pdf"
+                });
+
+                $(".btnAceptarBalanceAux").click(function () {
+                    var cont = $("#contP0").val();
+                    var per = $("#periodo0").val();
+                    url = "${g.createLink(controller:'reportes3' , action: 'balanceGeneralAuxiliares')}?cont=" + cont + "Wemp=${session.empresa.id}" + "Wper=" + per;
+                    location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=balancexAuxiliar.pdf"
+                });
+
+
+
+
+                $(".btnAceptarGeneral").click(function () {
+                    var cont = $("#contP6").val();
+                    var per = $("#periodo6").val();
+                    var ceros = "1"
+                    var firma1=$("#firma1").val()
+                    var firma2=$("#firma2").val()
+                    firma1=$.trim(firma1)
+                    firma1=firma1.replace(new RegExp(" ","g"),"_");
+                    firma2=$.trim(firma2)
+                    firma2=firma2.replace(new RegExp(" ","g"),"_");
+//                            console.log(firma1,firma2)
+                    if($("#cero").attr("checked")!="checked"){
+                        ceros="0"
+                    }
+                    url = "${g.createLink(controller:'reportes' , action: 'balanceG')}?contabilidad=" + cont + "Wperiodo=" + per + "Wempresa=${session.empresa.id}Wnivel="+$("#nivel").val()+"Wceros="+ceros+"Wfirma1="+firma1+"Wfirma2="+firma2;
+//                            console.log(url)
+                    location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=BalanceG.pdf"
+                });
+
+
+
+
+
+
+
+                %{--$("#dlgContabilidad").dialog({--}%
+                    %{--modal     : true,--}%
+                    %{--resizable : false,--}%
+                    %{--autoOpen  : false,--}%
+                    %{--buttons   : {--}%
+                        %{--"Aceptar"  : function () {--}%
+                            %{--var cont = $("#cont").val();--}%
+                            %{--var url = actionUrl + "?cont=" + cont + "Wemp=${session.empresa.id}";--}%
+                            %{--location.href = url;--}%
+                        %{--},--}%
+                        %{--"Cancelar" : function () {--}%
+                            %{--$("#dlgContabilidad").dialog("close");--}%
+                        %{--}--}%
+                    %{--}--}%
+                %{--});--}%
+
+
                 $("#dlgcxp").dialog({
                     modal    : true,
                     width    : 400,
@@ -651,6 +1283,25 @@
                         }
                     }
                 });
+
+                $("#plcn").dialog({
+                    modal    : true,
+                    width    : 400,
+                    height   : 300,
+                    title    : "Reporte de Cuentas por pagar",
+                    autoOpen : false,
+                    buttons  : {
+                        "Ver" : function () {
+                            var desde = $("#desde").val()
+                            var hasta = $("#hasta").val()
+                            url = "${g.createLink(controller:'reportes3' , action: 'reporteCxP')}?fechaInicio=" + desde + "WfechaFin=" + hasta + "Wempresa=${session.empresa.id}";
+                            location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=cuentas_por_pagar.pdf"
+                        }
+                    }
+
+                });
+
+
 
 
                 $("#dlgPagos").dialog({
@@ -675,30 +1326,30 @@
 
 
 
-                $("#dlgContabilidadPeriodo").dialog({
-                    modal     : true,
-                    resizable : false,
-                    autoOpen  : false,
-                    width     : 400,
-                    open      : function () {
-                        updatePeriodo("");
-                    },
-                    buttons   : {
-                        "Aceptar"  : function () {
-                            var cont = $("#contP").val();
-                            var per = $("#periodo").val();
-                            var url = actionUrl + "?cont=" + cont + "Wper=" + per + "Wemp=${session.empresa.id}";
-//                            console.group("URL");
-//                            console.log(actionUrl);
-//                            console.log(url);
-//                            console.groupEnd();
-                            location.href = url;
-                        },
-                        "Cancelar" : function () {
-                            $("#dlgContabilidadPeriodo").dialog("close");
-                        }
-                    }
-                });
+                %{--$("#dlgContabilidadPeriodo").dialog({--}%
+                    %{--modal     : true,--}%
+                    %{--resizable : false,--}%
+                    %{--autoOpen  : false,--}%
+                    %{--width     : 400,--}%
+                    %{--open      : function () {--}%
+                        %{--updatePeriodo("");--}%
+                    %{--},--}%
+                    %{--buttons   : {--}%
+                        %{--"Aceptar"  : function () {--}%
+                            %{--var cont = $("#contP").val();--}%
+                            %{--var per = $("#periodo").val();--}%
+                            %{--var url = actionUrl + "?cont=" + cont + "Wper=" + per + "Wemp=${session.empresa.id}";--}%
+%{--//                            console.group("URL");--}%
+%{--//                            console.log(actionUrl);--}%
+%{--//                            console.log(url);--}%
+%{--//                            console.groupEnd();--}%
+                            %{--location.href = url;--}%
+                        %{--},--}%
+                        %{--"Cancelar" : function () {--}%
+                            %{--$("#dlgContabilidadPeriodo").dialog("close");--}%
+                        %{--}--}%
+                    %{--}--}%
+                %{--});--}%
 
                 $("#dlgContabilidadPeriodoCuenta").dialog({
                     modal     : true,
@@ -724,107 +1375,107 @@
                     }
                 });
 
-                $("#dlgAuxiliarContable").dialog({
-                    modal     : true,
-                    resizable : false,
-                    autoOpen  : false,
-                    width     : 850,
-                    open      : function () {
+                %{--$("#dlgAuxiliarContable").dialog({--}%
+                    %{--modal     : true,--}%
+                    %{--resizable : false,--}%
+                    %{--autoOpen  : false,--}%
+                    %{--width     : 850,--}%
+                    %{--open      : function () {--}%
 
-                        updatePeriodo("3");
-                    },
-                    buttons   : {
-                        "Aceptar"  : function () {
-                            var cont = $("#contP3").val();
-                            var per = $("#periodo3").val();
-                            var cnta = $("#cnta3").val();
+                        %{--updatePeriodo("3");--}%
+                    %{--},--}%
+                    %{--buttons   : {--}%
+                        %{--"Aceptar"  : function () {--}%
+                            %{--var cont = $("#contP3").val();--}%
+                            %{--var per = $("#periodo3").val();--}%
+                            %{--var cnta = $("#cnta3").val();--}%
 
-                            if (per != null) {
-//
-//                    console.log("contabilidad:" + cont);
-//                    console.log("periodo:" + per);
-//                    console.log("cuenta:" + cnta);
+                            %{--if (per != null) {--}%
+%{--//--}%
+%{--//                    console.log("contabilidad:" + cont);--}%
+%{--//                    console.log("periodo:" + per);--}%
+%{--//                    console.log("cuenta:" + cnta);--}%
 
-                                var url = actionUrl + "?cont=" + cont + "Wper=" + per + "Wemp=${session.empresa.id}Wcnta=" + cnta;
-                                location.href = url;
+                                %{--var url = actionUrl + "?cont=" + cont + "Wper=" + per + "Wemp=${session.empresa.id}Wcnta=" + cnta;--}%
+                                %{--location.href = url;--}%
 
-                            }
-                            else {
+                            %{--}--}%
+                            %{--else {--}%
 
-                                console.log("entro")
-                                $.box({
-                                    imageClass : "box_error",
-                                    title      : "Alerta",
-                                    text       : "Ingrese el período!",
-                                    iconClose  : false,
-                                    dialog     : {
-                                        draggable : false,
-                                        resizable : false,
-                                        buttons   : {
-                                            "Aceptar" : function () {
-                                            }
-                                        }
-                                    }
-                                });
-                            }
+                                %{--console.log("entro")--}%
+                                %{--$.box({--}%
+                                    %{--imageClass : "box_error",--}%
+                                    %{--title      : "Alerta",--}%
+                                    %{--text       : "Ingrese el período!",--}%
+                                    %{--iconClose  : false,--}%
+                                    %{--dialog     : {--}%
+                                        %{--draggable : false,--}%
+                                        %{--resizable : false,--}%
+                                        %{--buttons   : {--}%
+                                            %{--"Aceptar" : function () {--}%
+                                            %{--}--}%
+                                        %{--}--}%
+                                    %{--}--}%
+                                %{--});--}%
+                            %{--}--}%
 
-                        },
-                        "Cancelar" : function () {
+                        %{--},--}%
+                        %{--"Cancelar" : function () {--}%
 
-                            $("#dlgAuxiliarContable").dialog("close");
-                        }
-
-
-                    }
+                            %{--$("#dlgAuxiliarContable").dialog("close");--}%
+                        %{--}--}%
 
 
-                });
+                    %{--}--}%
 
-                $("#dlgComprobante").dialog({
-                    resizable : false,
-                    autoOpen  : false,
-                    modal     : true,
-                    width     : 400,
-                    buttons   : {
-                        "Aceptar"  : function () {
-                            var cont = $("#compCont").val();
-                            var tipo = $("#compTipo").val();
-                            var num = $("#compNum").val();
 
-                            $.ajax({
-                                type    : "POST",
-                                url     : "${createLink(controller: 'reportes3', action: 'reporteComprobante')}",
-                                data    : {
-                                    cont : cont,
-                                    tipo : tipo,
-                                    num  : num
-                                },
-                                success : function (msg) {
-                                    var parts = msg.split("_");
-                                    if (parts[0] != "NO") {
-                                        var url = actionUrl + "?id=" + msg;
-                                        location.href = url;
-                                    } else {
-                                        alert(parts[1]);
-                                    }
-                                }
-                            });
+                %{--});--}%
 
-//                            location.href = url;
-                        },
-                        "Cancelar" : function () {
-                            $("#dlgComprobante").dialog("close");
-                        }
-                    }
-                });
+                %{--$("#dlgComprobante").dialog({--}%
+                    %{--resizable : false,--}%
+                    %{--autoOpen  : false,--}%
+                    %{--modal     : true,--}%
+                    %{--width     : 400,--}%
+                    %{--buttons   : {--}%
+                        %{--"Aceptar"  : function () {--}%
+                            %{--var cont = $("#compCont").val();--}%
+                            %{--var tipo = $("#compTipo").val();--}%
+                            %{--var num = $("#compNum").val();--}%
 
-                $("#dlgAuxiliarCliente").dialog({
-                    resizable : false,
-                    autoOpen  : false,
-                    modal     : true,
-                    width     : 400,
-                    buttons   : {
-                        "Aceptar"  : function () {
+                            %{--$.ajax({--}%
+                                %{--type    : "POST",--}%
+                                %{--url     : "${createLink(controller: 'reportes3', action: 'reporteComprobante')}",--}%
+                                %{--data    : {--}%
+                                    %{--cont : cont,--}%
+                                    %{--tipo : tipo,--}%
+                                    %{--num  : num--}%
+                                %{--},--}%
+                                %{--success : function (msg) {--}%
+                                    %{--var parts = msg.split("_");--}%
+                                    %{--if (parts[0] != "NO") {--}%
+                                        %{--var url = actionUrl + "?id=" + msg;--}%
+                                        %{--location.href = url;--}%
+                                    %{--} else {--}%
+                                        %{--alert(parts[1]);--}%
+                                    %{--}--}%
+                                %{--}--}%
+                            %{--});--}%
+
+%{--//                            location.href = url;--}%
+                        %{--},--}%
+                        %{--"Cancelar" : function () {--}%
+                            %{--$("#dlgComprobante").dialog("close");--}%
+                        %{--}--}%
+                    %{--}--}%
+                %{--});--}%
+
+                %{--$("#dlgAuxiliarCliente").dialog({--}%
+                    %{--resizable : false,--}%
+                    %{--autoOpen  : false,--}%
+                    %{--modal     : true,--}%
+                    %{--width     : 400,--}%
+                    %{--buttons   : {--}%
+                        %{--"Aceptar"  : function () {--}%
                             %{--var cont = $("#cont").val();--}%
                             %{--var per = $("#periodo").val();--}%
                             %{--var url = actionUrl + "?cont=" + cont + "Wper=" + per + "Wemp=${session.empresa.id}";--}%
@@ -833,35 +1484,35 @@
                             %{--//                            console.log(url);--}%
                             %{--//                            console.groupEnd();--}%
                             %{--location.href = url;--}%
-                        },
-                        "Cancelar" : function () {
-                            $("#dlgAuxiliarCliente").dialog("close");
-                        }
-                    }
-                });
+                        %{--},--}%
+                        %{--"Cancelar" : function () {--}%
+                            %{--$("#dlgAuxiliarCliente").dialog("close");--}%
+                        %{--}--}%
+                    %{--}--}%
+                %{--});--}%
 
-                $("#dlgAuxiliarCliente").dialog({
-                    resizable : false,
-                    autoOpen  : false,
-                    modal     : true,
-                    width     : 400,
-                    buttons   : {
-                        "Aceptar"  : function () {
-                            var cont = $("#contP4").val();
-                            var per = $("#periodo4").val();
-                            var cli = $("#hidVal").val();
-                            var url = actionUrl + "?cont=" + cont + "Wper=" + per + "Wcli=" + cli + "Wemp=${session.empresa.id}";
-//                            console.group("URL");
-//                            console.log(actionUrl);
-//                            console.log(url);
-//                            console.groupEnd();
-                            location.href = url;
-                        },
-                        "Cancelar" : function () {
-                            $("#dlgAuxiliarCliente").dialog("close");
-                        }
-                    }
-                });
+                %{--$("#dlgAuxiliarCliente").dialog({--}%
+                    %{--resizable : false,--}%
+                    %{--autoOpen  : false,--}%
+                    %{--modal     : true,--}%
+                    %{--width     : 400,--}%
+                    %{--buttons   : {--}%
+                        %{--"Aceptar"  : function () {--}%
+                            %{--var cont = $("#contP4").val();--}%
+                            %{--var per = $("#periodo4").val();--}%
+                            %{--var cli = $("#hidVal").val();--}%
+                            %{--var url = actionUrl + "?cont=" + cont + "Wper=" + per + "Wcli=" + cli + "Wemp=${session.empresa.id}";--}%
+%{--//                            console.group("URL");--}%
+%{--//                            console.log(actionUrl);--}%
+%{--//                            console.log(url);--}%
+%{--//                            console.groupEnd();--}%
+                            %{--location.href = url;--}%
+                        %{--},--}%
+                        %{--"Cancelar" : function () {--}%
+                            %{--$("#dlgAuxiliarCliente").dialog("close");--}%
+                        %{--}--}%
+                    %{--}--}%
+                %{--});--}%
 
                 $("#btnTodosPrv").button().click(function () {
                     $("#hidVal").val("-1");
@@ -929,40 +1580,40 @@
 
 
 
-                $("#balanceDialog").dialog({
-                    modal     : true,
-                    resizable : false,
-                    autoOpen  : false,
-                    width     : 400,
-                    open      : function () {
-                        updatePeriodo("6");
-                    },
-                    buttons   : {
-                        "Aceptar"  : function () {
-                            var cont = $("#contP6").val();
-                            var per = $("#periodo6").val();
-                            var ceros = "1"
-                            var firma1=$("#firma1").val()
-                            var firma2=$("#firma2").val()
-                            firma1=$.trim(firma1)
-                            firma1=firma1.replace(new RegExp(" ","g"),"_");
-                            firma2=$.trim(firma2)
-                            firma2=firma2.replace(new RegExp(" ","g"),"_");
-//                            console.log(firma1,firma2)
-                            if($("#cero").attr("checked")!="checked"){
-                                ceros="0"
-                            }
-                            url = "${g.createLink(controller:'reportes' , action: 'balanceG')}?contabilidad=" + cont + "Wperiodo=" + per + "Wempresa=${session.empresa.id}Wnivel="+$("#nivel").val()+"Wceros="+ceros+"Wfirma1="+firma1+"Wfirma2="+firma2;
-//                            console.log(url)
-                            location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=BalanceG.pdf"
+                %{--$("#balanceDialog").dialog({--}%
+                    %{--modal     : true,--}%
+                    %{--resizable : false,--}%
+                    %{--autoOpen  : false,--}%
+                    %{--width     : 400,--}%
+                    %{--open      : function () {--}%
+                        %{--updatePeriodo("6");--}%
+                    %{--},--}%
+                    %{--buttons   : {--}%
+                        %{--"Aceptar"  : function () {--}%
+                            %{--var cont = $("#contP6").val();--}%
+                            %{--var per = $("#periodo6").val();--}%
+                            %{--var ceros = "1"--}%
+                            %{--var firma1=$("#firma1").val()--}%
+                            %{--var firma2=$("#firma2").val()--}%
+                            %{--firma1=$.trim(firma1)--}%
+                            %{--firma1=firma1.replace(new RegExp(" ","g"),"_");--}%
+                            %{--firma2=$.trim(firma2)--}%
+                            %{--firma2=firma2.replace(new RegExp(" ","g"),"_");--}%
+%{--//                            console.log(firma1,firma2)--}%
+                            %{--if($("#cero").attr("checked")!="checked"){--}%
+                                %{--ceros="0"--}%
+                            %{--}--}%
+                            %{--url = "${g.createLink(controller:'reportes' , action: 'balanceG')}?contabilidad=" + cont + "Wperiodo=" + per + "Wempresa=${session.empresa.id}Wnivel="+$("#nivel").val()+"Wceros="+ceros+"Wfirma1="+firma1+"Wfirma2="+firma2;--}%
+%{--//                            console.log(url)--}%
+                            %{--location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=BalanceG.pdf"--}%
 
 
-                        },
-                        "Cancelar" : function () {
-                            $("#balanceDialog").dialog("close");
-                        }
-                    }
-                });
+                        %{--},--}%
+                        %{--"Cancelar" : function () {--}%
+                            %{--$("#balanceDialog").dialog("close");--}%
+                        %{--}--}%
+                    %{--}--}%
+                %{--});--}%
 
 
 

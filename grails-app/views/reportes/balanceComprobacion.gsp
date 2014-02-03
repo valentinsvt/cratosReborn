@@ -84,7 +84,9 @@
                 <g:if test="${m.saldoInicial+m.debe-m.haber!=0}">
                     <tr>
                         <td>${m.cuenta.numero}</td>
-                        <td>${m.cuenta.descripcion}</td>
+                        %{--<td>${m.cuenta.descripcion}</td>--}%
+                        <td><util:clean str="${m.cuenta.descripcion}"></util:clean></td>
+
                         <td style="text-align:right;"><g:formatNumber number="${m.saldoInicial}" maxFractionDigits="2" minFractionDigits="2" type="number"/></td>
                         <td style="text-align:right;">
                             <g:formatNumber number="${m.debe}" maxFractionDigits="2" minFractionDigits="2" type="number"/>

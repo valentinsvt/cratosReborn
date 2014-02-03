@@ -57,7 +57,7 @@
         <table>
             <tr>
                 <td width="450px" height="50px">
-                    Nombre: ${item.key}
+                    Nombre:   <util:clean str="${item.key}"></util:clean>
                 </td>
 
                 <td >
@@ -71,7 +71,7 @@
 
             <tr>
                 <td height="50px">
-                    Descripción: ${val.descripcion}
+                    Descripción:  <util:clean str="${val.descripcion}"></util:clean>
                 </td>
 
             </tr>
@@ -110,7 +110,8 @@
 
                     </td>
                     <td>
-                        ${i.descripcion}
+                        %{--${i.descripcion}--}%
+                        <util:clean str="${i.descripcion}"></util:clean>
 
                     </td>
                     <td>

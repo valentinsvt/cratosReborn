@@ -84,7 +84,7 @@
 <body>
 <div class="hoja">
     %{--<h1>Periodo ${periodo.numero}</h1>--}%
-    <h1 style="margin-bottom: 5px">${empresa.nombre}</h1>
+    <h1 style="margin-bottom: 5px"> <util:clean str="${empresa?.nombre}"></util:clean></h1>
     <h2>Estado de resultados</h2>
 
     <h3>Periodo del ${periodo.fechaInicio.format('dd-MM-yyyy')} a ${periodo.fechaFin.format('dd-MM-yyyy')}</h3>
@@ -107,7 +107,8 @@
                     ${i?.numero}
                 </td>
                 <td class="nombre">
-                    ${i?.descripcion}
+
+                    <util:clean str="${i.descripcion}"></util:clean>
                 </td>
                 <td class="${i.nivel.descripcion} numero">
                     <g:formatNumber number="${saldo4[i.id.toString()]}" type="number" minFractionDigits="2" maxFractionDigits="2"/>
@@ -138,7 +139,8 @@
                     ${i?.numero}
                 </td>
                 <td class="nombre">
-                    ${i?.descripcion}
+                    %{--${i?.descripcion}--}%
+                    <util:clean str="${i.descripcion}"></util:clean>
                 </td>
                 <td class="${i.nivel.descripcion} numero">
                     <g:formatNumber number="${saldo5[i.id.toString()]}" type="number" minFractionDigits="2" maxFractionDigits="2"/>

@@ -402,11 +402,13 @@ class Reportes2Controller {
 //        def contabilidad = Contabilidad.get(params.cont);
 
         def sp = kerberosoldService.ejecutarProcedure("saldos",params.cont)
-        println "estado de resultados aaaaa " + params
+//        println "estado de resultados aaaaa " + params
         def periodo = Periodo.get(params.per);
 
 
-        def empresa = Empresa.get(params.emp)
+        def empresa = Empresa.get(params.empresa)
+//        println("empresa" + empresa)
+
         def cuenta4 = Cuenta.findAllByNumeroIlikeAndEmpresa("4%", empresa,[sort: "numero"])
         def cuenta5 = Cuenta.findAllByNumeroIlikeAndEmpresa("5%", empresa,[sort: "numero"])
         def saldo4=[:]
@@ -419,10 +421,14 @@ class Reportes2Controller {
         if(cuenta4){
             cuenta4.eachWithIndex {i,j->
                 //println "each "+i+" j "+j
-                def saldo=SaldoMensual.findByCuentaAndPeriodo(i,periodo).refresh()
-                if(saldo)
+
+                def saldo=SaldoMensual.findByCuentaAndPeriodo(i,periodo)
+
+                if(saldo){
+                    saldo=SaldoMensual.findByCuentaAndPeriodo(i,periodo).refresh()
                     saldo4.put(i.id.toString(),saldo.saldoInicial+saldo.debe-saldo.haber)
-                else
+                }
+                    else
                     saldo4.put(i.id.toString(),0)
                 if(j==0)
                     total4=saldo4[i.id.toString()]
@@ -432,9 +438,11 @@ class Reportes2Controller {
         }
         if(cuenta5){
             cuenta5.eachWithIndex {i,j->
-                def saldo=SaldoMensual.findByCuentaAndPeriodo(i,periodo).refresh()
-                if(saldo)
+                def saldo=SaldoMensual.findByCuentaAndPeriodo(i,periodo)
+                if(saldo){
+                    saldo=SaldoMensual.findByCuentaAndPeriodo(i,periodo).refresh()
                     saldo5.put(i.id.toString(),saldo.saldoInicial+saldo.debe-saldo.haber)
+                }
                 else
                     saldo5.put(i.id.toString(),0)
                 if(j==0)

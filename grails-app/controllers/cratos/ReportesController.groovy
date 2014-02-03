@@ -8,10 +8,13 @@ class ReportesController {
 
     def index() {
         def camposCliente = ["nombre": ["Nombre", "string"], "ruc": ["Ruc", "string"]]
+
+        def clientes = Proveedor.findAllByEmpresa(session.empresa)
+
         if (params.msn)
-            [camposCliente: camposCliente, msn: params.msn]
+            [camposCliente: camposCliente, msn: params.msn, clientes: clientes]
         else
-            [camposCliente: camposCliente]
+            [camposCliente: camposCliente, clientes: clientes]
     }
 
 
@@ -114,10 +117,17 @@ class ReportesController {
     }
 
     def planDeCuentas() {
-        [cuentas: cuentasService.getCuentas(params.cont, params.emp)]
+
+        println("params" + params)
+
+        [cuentas: cuentasService.getCuentas(params.cont, params.empresa)]
+//        [cuentas:Cuenta.findAllByNumeroLike('5%')]
     }
 
     def balanceComprobacion() {
+
+//        println("paramsBC" + params )
+
         def sp = kerberosoldService.ejecutarProcedure("saldos", params.cont)
 
         def contabilidad = Contabilidad.get(params.cont)
@@ -145,8 +155,8 @@ class ReportesController {
     }
 
     def gestorContable() {
-        def gestor = cuentasService.getGestor(params.cont, params.emp)
-        def cuentas = cuentasService.getCuentas(params.cont, params.emp)
+        def gestor = cuentasService.getGestor(params.cont, params.empresa)
+        def cuentas = cuentasService.getCuentas(params.cont, params.empresa)
 //        def genera = cuentasService.getGenera(7)
 
         def genera = []

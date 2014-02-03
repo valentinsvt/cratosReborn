@@ -133,7 +133,8 @@
                                     ${cnta.numero} - ${cnta.descripcion}
                                 </td>
                                 <td style="text-align: right"  >
-                                    ${saldos[cnta.id.toString()].round(2)}
+                                    %{--${saldos[cnta.id.toString()].round(2)}--}%
+                                    ${saldos[cnta.id.toString()]}
                                 </td>
                             </tr>
                         </g:if>
@@ -144,7 +145,8 @@
                                         ${cnta.numero} - ${cnta.descripcion}
                                     </td>
                                     <td style="text-align: right"  >
-                                        ${saldos[cnta.id.toString()].round(2)}
+                                        %{--${saldos[cnta.id.toString()].round(2)}--}%
+                                        ${saldos[cnta.id.toString()]}
                                     </td>
                                 </tr>
                                 <g:set var="cont" value="${cont+1}"></g:set>

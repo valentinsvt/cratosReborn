@@ -65,7 +65,7 @@ class Reportes3Controller {
 
     def auxiliarPorCliente() {
 //        println "\n\n\n\n"
-//        println params
+//        println ("params:-->" + params)
 
         if (!params.cli) {
             params.cli = "-1"
@@ -94,6 +94,8 @@ class Reportes3Controller {
             html += "</ul>"
             html += "</div>"
         } else {
+//            println("entro!!!!!")
+
             def empresa = Empresa.get(params.emp)
             def periodo = Periodo.get(params.per)
             def cliente = Proveedor.get(params.cli)
@@ -282,7 +284,11 @@ class Reportes3Controller {
 //        println cuenta
         html += "<tr class='cuenta'>"
         html += "<td class='numero'>" + cuenta.numero + "</td>"
-        html += "<td class='nombre'>" + cuenta.descripcion + "</td>"
+//        html += "<td class='nombre'>" + cuenta.descripcion + "</td>"
+        //  <util:clean str="${cuenta.descripcion}"></util:clean>
+        html += "<td class='nombre'>" + util.clean(str:cuenta.descripcion) + "</td>"
+
+
         html += "<td class='valor ${cuenta.nivel.descripcion.trim().toLowerCase()}'>"
         def saldos = SaldoMensual.findAllByCuentaAndPeriodo(cuenta, per)
         def saldoInit = 0
@@ -308,9 +314,11 @@ class Reportes3Controller {
                 html += "<td class='nombre'>"
                 if (asiento.comprobante.proceso?.proveedor) {
                     if (asiento.comprobante.proceso?.proveedor?.nombre) {
-                        html += asiento.comprobante.proceso?.proveedor?.nombre
+//                        html += asiento.comprobante.proceso?.proveedor?.nombre
+                        html += util.clean(str:asiento.comprobante.proceso?.proveedor?.nombre)
                     } else if (asiento.comprobante.proceso?.proveedor?.nombreContacto) {
-                        html += asiento.comprobante.proceso?.proveedor?.nombreContacto + " " + asiento.comprobante.proceso?.proveedor?.apellidoContacto
+//                        html += asiento.comprobante.proceso?.proveedor?.nombreContacto + " " + asiento.comprobante.proceso?.proveedor?.apellidoContacto
+                        html += util.clean(str:asiento.comprobante.proceso?.proveedor?.nombreContacto) + " " + util.clean(str:asiento.comprobante.proceso?.proveedor?.apellidoContacto)
                     } else {
                         html += ""
                     }
@@ -359,7 +367,8 @@ class Reportes3Controller {
                     html += "<li>No se encontró el periodo " + params.per + "</li>"
                 }
                 if (!empresa) {
-                    html += "<li>No se econtró la empresa " + params.emp + "</li>"
+//                    html += "<li>No se econtró la empresa " + params.emp + "</li>"
+                    html += "<li>No se econtró la empresa " + util.clean(str:empresa.nombre) + "</li>"
                 }
                 html += "</ul>"
                 html += "</div>"
@@ -367,7 +376,7 @@ class Reportes3Controller {
 
                 def sp = kerberosoldService.ejecutarProcedure("saldos", periodo.contabilidadId)
 
-                header += "<h1>" + empresa.nombre + "</h1>"
+                header += "<h1>" + util.clean(str:empresa.nombre) + "</h1>"
                 header += "<h2>ESTADO DE SITUACION FINANCIERA (BALANCE GENERAL CON AUXILIARES)</h2>"
                 header += "<h3>Movimiento desde " + periodo.fechaInicio.format("dd-MM-yyyy") + "    hasta " + periodo.fechaFin.format("dd-MM-yyyy") + "</h3>"
 

@@ -4,6 +4,9 @@ class CuentasService {
     //static scope = "session"
 
     def getCuentas(contabilidadId, empresaId) {
+
+
+
         def empresa = Empresa.get(empresaId)
 
         def contabilidad = Contabilidad.get(contabilidadId)

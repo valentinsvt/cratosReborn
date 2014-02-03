@@ -1,5 +1,3 @@
-
-<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
   <title>Plan de cuentas</title>
@@ -46,7 +44,7 @@
                  ${cuenta.nivel.id}
              </td>
              <td>
-                 ${cuenta.descripcion}
+                <util:clean str="${cuenta.descripcion}"></util:clean>
              </td>
 
          </tr>
