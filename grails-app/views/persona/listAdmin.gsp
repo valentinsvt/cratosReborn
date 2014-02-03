@@ -1,9 +1,9 @@
-<%@ page import="cratos.Contabilidad" %>
+<%@ page import="cratos.seguridad.Persona" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="layout" content="main">
-        <title>Lista de Contabilidad</title>
+        <title>Lista de Usuarios</title>
     </head>
 
     <body>
@@ -13,6 +13,9 @@
         <!-- botones -->
         <div class="btn-toolbar toolbar">
             <div class="btn-group">
+                <g:link controller="admin" action="index" class="btn btn-default">
+                    <i class="fa fa-arrow-left"></i> Administración
+                </g:link>
                 <g:link action="form" class="btn btn-default btnCrear">
                     <i class="fa fa-file-o"></i> Crear
                 </g:link>
@@ -31,34 +34,46 @@
         </div>
 
         <div class="vertical-container vertical-container-list">
-            <p class="css-vertical-text">Lista de Contabilidad</p>
+            <p class="css-vertical-text">Lista de Usuarios</p>
 
             <div class="linea"></div>
             <table class="table table-condensed table-bordered table-striped table-hover">
                 <thead>
                     <tr>
-                        <g:sortableColumn property="fechaInicio" title="Fecha Inicio"/>
-                        <g:sortableColumn property="fechaCierre" title="Fecha Cierre"/>
-                        <g:sortableColumn property="prefijo" title="Prefijo"/>
-                        <g:sortableColumn property="descripcion" title="Descripción"/>
-                        <th width="110">Acciones</th>
+                        <g:sortableColumn property="empresa" title="Empresa"/>
+                        <g:sortableColumn property="cedula" title="Cédula"/>
+                        <g:sortableColumn property="nombre" title="Nombre"/>
+                        <g:sortableColumn property="apellido" title="Apellido"/>
+                        <g:sortableColumn property="login" title="Login"/>
+                        <g:sortableColumn property="activo" title="Activo"/>
+                        <g:sortableColumn property="observaciones" title="Observaciones"/>
+                        <th width="190">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <g:each in="${contabilidadInstanceList}" status="i" var="contabilidadInstance">
-                        <tr data-id="${contabilidadInstance.id}">
-                            <td><g:formatDate date="${contabilidadInstance.fechaInicio}" format="dd-MM-yyyy"/></td>
-                            <td><g:formatDate date="${contabilidadInstance.fechaCierre}" format="dd-MM-yyyy"/></td>
-                            <td>${fieldValue(bean: contabilidadInstance, field: "prefijo")}</td>
-                            <td>${fieldValue(bean: contabilidadInstance, field: "descripcion")}</td>
+                    <g:each in="${personaInstanceList}" status="i" var="personaInstance">
+                        <tr data-id="${personaInstance.id}">
+                            <td>${fieldValue(bean: personaInstance, field: "empresa")}</td>
+                            <td>${fieldValue(bean: personaInstance, field: "cedula")}</td>
+                            <td>${fieldValue(bean: personaInstance, field: "nombre")}</td>
+                            <td>${fieldValue(bean: personaInstance, field: "apellido")}</td>
+                            <td>${fieldValue(bean: personaInstance, field: "login")}</td>
+                            <td><g:formatBoolean boolean="${personaInstance.activo == 1}" true="SI" false="NO"/></td>
+                            <td>${fieldValue(bean: personaInstance, field: "observaciones")}</td>
                             <td>
-                                <a href="#" data-id="${contabilidadInstance.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver">
+                                <a href="#" data-id="${personaInstance.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver">
                                     <i class="fa fa-laptop"></i>
                                 </a>
-                                <a href="#" data-id="${contabilidadInstance.id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar">
+                                <a href="#" data-id="${personaInstance.id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar">
                                     <i class="fa fa-pencil"></i>
                                 </a>
-                                <a href="#" data-id="${contabilidadInstance.id}" class="btn btn-danger btn-sm btn-delete btn-ajax" title="Eliminar">
+                                <g:link action="perfiles" id="${personaInstance.id}" class="btn btn-primary btn-sm btn-ajax" title="Perfiles">
+                                    <i class="fa fa-users"></i>
+                                </g:link>
+                                <a href="#" data-id="${personaInstance.id}" class="btn btn-warning btn-pass btn-sm" title="Reiniciar password">
+                                    <i class="fa fa-refresh"></i>
+                                </a>
+                                <a href="#" data-id="${personaInstance.id}" class="btn btn-danger btn-delete btn-sm" title="Eliminar">
                                     <i class="fa fa-trash-o"></i>
                                 </a>
                             </td>
@@ -67,32 +82,45 @@
                 </tbody>
             </table>
         </div>
-        <elm:pagination total="${contabilidadInstanceCount}" params="${params}"/>
+        <elm:pagination total="${personaInstanceCount}" params="${params}"/>
 
         <script type="text/javascript">
-            var id = null;
+
+            function doSave($btn, $form, data) {
+                $btn.replaceWith(spinner);
+                openLoader("Grabando");
+                $.ajax({
+                    type    : "POST",
+                    url     : $form.attr("action"),
+                    data    : data,
+                    success : function (msg) {
+                        var parts = msg.split("_");
+                        log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                        if (parts[0] == "OK") {
+                            location.reload(true);
+                        } else {
+                            closeLoader();
+                            spinner.replaceWith($btn);
+                            return false;
+                        }
+                    }
+                });
+            }
+
             function submitForm() {
-                var $form = $("#frmContabilidad");
+                var $form = $("#frmPersona");
                 var $btn = $("#dlgCreateEdit").find("#btnSave");
                 if ($form.valid()) {
-                    $btn.replaceWith(spinner);
-                    openLoader("Grabando");
-                    $.ajax({
-                        type    : "POST",
-                        url     : $form.attr("action"),
-                        data    : $form.serialize(),
-                        success : function (msg) {
-                            var parts = msg.split("_");
-                            log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
-                            if (parts[0] == "OK") {
-                                location.reload(true);
-                            } else {
-                                closeLoader();
-                                spinner.replaceWith($btn);
-                                return false;
+                    var perfiles = getPerfiles();
+                    if (perfiles == "") {
+                        bootbox.confirm("<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i><p>No ha seleccionado ningún perfil. El usuario no podrá ingresar al sistema. ¿Desea continuar?.</p>", function (result) {
+                            if (result) {
+                                doSave($btn, $form, $form.serialize() + perfiles);
                             }
-                        }
-                    });
+                        })
+                    } else {
+                        doSave($btn, $form, $form.serialize() + perfiles);
+                    }
                 } else {
                     return false;
                 } //else
@@ -100,7 +128,7 @@
             function deleteRow(itemId) {
                 bootbox.dialog({
                     title   : "Alerta",
-                    message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar el Contabilidad seleccionado? Esta acción no se puede deshacer.</p>",
+                    message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar el Usuario seleccionado? Esta acción no se puede deshacer.</p>",
                     buttons : {
                         cancelar : {
                             label     : "Cancelar",
@@ -141,13 +169,15 @@
                 var data = id ? { id : id } : {};
                 $.ajax({
                     type    : "POST",
-                    url     : "${createLink(action:'form_ajax')}",
+                    url     : "${createLink(action:'formAdmin_ajax')}",
                     data    : data,
                     success : function (msg) {
                         var b = bootbox.dialog({
                             id      : "dlgCreateEdit",
-                            title   : title + " Contabilidad",
+                            class   : "long",
+                            title   : title + " Usuario",
                             message : msg,
+
                             buttons : {
                                 cancelar : {
                                     label     : "Cancelar",
@@ -189,7 +219,8 @@
                         },
                         success : function (msg) {
                             bootbox.dialog({
-                                title   : "Ver Contabilidad",
+                                title   : "Ver Persona",
+                                class   : "long",
                                 message : msg,
                                 buttons : {
                                     ok : {
@@ -206,6 +237,46 @@
                 $(".btn-edit").click(function () {
                     var id = $(this).data("id");
                     createEditRow(id);
+                });
+                $(".btn-pass").click(function () {
+                    var id = $(this).data("id");
+                    bootbox.dialog({
+                        title   : "Alerta",
+                        message : "<i class='fa fa-warning fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea reiniciar el password del usuario?<br/>El password será el número de cédula y no se puede deshacer.</p>",
+                        buttons : {
+                            cancelar : {
+                                label     : "Cancelar",
+                                className : "btn-primary",
+                                callback  : function () {
+                                }
+                            },
+                            cambiar  : {
+                                label     : "<i class='fa fa-refresh'></i> Reiniciar",
+                                className : "btn-warning",
+                                callback  : function () {
+                                    openLoader("Modificando");
+                                    $.ajax({
+                                        type    : "POST",
+                                        url     : '${createLink(action:'reset_pass_ajax')}',
+                                        data    : {
+                                            id : id
+                                        },
+                                        success : function (msg) {
+                                            var parts = msg.split("_");
+                                            log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                                            if (parts[0] == "OK") {
+                                                location.reload(true);
+                                            } else {
+                                                closeLoader();
+                                                spinner.replaceWith($btn);
+                                                return false;
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
                 });
                 $(".btn-delete").click(function () {
                     var id = $(this).data("id");

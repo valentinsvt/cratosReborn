@@ -1,91 +1,95 @@
 package cratos
 
-import org.springframework.dao.DataIntegrityViolationException
 
 class TipoComprobanteSriController extends cratos.seguridad.Shield {
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    static allowedMethods = [save: "POST", delete: "POST", save_ajax: "POST", delete_ajax: "POST"]
 
     def index() {
         redirect(action: "list", params: params)
-    }
+    } //index
 
     def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [tipoComprobanteSriInstanceList: TipoComprobanteSri.list(params), tipoComprobanteSriInstanceTotal: TipoComprobanteSri.count()]
-    }
+        params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+        def tipoComprobanteSriInstanceList = TipoComprobanteSri.list(params)
+        def tipoComprobanteSriInstanceCount = TipoComprobanteSri.count()
+        if(tipoComprobanteSriInstanceList.size() == 0 && params.offset && params.max) {
+            params.offset = params.offset - params.max
+        }
+        tipoComprobanteSriInstanceList = TipoComprobanteSri.list(params)
+        return [tipoComprobanteSriInstanceList: tipoComprobanteSriInstanceList, tipoComprobanteSriInstanceCount: tipoComprobanteSriInstanceCount]
+    } //list
 
-    def create() {
-        [tipoComprobanteSriInstance: new TipoComprobanteSri(params)]
-    }
-
-    def save() {
-        def tipoComprobanteSriInstance
-        if (params.id) {
-            tipoComprobanteSriInstance = TipoComprobanteSri.get(params.id)
-            if (!tipoComprobanteSriInstance) {
-                flash.message = "No se encontr&oacute; TipoComprobanteSri a modificar"
-                render "NO"
+    def show_ajax() {
+        if(params.id) {
+            def tipoComprobanteSriInstance = TipoComprobanteSri.get(params.id)
+            if(!tipoComprobanteSriInstance) {
+                notFound_ajax()
                 return
             }
-            tipoComprobanteSriInstance.properties = params
+            return [tipoComprobanteSriInstance: tipoComprobanteSriInstance]
         } else {
-            tipoComprobanteSriInstance = new TipoComprobanteSri(params)
+            notFound_ajax()
         }
-        if (!tipoComprobanteSriInstance.save(flush: true)) {
-            render "NO"
-            println tipoComprobanteSriInstance.errors
-            flash.message = "Ha ocurrido un error al guardar TipoComprobanteSri"
+    } //show para cargar con ajax en un dialog
+
+    def form_ajax() {
+        def tipoComprobanteSriInstance = new TipoComprobanteSri(params)
+        if(params.id) {
+            tipoComprobanteSriInstance = TipoComprobanteSri.get(params.id)
+            if(!tipoComprobanteSriInstance) {
+                notFound_ajax()
+                return
+            }
+        }
+        return [tipoComprobanteSriInstance: tipoComprobanteSriInstance]
+    } //form para cargar con ajax en un dialog
+
+    def save_ajax() {
+        params.each { k, v ->
+            if (v != "date.struct" && v instanceof java.lang.String) {
+                params[k] = v.toUpperCase()
+            }
+        }
+
+        def tipoComprobanteSriInstance = new TipoComprobanteSri()
+        if(params.id) {
+            tipoComprobanteSriInstance = TipoComprobanteSri.get(params.id)
+            if(!tipoComprobanteSriInstance) {
+                notFound_ajax()
+                return
+            }
+        } //update
+        tipoComprobanteSriInstance.properties = params
+        if(!tipoComprobanteSriInstance.save(flush:true)) {
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} TipoComprobanteSri."
+            msg += renderErrors(bean: tipoComprobanteSriInstance)
+            render msg
             return
         }
+        render "OK_${params.id ? 'Actualización' : 'Creación'} de TipoComprobanteSri exitosa."
+    } //save para grabar desde ajax
 
-        flash.message = "TipoComprobanteSri guardado exitosamente"
-//    redirect(action: "show", id: tipoComprobanteSriInstance.id)
-        render "OK"
-    }
-
-    def show() {
-        def tipoComprobanteSriInstance = TipoComprobanteSri.get(params.id)
-        if (!tipoComprobanteSriInstance) {
-            flash.message = "No se encontr&oacute; TipoComprobanteSri a mostrar"
-//            redirect(action: "list")
-            render "NO"
-            return
+    def delete_ajax() {
+        if(params.id) {
+            def tipoComprobanteSriInstance = TipoComprobanteSri.get(params.id)
+            if(tipoComprobanteSriInstance) {
+                try {
+                    tipoComprobanteSriInstance.delete(flush:true)
+                    render "OK_Eliminación de TipoComprobanteSri exitosa."
+                } catch (e) {
+                    render "NO_No se pudo eliminar TipoComprobanteSri."
+                }
+            } else {
+                notFound_ajax()
+            }
+        } else {
+            notFound_ajax()
         }
+    } //delete para eliminar via ajax
 
-        [tipoComprobanteSriInstance: tipoComprobanteSriInstance]
-    }
+    protected void notFound_ajax() {
+        render "NO_No se encontró TipoComprobanteSri."
+    } //notFound para ajax
 
-    def edit() {
-        def tipoComprobanteSriInstance = TipoComprobanteSri.get(params.id)
-        if (!tipoComprobanteSriInstance) {
-            flash.message = "No se encontr&oacute; TipoComprobanteSri a modificar"
-//            redirect(action: "list")
-            render "NO"
-            return
-        }
-
-        [tipoComprobanteSriInstance: tipoComprobanteSriInstance]
-    }
-
-    def delete() {
-        def tipoComprobanteSriInstance = TipoComprobanteSri.get(params.id)
-        if (!tipoComprobanteSriInstance) {
-            flash.message = "No se encontr&oacute; TipoComprobanteSri a eliminar"
-            render "NO"
-//            redirect(action: "list")
-            return
-        }
-
-        try {
-            tipoComprobanteSriInstance.delete(flush: true)
-            flash.message = "TipoComprobanteSri eliminado exitosamente"
-            redirect(action: "list")
-        }
-        catch (DataIntegrityViolationException e) {
-            flash.message = "Ha ocurrido un error al eliminar TipoComprobanteSri"
-//            redirect(action: "show", id: params.id)
-        }
-        render "OK"
-    }
 }

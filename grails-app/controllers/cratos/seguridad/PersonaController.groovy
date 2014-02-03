@@ -6,6 +6,32 @@ class PersonaController extends cratos.seguridad.Shield {
 
     static allowedMethods = [save: "POST", delete: "POST", save_ajax: "POST", delete_ajax: "POST"]
 
+    def modificar() {
+        def yo = Persona.get(session.usuario.id)
+        return [personaInstance: yo]
+    }
+
+    def cambiarPass() {
+        def yo = Persona.get(session.usuario.id)
+        return [personaInstance: yo, tipo: params.tipo]
+    }
+
+    def validarPass_ajax() {
+        def yo = Persona.get(session.usuario.id)
+        def pass = params.actu.toString().trim().encodeAsMD5()
+        switch (params.tipo) {
+            case "pass":
+                render pass == yo.password
+                return
+                break;
+            case "auto":
+                render pass == yo.autorizacion
+                return
+                break;
+        }
+        render false
+    }
+
     def index() {
         redirect(action: "list", params: params)
     } //index
@@ -103,9 +129,7 @@ class PersonaController extends cratos.seguridad.Shield {
         }
     }
 
-    /* ************************ COPIAR DESDE AQUI ****************************/
-
-    def list() {
+    def listAdmin() {
         params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
         def personaInstanceList = Persona.list(params)
         def personaInstanceCount = Persona.count()
@@ -115,6 +139,31 @@ class PersonaController extends cratos.seguridad.Shield {
         personaInstanceList = Persona.list(params)
         return [personaInstanceList: personaInstanceList, personaInstanceCount: personaInstanceCount]
     } //list
+
+    /* ************************ COPIAR DESDE AQUI ****************************/
+
+    def list() {
+        params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+        def personaInstanceList = Persona.findAllByEmpresa(session.empresa, params)
+        def personaInstanceCount = Persona.count()
+        if (personaInstanceList.size() == 0 && params.offset && params.max) {
+            params.offset = params.offset - params.max
+        }
+        personaInstanceList = Persona.findAllByEmpresa(session.empresa, params)
+        return [personaInstanceList: personaInstanceList, personaInstanceCount: personaInstanceCount]
+    } //list
+
+    def formAdmin_ajax() {
+        def personaInstance = new Persona(params)
+        if (params.id) {
+            personaInstance = Persona.get(params.id)
+            if (!personaInstance) {
+                notFound_ajax()
+                return
+            }
+        }
+        return [personaInstance: personaInstance]
+    }
 
     def createAdmin() {
         def personaInstance = new Persona(params)
@@ -154,6 +203,79 @@ class PersonaController extends cratos.seguridad.Shield {
     } //form para cargar con ajax en un dialog
 
     def save() {
+        def personaInstance = new Persona()
+        if (params.id) {
+            personaInstance = Persona.get(params.id)
+            if (!personaInstance) {
+                notFound_ajax()
+                return
+            }
+        } //update
+        else {
+            //create: pone la cedula en el pass y validacion y pone fecha de cambio de pass en ahora
+            params.password = params.cedula.toString().encodeAsMD5()
+            params.autorizacion = params.cedula.toString().encodeAsMD5()
+            params.fechaPass = new Date()
+        }
+
+        personaInstance.properties = params
+
+        if (!personaInstance.save(flush: true)) {
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Persona."
+            msg += renderErrors(bean: personaInstance)
+            render msg
+            return
+        }
+
+        def perfilesUsu = Sesn.findAllByUsuario(personaInstance).perfil.id*.toString()
+        def arrRemove = perfilesUsu, arrAdd = []
+        def errores = ""
+
+        if (params.perfil instanceof java.lang.String) {
+            params.perfil = [params.perfil]
+        }
+
+        params.perfil.each { pid ->
+            if (perfilesUsu.contains(pid)) {
+                //ya tiene este perfil: le quito de la lista de los de eliminar
+                arrRemove.remove(pid)
+            } else {
+                //no tiene este perfil: le pongo en la lista de agregar
+                arrAdd.add(pid)
+            }
+        }
+        arrRemove.each { pid ->
+            def perf = Prfl.get(pid)
+            def sesn = Sesn.findByUsuarioAndPerfil(personaInstance, perf)
+            try {
+                sesn.delete(flush: true)
+            } catch (e) {
+                println "erorr al eliminar perfil: " + e
+                errores += "<li>No se puedo remover el perfil ${perf.nombre}</li>"
+            }
+        }
+        arrAdd.each { pid ->
+            def perf = Prfl.get(pid)
+            def sesn = new Sesn([usuario: personaInstance, perfil: perf])
+            if (!sesn.save(flush: true)) {
+                println "error al asignar perfil: " + sesn.errors
+                errores += "<li>No se puedo remover el perfil ${perf.nombre}</li>"
+            }
+        }
+
+        def mensaje = "OK_${params.id ? 'Actualización' : 'Creación'} de Persona exitosa."
+
+        if (errores == "") {
+            mensaje += "<br/>Perfil(es) asignado(s) exitosamente"
+        } else {
+            mensaje += "<br/><ul>" + errores + "</ul>"
+        }
+
+        render mensaje
+    } //save para grabar desde ajax
+
+    def saveAdmin_ajax() {
+        println params
         def personaInstance = new Persona()
         if (params.id) {
             personaInstance = Persona.get(params.id)
