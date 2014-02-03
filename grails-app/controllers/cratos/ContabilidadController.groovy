@@ -2,18 +2,130 @@ package cratos
 
 import org.springframework.dao.DataIntegrityViolationException
 
-class ContabilidadController extends cratos.seguridad.Shield  {
+class ContabilidadController extends cratos.seguridad.Shield {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST", delete: "GET"]
+
+    /* ************************ COPIAR DESDE AQUI ****************************/
+
+    def list() {
+        params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+        def contabilidadInstanceList = Contabilidad.findAllByInstitucion(session.empresa, params)
+        def contabilidadInstanceCount = Contabilidad.count()
+        if (contabilidadInstanceList.size() == 0 && params.offset && params.max) {
+            params.offset = params.offset - params.max
+        }
+        contabilidadInstanceList = Contabilidad.findAllByInstitucion(session.empresa, params)
+        return [contabilidadInstanceList: contabilidadInstanceList, contabilidadInstanceCount: contabilidadInstanceCount]
+    } //list
+
+    def show_ajax() {
+        if (params.id) {
+            def contabilidadInstance = Contabilidad.get(params.id)
+            if (!contabilidadInstance) {
+                notFound_ajax()
+                return
+            }
+            return [contabilidadInstance: contabilidadInstance]
+        } else {
+            notFound_ajax()
+        }
+    } //show para cargar con ajax en un dialog
+
+    def form_ajax() {
+        def contabilidadInstance = new Contabilidad(params)
+        if (params.id) {
+            contabilidadInstance = Contabilidad.get(params.id)
+            if (!contabilidadInstance) {
+                notFound_ajax()
+                return
+            }
+        }
+        return [contabilidadInstance: contabilidadInstance]
+    } //form para cargar con ajax en un dialog
+
+    def save_ajax() {
+
+        params.each { k, v ->
+            if (v != "date.struct" && v instanceof java.lang.String) {
+                params[k] = v.toUpperCase()
+            }
+        }
+
+        params.institucion = session.empresa
+
+        def contabilidadInstance = new Contabilidad()
+        if (params.id) {
+            contabilidadInstance = Contabilidad.get(params.id)
+            if (!contabilidadInstance) {
+                notFound_ajax()
+                return
+            }
+        } //update
+
+        contabilidadInstance.properties = params
+        contabilidadInstance.presupuesto = contabilidadInstance.fechaInicio
+
+        if (!contabilidadInstance.save(flush: true)) {
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Contabilidad."
+            msg += renderErrors(bean: contabilidadInstance)
+            render msg
+            return
+        }
+
+        12.times {
+            def ini = new Date().parse("dd-MM-yyyy", "01-" + ((it + 1).toString().padLeft(2, '0')) + "-" + contabilidadInstance.fechaInicio.format("yyyy"))
+            def fin = getLastDayOfMonth(ini)
+            def periodoInstance = new Periodo()
+
+            if (periodoInstance.save(flush: true)) {
+
+                periodoInstance.contabilidad = contabilidadInstance
+                periodoInstance.fechaInicio = ini
+                periodoInstance.fechaFin = fin
+                periodoInstance.numero = it + 1
+            } else {
+
+                render "Error al grabar períodos"
+            }
+        }
+
+        render "OK_${params.id ? 'Actualización' : 'Creación'} de Contabilidad exitosa."
+    } //save para grabar desde ajax
+
+    def delete_ajax() {
+        if (params.id) {
+            def contabilidadInstance = Contabilidad.get(params.id)
+            if (contabilidadInstance) {
+                try {
+                    contabilidadInstance.delete(flush: true)
+                    render "OK_Eliminación de Contabilidad exitosa."
+                } catch (e) {
+                    render "NO_No se pudo eliminar Contabilidad."
+                }
+            } else {
+                notFound_ajax()
+            }
+        } else {
+            notFound_ajax()
+        }
+    } //delete para eliminar via ajax
+
+    protected void notFound_ajax() {
+        render "NO_No se encontró Contabilidad."
+    } //notFound para ajax
+
+    /* ******************** COPIADO HASTA AQUI ********************************************* */
+
 
     def index() {
         redirect(action: "list", params: params)
     }
 
-    def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [contabilidadInstanceList: Contabilidad.list(params), contabilidadInstanceTotal: Contabilidad.count()]
-    }
+//    def list() {
+//        params.max = Math.min(params.max ? params.int('max') : 10, 100)
+//        [contabilidadInstanceList: Contabilidad.list(params), contabilidadInstanceTotal: Contabilidad.count()]
+//    }
 
     def create() {
         [contabilidadInstance: new Contabilidad(params)]
@@ -21,13 +133,13 @@ class ContabilidadController extends cratos.seguridad.Shield  {
 
     def save() {
 
-        if(params.fechaInicio) {
+        if (params.fechaInicio) {
             params.fechaInicio = new Date().parse("dd-MM-yyyy", params.fechaInicio)
         }
-        if(params.fechaCierre) {
+        if (params.fechaCierre) {
             params.fechaCierre = new Date().parse("dd-MM-yyyy", params.fechaCierre)
         }
-        if(params.presupuesto) {
+        if (params.presupuesto) {
             params.presupuesto = new Date().parse("dd-MM-yyyy", params.presupuesto)
         }
 
@@ -58,20 +170,19 @@ class ContabilidadController extends cratos.seguridad.Shield  {
         }
 
         12.times {
-            def ini = new Date().parse("dd-MM-yyyy", "01-"+((it+1).toString().padLeft(2,'0'))+"-"+contabilidadInstance.fechaInicio.format("yyyy"))
+            def ini = new Date().parse("dd-MM-yyyy", "01-" + ((it + 1).toString().padLeft(2, '0')) + "-" + contabilidadInstance.fechaInicio.format("yyyy"))
             def fin = getLastDayOfMonth(ini)
             def periodoInstance = new Periodo()
 
-            if(periodoInstance.save(flush: true)){
+            if (periodoInstance.save(flush: true)) {
 
                 periodoInstance.contabilidad = contabilidadInstance
                 periodoInstance.fechaInicio = ini
                 periodoInstance.fechaFin = fin
-                periodoInstance.numero = it+1
-            }
-            else {
+                periodoInstance.numero = it + 1
+            } else {
 
-                 render "Error al grabar períodos"
+                render "Error al grabar períodos"
             }
         }
 
@@ -141,7 +252,6 @@ class ContabilidadController extends cratos.seguridad.Shield  {
             redirect(action: "show", id: params.id)
         }
     }
-
 
 
 }

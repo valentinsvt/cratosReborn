@@ -16,11 +16,13 @@ class MenuTagLib {
             def acciones = cratos.seguridad.Prms.findAllByPerfil(perfil).accion.sort { it.modulo.orden }
 
             acciones.each { ac ->
-                if (!items[ac.modulo.nombre]) {
-                    items.put(ac.modulo.nombre, [ac.accnDescripcion, g.createLink(controller: ac.control.ctrlNombre, action: ac.accnNombre)])
-                } else {
-                    items[ac.modulo.nombre].add(ac.accnDescripcion)
-                    items[ac.modulo.nombre].add(g.createLink(controller: ac.control.ctrlNombre, action: ac.accnNombre))
+                if (ac.moduloId != 0) {
+                    if (!items[ac.modulo.nombre]) {
+                        items.put(ac.modulo.nombre, [ac.accnDescripcion, g.createLink(controller: ac.control.ctrlNombre, action: ac.accnNombre)])
+                    } else {
+                        items[ac.modulo.nombre].add(ac.accnDescripcion)
+                        items[ac.modulo.nombre].add(g.createLink(controller: ac.control.ctrlNombre, action: ac.accnNombre))
+                    }
                 }
             }
             items.each { item ->

@@ -13,6 +13,9 @@
         <!-- botones -->
         <div class="btn-toolbar toolbar">
             <div class="btn-group">
+                <g:link controller="admin" action="index" class="btn btn-default">
+                    <i class="fa fa-arrow-left"></i> Administración
+                </g:link>
                 <g:link action="form" class="btn btn-default btnCrear">
                     <i class="fa fa-file-o"></i> Crear
                 </g:link>
@@ -31,7 +34,7 @@
         </div>
 
         <div class="vertical-container vertical-container-list">
-            <p class="css-vertical-text">Lista de Empresa</p>
+            <p class="css-vertical-text">Lista de Empresas</p>
 
             <div class="linea"></div>
             <table class="table table-condensed table-bordered table-striped table-hover">

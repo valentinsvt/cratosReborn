@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta name="layout" content="main">
-        <title>Lista de Persona</title>
+        <title>Lista de Usuarios</title>
     </head>
 
     <body>
@@ -31,7 +31,7 @@
         </div>
 
         <div class="vertical-container vertical-container-list">
-            <p class="css-vertical-text">Lista de Persona</p>
+            <p class="css-vertical-text">Lista de Usuarios</p>
 
             <div class="linea"></div>
             <table class="table table-condensed table-bordered table-striped table-hover">
@@ -110,7 +110,7 @@
             function deleteRow(itemId) {
                 bootbox.dialog({
                     title   : "Alerta",
-                    message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar el Persona seleccionado? Esta acción no se puede deshacer.</p>",
+                    message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar el Usuario seleccionado? Esta acción no se puede deshacer.</p>",
                     buttons : {
                         cancelar : {
                             label     : "Cancelar",
@@ -157,7 +157,7 @@
                         var b = bootbox.dialog({
                             id      : "dlgCreateEdit",
                             class   : "long",
-                            title   : title + " Persona",
+                            title   : title + " Usuario",
                             message : msg,
 
                             buttons : {
@@ -224,7 +224,7 @@
                     var id = $(this).data("id");
                     bootbox.dialog({
                         title   : "Alerta",
-                        message : "<i class='fa fa-warning fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea reiniciar el password de la persona?<br/>El password será el número de cédula y no se puede deshacer.</p>",
+                        message : "<i class='fa fa-warning fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea reiniciar el password del usuario?<br/>El password será el número de cédula y no se puede deshacer.</p>",
                         buttons : {
                             cancelar : {
                                 label     : "Cancelar",

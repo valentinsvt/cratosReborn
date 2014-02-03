@@ -226,18 +226,35 @@
             </div>
         </g:if>
 
-        %{--<g:if test="${personaInstance?.activo}">--}%
-            <div class="row">
-                <div class="col-md-3 text-info">
-                    Activo
-                </div>
-
-                <div class="col-md-4">
-                    <g:formatBoolean boolean="${personaInstance.activo==1}" true="SI" false="NO"/>
-                </div>
-
+    %{--<g:if test="${personaInstance?.activo}">--}%
+        <div class="row">
+            <div class="col-md-3 text-info">
+                Activo
             </div>
-        %{--</g:if>--}%
+
+            <div class="col-md-4">
+                <g:formatBoolean boolean="${personaInstance.activo == 1}" true="SI" false="NO"/>
+            </div>
+
+        </div>
+    %{--</g:if>--}%
+
+        <div class="row">
+            <div class="col-md-3 text-info">
+                Perfiles
+            </div>
+
+            <div class="col-md-4">
+                <ul class="fa-ul">
+                    <g:each in="${cratos.seguridad.Sesn.findAllByUsuario(personaInstance)}" var="perf">
+                        <li class="keeptogether"><i class="fa-li fa fa-user"></i>
+                            ${perf.perfil.nombre}
+                        </li>
+                    </g:each>
+                </ul>
+            </div>
+
+        </div>
 
     </g:else>
 </div>
