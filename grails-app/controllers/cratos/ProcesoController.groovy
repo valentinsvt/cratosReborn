@@ -481,9 +481,11 @@ class ProcesoController extends cratos.seguridad.Shield {
 
 
     def detalleSri() {
-        def proceso = Proceso.get(params.id)
+        def proceso = Proceso.get(params.id)  //CAMBIAR!!!!!
+
         def retencion = Retencion.findByProceso(proceso)
-        def detalleRetencion
+//        println("retencion " + retencion)
+
         if (retencion) {
             detalleRetencion = DetalleRetencion.findAllByRetencion(retencion)
         } else {
@@ -595,28 +597,29 @@ class ProcesoController extends cratos.seguridad.Shield {
 
 
     def guardarSri() {
-        println("guardarSri:" + params)
+//        println("guardarSri:" + params)
         def fecha = params.remove("fechaEmision")
         def proceso = Proceso.get(params.id)
         def retencion = Retencion.findByProceso(proceso)
         def concepto = ConceptoRetencionImpuestoRenta.get(params.concepto)
+
         if (retencion.save(flush: true)) {
             retencion.numeroEstablecimiento = params.numeroEstablecimiento
             retencion.numeroPuntoEmision = params.numeroEmision
             retencion.numeroAutorizacionComprobante = params.numeroAutorizacion
             retencion.tipoPago = params.pago
-            retencion.pais = Pais.get(params.pais)
             retencion.numeroSecuencial = params.numeroSecuencial
             retencion.creditoTributario = params.credito
             if (params.pago == '02') {
                 retencion.normaLegal = params.normaLegal
                 retencion.convenio = params.convenio
+                retencion.pais = Pais.get(params.pais)
             } else {
                 retencion.normaLegal = ''
                 retencion.convenio = ''
             }
             if (fecha) {
-                retencion.fechaEmision = new Date().parse("yyyy-MM-dd", fecha)
+                retencion.fechaEmision = new Date().parse("dd-MM-yyyy", fecha)
             }
             //detalle
             def detalle = DetalleRetencion.findAllByRetencion(retencion)
@@ -651,6 +654,7 @@ class ProcesoController extends cratos.seguridad.Shield {
             }
 
             render "ok"
+            println("ok")
 
         } else {
 
