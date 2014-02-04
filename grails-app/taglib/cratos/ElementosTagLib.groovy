@@ -116,7 +116,7 @@ class ElementosTagLib {
      *      img             imagen del calendario. clase de glyphicons o font awsome
      **/
     def datepicker = { attrs ->
-        println attrs
+//        println attrs
         def name = attrs.name
         def nameInput = name + "_input"
         def nameHiddenDay = name + "_day"
@@ -129,7 +129,8 @@ class ElementosTagLib {
 
         def idInput = id + "_input"
         if (id.contains("_input")) {
-            idInput = id
+            id = id.replaceAll("_input", "")
+            idInput = id + "_input"
         }
         def idHiddenDay = id + "_day"
         def idHiddenMonth = id + "_month"
