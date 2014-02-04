@@ -9,7 +9,7 @@ class ElementosTagLib {
 
     static namespace = "elm"
 
-    def datePicker = { attrs->
+    def datePicker = { attrs ->
         out << "Este tag ya no existe...utilizar elm:datepicker en su lugar..."
     }
 
@@ -110,11 +110,9 @@ class ElementosTagLib {
      *}*}*                                }
      *      onChangeDate    funcion. funcion q se ejecuta al cambiar una fecha. se manda solo el nombre, sin parentesis, como parametro recibe el datepicker y el objeto
      *                          ej: onChangeDate="miFuncion"
-     *                          function miFuncion($elm, e) {
-     *                              console.log($elm); //el objeto jquery del datepicker, el textfield
+     *                          function miFuncion($elm, e) {*                              console.log($elm); //el objeto jquery del datepicker, el textfield
      *                              console.log(e); //el objeto que pasa el plugin
-     *                          }
-     *      daysOfWeekDisabled  lista de números para deshabilitar ciertos días: 0:domingo, 1:lunes, 2:martes, 3:miercoles, 4:jueves, 5:viernes, 6:sabado
+     *}*      daysOfWeekDisabled  lista de números para deshabilitar ciertos días: 0:domingo, 1:lunes, 2:martes, 3:miercoles, 4:jueves, 5:viernes, 6:sabado
      *      img             imagen del calendario. clase de glyphicons o font awsome
      **/
     def datepicker = { attrs ->
@@ -127,6 +125,12 @@ class ElementosTagLib {
         if (attrs.id) {
             id = attrs.id
         }
+
+        def idInput = id + "_input"
+        def idHiddenDay = id + "_day"
+        def idHiddenMonth = id + "_month"
+        def idHiddenYear = id + "_year"
+
         def readonly = attrs.readonly ?: true
         def value = attrs.value
 
@@ -167,11 +171,11 @@ class ElementosTagLib {
 
         def br = "\n"
 
-        def textfield = "<input type='text' name='${nameInput}' id='${id}' " + (readonly ? "readonly=''" : "") + " value='${value}' class='${clase}' />"
-        def hiddenDay = "<input type='hidden' name='${nameHiddenDay}' id='${nameHiddenDay}' value='${valueDay}'/>"
-        def hiddenMonth = "<input type='hidden' name='${nameHiddenMonth}' id='${nameHiddenMonth}' value='${valueMonth}'/>"
-        def hiddenYear = "<input type='hidden' name='${nameHiddenYear}' id='${nameHiddenYear}' value='${valueYear}'/>"
-        def hidden = "<input type='hidden' name='${name}' id='${name}' value='date.struct'/>"
+        def textfield = "<input type='text' name='${nameInput}' id='${idInput}' " + (readonly ? "readonly=''" : "") + " value='${value}' class='${clase}' />"
+        def hiddenDay = "<input type='hidden' name='${nameHiddenDay}' id='${idHiddenDay}' value='${valueDay}'/>"
+        def hiddenMonth = "<input type='hidden' name='${nameHiddenMonth}' id='${idHiddenMonth}' value='${valueMonth}'/>"
+        def hiddenYear = "<input type='hidden' name='${nameHiddenYear}' id='${idHiddenYear}' value='${valueYear}'/>"
+        def hidden = "<input type='hidden' name='${name}' id='${id}' value='date.struct'/>"
 
         def div = ""
         div += hiddenDay + br
@@ -184,7 +188,7 @@ class ElementosTagLib {
         div += "</div>" + br
 
         def js = "<script type=\"text/javascript\">" + br
-        js += '$("#' + id + '").datepicker({' + br
+        js += '$("#' + idInput + '").datepicker({' + br
         if (startDate) {
             js += "startDate: '${startDate}'," + br
         }
@@ -206,9 +210,9 @@ class ElementosTagLib {
         js += "}).on('changeDate', function(e) {" + br
         js += "var fecha = e.date;" + br
         js += "if(fecha) {" + br
-        js += '$("#' + nameHiddenDay + '").val(fecha.getDate());' + br
-        js += '$("#' + nameHiddenMonth + '").val(fecha.getMonth() + 1);' + br
-        js += '$("#' + nameHiddenYear + '").val(fecha.getFullYear());' + br
+        js += '$("#' + idHiddenDay + '").val(fecha.getDate());' + br
+        js += '$("#' + idHiddenMonth + '").val(fecha.getMonth() + 1);' + br
+        js += '$("#' + idHiddenYear + '").val(fecha.getFullYear());' + br
         js += '$(e.currentTarget).parents(".grupo").removeClass("has-error").find("label.help-block").hide();' + br
         js += "}" + br
         if (onChangeDate) {

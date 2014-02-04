@@ -299,7 +299,7 @@
     private renderNoSelection(property) {
         if (isOptional()) {
             if (property.manyToOne || property.oneToOne) {
-                return " noSelection=\"['null': '']\""
+                return " noSelection=\"['': '']\""
             } else if (property.type == Date || property.type == java.sql.Date || property.type == java.sql.Time || property.type == Calendar) {
                 return "default=\"none\" noSelection=\"['': '']\""
             } else {

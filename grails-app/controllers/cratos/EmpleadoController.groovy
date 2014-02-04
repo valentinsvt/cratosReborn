@@ -212,25 +212,108 @@ class EmpleadoController extends cratos.seguridad.Shield {
         return [empleadoInstance: empleadoInstance]
     } //form para cargar con ajax en un dialog
 
+    def loadPersona() {
+        def ci = params.ci
+        def persona = Persona.findByCedula(ci)
+
+        def datos = [:]
+        if (persona) {
+            datos = [
+                    id: persona.id,
+                    cedula: persona.cedula,
+                    nombre: persona.nombre,
+                    apellido: persona.apellido,
+                    sigla: persona.sigla,
+                    direccion: persona.direccion,
+                    direccionReferencia: persona.direccionReferencia,
+                    barrio: persona.barrio,
+                    telefono: persona.telefono,
+                    email: persona.email,
+                    fechaNacimiento_input: persona.fechaNacimiento ? persona.fechaNacimiento.format("dd-MM-yyyy") : "",
+                    fechaNacimiento_day: persona.fechaNacimiento ? persona.fechaNacimiento.format("dd") : "",
+                    fechaNacimiento_month: persona.fechaNacimiento ? persona.fechaNacimiento.format("MM") : "",
+                    fechaNacimiento_year: persona.fechaNacimiento ? persona.fechaNacimiento.format("yyyy") : "",
+                    discapacitado: persona.discapacitado,
+                    sexo: persona.sexo,
+                    nacionalidad: persona.nacionalidadId,
+                    profesion: persona.profesionId,
+                    estadoCivil: persona.estadoCivilId
+            ]
+        }
+        def json = new JsonBuilder(datos)
+        render json
+    }
+
+    def validarCedula_ajax() {
+        params.cedula = params.persona.cedula.toString().trim()
+        if (params.id) {
+            def emp = Empleado.get(params.id)
+            if (emp.persona.cedula == params.cedula) {
+                render true
+                return
+            } else {
+                def emps = Empleado.withCriteria {
+                    persona {
+                        eq("cedula", params.cedula)
+                    }
+                }
+                render emps.size() == 0
+                return
+            }
+        } else {
+            def emps = Empleado.withCriteria {
+                persona {
+                    eq("cedula", params.cedula)
+                }
+            }
+            render emps.size() == 0
+            return
+        }
+    }
+
     def save_ajax() {
 
-        params.each { k, v ->
-            if (v != "date.struct" && v instanceof java.lang.String) {
-                params[k] = v.toUpperCase()
+//        params.each { k, v ->
+//            if (v != "date.struct" && v instanceof java.lang.String) {
+//                params[k] = v.toUpperCase()
+//            }
+//        }
+
+        def personaInstance = new Persona()
+        if (params.persona.id) {
+            personaInstance = Persona.get(params.persona.id)
+            if (!personaInstance) {
+                notFound_ajax()
+                return
             }
+        } //update persona
+
+        personaInstance.properties = params.persona
+
+        if (!params.persona.id) {
+            personaInstance.login = "empleado_${personaInstance.cedula}"
+            personaInstance.password = personaInstance.cedula
+            personaInstance.autorizacion = personaInstance.cedula
+        }
+
+        if (!personaInstance.save(flush: true)) {
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Persona."
+            msg += renderErrors(bean: personaInstance)
+            render msg
+            return
         }
 
         def empleadoInstance = new Empleado()
-        if (params.id) {
-            empleadoInstance = Empleado.get(params.id)
+        if (params.empleado.id) {
+            empleadoInstance = Empleado.get(params.empleado.id)
             if (!empleadoInstance) {
                 notFound_ajax()
                 return
             }
         } //update
 
-        empleadoInstance.properties = params
-
+        empleadoInstance.properties = params.empleado
+        empleadoInstance.persona = personaInstance
         if (!empleadoInstance.save(flush: true)) {
             def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Empleado."
             msg += renderErrors(bean: empleadoInstance)
