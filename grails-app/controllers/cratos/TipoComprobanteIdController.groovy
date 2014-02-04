@@ -1,91 +1,95 @@
 package cratos
 
-import org.springframework.dao.DataIntegrityViolationException
 
 class TipoComprobanteIdController extends cratos.seguridad.Shield {
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    static allowedMethods = [save: "POST", delete: "POST", save_ajax: "POST", delete_ajax: "POST"]
 
     def index() {
         redirect(action: "list", params: params)
-    }
+    } //index
 
     def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [tipoComprobanteIdInstanceList: TipoComprobanteId.list(params), tipoComprobanteIdInstanceTotal: TipoComprobanteId.count()]
-    }
+        params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+        def tipoComprobanteIdInstanceList = TipoComprobanteId.list(params)
+        def tipoComprobanteIdInstanceCount = TipoComprobanteId.count()
+        if(tipoComprobanteIdInstanceList.size() == 0 && params.offset && params.max) {
+            params.offset = params.offset - params.max
+        }
+        tipoComprobanteIdInstanceList = TipoComprobanteId.list(params)
+        return [tipoComprobanteIdInstanceList: tipoComprobanteIdInstanceList, tipoComprobanteIdInstanceCount: tipoComprobanteIdInstanceCount]
+    } //list
 
-    def create() {
-        [tipoComprobanteIdInstance: new TipoComprobanteId(params)]
-    }
-
-    def save() {
-        def tipoComprobanteIdInstance
-        if (params.id) {
-            tipoComprobanteIdInstance = TipoComprobanteId.get(params.id)
-            if (!tipoComprobanteIdInstance) {
-                flash.message = "No se encontr&oacute; TipoComprobanteId a modificar"
-                render "NO"
+    def show_ajax() {
+        if(params.id) {
+            def tipoComprobanteIdInstance = TipoComprobanteId.get(params.id)
+            if(!tipoComprobanteIdInstance) {
+                notFound_ajax()
                 return
             }
-            tipoComprobanteIdInstance.properties = params
+            return [tipoComprobanteIdInstance: tipoComprobanteIdInstance]
         } else {
-            tipoComprobanteIdInstance = new TipoComprobanteId(params)
+            notFound_ajax()
         }
-        if (!tipoComprobanteIdInstance.save(flush: true)) {
-            render "NO"
-            println tipoComprobanteIdInstance.errors
-            flash.message = "Ha ocurrido un error al guardar TipoComprobanteId"
+    } //show para cargar con ajax en un dialog
+
+    def form_ajax() {
+        def tipoComprobanteIdInstance = new TipoComprobanteId(params)
+        if(params.id) {
+            tipoComprobanteIdInstance = TipoComprobanteId.get(params.id)
+            if(!tipoComprobanteIdInstance) {
+                notFound_ajax()
+                return
+            }
+        }
+        return [tipoComprobanteIdInstance: tipoComprobanteIdInstance]
+    } //form para cargar con ajax en un dialog
+
+    def save_ajax() {
+        params.each { k, v ->
+            if (v != "date.struct" && v instanceof java.lang.String) {
+                params[k] = v.toUpperCase()
+            }
+        }
+
+        def tipoComprobanteIdInstance = new TipoComprobanteId()
+        if(params.id) {
+            tipoComprobanteIdInstance = TipoComprobanteId.get(params.id)
+            if(!tipoComprobanteIdInstance) {
+                notFound_ajax()
+                return
+            }
+        } //update
+        tipoComprobanteIdInstance.properties = params
+        if(!tipoComprobanteIdInstance.save(flush:true)) {
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} TipoComprobanteId."
+            msg += renderErrors(bean: tipoComprobanteIdInstance)
+            render msg
             return
         }
+        render "OK_${params.id ? 'Actualización' : 'Creación'} de TipoComprobanteId exitosa."
+    } //save para grabar desde ajax
 
-        flash.message = "TipoComprobanteId guardado exitosamente"
-//    redirect(action: "show", id: tipoComprobanteIdInstance.id)
-        render "OK"
-    }
-
-    def show() {
-        def tipoComprobanteIdInstance = TipoComprobanteId.get(params.id)
-        if (!tipoComprobanteIdInstance) {
-            flash.message = "No se encontr&oacute; TipoComprobanteId a mostrar"
-//            redirect(action: "list")
-            render "NO"
-            return
+    def delete_ajax() {
+        if(params.id) {
+            def tipoComprobanteIdInstance = TipoComprobanteId.get(params.id)
+            if(tipoComprobanteIdInstance) {
+                try {
+                    tipoComprobanteIdInstance.delete(flush:true)
+                    render "OK_Eliminación de TipoComprobanteId exitosa."
+                } catch (e) {
+                    render "NO_No se pudo eliminar TipoComprobanteId."
+                }
+            } else {
+                notFound_ajax()
+            }
+        } else {
+            notFound_ajax()
         }
+    } //delete para eliminar via ajax
 
-        [tipoComprobanteIdInstance: tipoComprobanteIdInstance]
-    }
+    protected void notFound_ajax() {
+        render "NO_No se encontró TipoComprobanteId."
+    } //notFound para ajax
 
-    def edit() {
-        def tipoComprobanteIdInstance = TipoComprobanteId.get(params.id)
-        if (!tipoComprobanteIdInstance) {
-            flash.message = "No se encontr&oacute; TipoComprobanteId a modificar"
-//            redirect(action: "list")
-            render "NO"
-            return
-        }
-
-        [tipoComprobanteIdInstance: tipoComprobanteIdInstance]
-    }
-
-    def delete() {
-        def tipoComprobanteIdInstance = TipoComprobanteId.get(params.id)
-        if (!tipoComprobanteIdInstance) {
-            flash.message = "No se encontr&oacute; TipoComprobanteId a eliminar"
-            render "NO"
-//            redirect(action: "list")
-            return
-        }
-
-        try {
-            tipoComprobanteIdInstance.delete(flush: true)
-            flash.message = "TipoComprobanteId eliminado exitosamente"
-            redirect(action: "list")
-        }
-        catch (DataIntegrityViolationException e) {
-            flash.message = "Ha ocurrido un error al eliminar TipoComprobanteId"
-//            redirect(action: "show", id: params.id)
-        }
-        render "OK"
-    }
 }
