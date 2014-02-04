@@ -90,8 +90,8 @@ class MenuTagLib {
 //        html += '</ul>'
 //        html += '</li>'
         html += '</ul>'
-        html += '</div><!-- /.navbar-collapse -->'
-        html += '</div>'
+        html += '</div><!-- navbar-collapse -->'
+        html += '</div><!-- container -->'
         html += '</nav>'
 
 //        html += '<li><a href="' + g.createLink(controller: 'tramites', action: 'list') + '">Alertas</a></li>'

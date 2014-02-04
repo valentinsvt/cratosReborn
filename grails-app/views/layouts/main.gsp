@@ -96,51 +96,24 @@
     </head>
 
     <body>
-        <div id="wrap">
-            <div id="modalTabelGray"></div>
 
-            <div id="modalDiv" class="ui-corner-all">
-                <div class="loading-title">Procesando</div>
-                <img src="${resource(dir: 'images/spinners', file: 'loading_new.GIF')}">
+        <div id="modalTabelGray"></div>
 
-                <div class="loading-footer">Espere por favor</div>
-            </div>
-            <mn:menu title="${g.layoutTitle(default: 'cratos')}"/>
+        <div id="modalDiv" class="ui-corner-all">
+            <div class="loading-title">Procesando</div>
+            <img src="${resource(dir: 'images/spinners', file: 'loading_new.GIF')}">
 
-            <div class="container" style="min-width: 1000px !important;">
-                <g:layoutBody/>
-            </div> <!-- /container -->
+            <div class="loading-footer">Espere por favor</div>
         </div>
+        <mn:menu title="${g.layoutTitle(default: 'cratos')}"/>
 
-        <div id="footer">
-            <nav class="navbar navbar-default" role="navigation">
-                <div class="container">
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#">Link</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">Action</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#">Separated link</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div><!-- /.container-fluid -->
-            </nav>
-            %{--<div class="container">--}%
-            %{--<p class="text-">Place sticky footer content here.</p>--}%
-            %{--</div>--}%
-        </div>
+        <div class="container" style="min-width: 1000px !important;">
+            <g:layoutBody/>
+        </div> <!-- /container -->
 
-
-        <!-- Bootstrap core JavaScript
+    <!-- Bootstrap core JavaScript
     ================================================== -->
-        <!-- Placed at the end of the document so the pages load faster -->
+    <!-- Placed at the end of the document so the pages load faster -->
         <script src="${resource(dir: 'bootstrap-3.0.1/js', file: 'bootstrap.min.js')}"></script>
 
         <!-- funciones de ui (tooltips, maxlength, bootbox, contextmenu, validacion en keydown para los numeros) -->
