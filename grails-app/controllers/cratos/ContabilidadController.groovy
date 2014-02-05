@@ -1,10 +1,28 @@
 package cratos
 
+import cratos.seguridad.Persona
 import org.springframework.dao.DataIntegrityViolationException
 
 class ContabilidadController extends cratos.seguridad.Shield {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST", delete: "GET"]
+
+    def cambiar() {
+        def yo = Persona.get(session.usuario.id)
+        def cont = Contabilidad.get(session.contabilidad.id)
+        def empresa = Empresa.get(session.empresa.id)
+
+        def contabilidades = Contabilidad.findAllByInstitucion(empresa, [sort: "fechaInicio"])
+        contabilidades.remove(cont)
+
+        return [yo: yo, cont: cont, contabilidades: contabilidades]
+    }
+
+    def cambiarContabilidad() {
+        def contabilidad = Contabilidad.get(params.contabilidad)
+        session.contabilidad = contabilidad
+        redirect(action: 'cambiar')
+    }
 
     /* ************************ COPIAR DESDE AQUI ****************************/
 
