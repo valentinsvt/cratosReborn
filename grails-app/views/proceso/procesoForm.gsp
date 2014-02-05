@@ -92,14 +92,23 @@
             Cancelar
         </g:link>
         <g:if test="${proceso}">
-        %{--todo cambiar esto para que no solo sea por link--}%
-            <g:form action="borrarProceso" class="br_prcs" style="margin:0px;display: inline" >
-                <input type="hidden" name="id" value="${proceso?.id}">
-                <a class="btn btn-danger" id="btn-br-prcs" action="borrarProceso">
-                    <i class="fa fa-basket"></i>
-                    Borrar Proceso
+            <g:if test="${!aux}">
+                <g:if test="${proceso?.tipoProceso!='P'}">
+                    <g:form action="borrarProceso" class="br_prcs" style="margin:0px;display: inline" >
+                        <input type="hidden" name="id" value="${proceso?.id}">
+                        <a class="btn btn-danger" id="btn-br-prcs" action="borrarProceso">
+                            <i class="fa fa-basket"></i>
+                            Borrar Proceso
+                        </a>
+                    </g:form>
+                </g:if>
+            </g:if>
+            <g:else>
+                <a href="#" class="btn btn-default" style="cursor: default" >
+                    <i class="fa fa-ban"></i>
+                    Esta transacción no puede ser eliminada ni desmayorizada porque tiene auxiliares registrados.
                 </a>
-            </g:form>
+            </g:else>
         </g:if>
     </div>
 </div>
@@ -166,7 +175,7 @@
                 Sustento Tributario:
             </div>
             <div class="col-xs-5 negrilla">
-                <g:select class=" form-control required cmbRequired" name="sustentoTributario.id" id="sustento" from="${SustentoTributario.list([sort:'codigo'])}" title="Necesario solo si la transacción debe reportarse al S.R.I." optionKey="id" optionValue="descripcion"  value="${proceso?.sustentoTributario?.id}"  noSelection="${['-1':'No aplica']}" disabled="${registro?true:false}" />
+                <g:select class=" form-control required cmbRequired" name="sustentoTributario.id" id="sustento" from="${SustentoTributario.list([sort:'codigo'])}" title="Necesario solo si la transacción debe reportarse al S.R.I." optionKey="id"   value="${proceso?.sustentoTributario?.id}"  noSelection="${['-1':'No aplica']}" disabled="${registro?true:false}" />
             </div>
             <div class="col-xs-2 " style="font-size: 10px;">
                 Necesario solo si la transacción debe reportarse al S.R.I.
@@ -255,7 +264,7 @@
     </div>
 </g:form>
 <g:if test="${proceso}">
-    <div class="vertical-container" style="margin-top: 25px;color: black;min-height: 250px;margin-bottom: 20px">
+    <div class="vertical-container" skip="1" style="margin-top: 25px;color: black;min-height: 250px;margin-bottom: 20px">
         <p class="css-vertical-text">Comprobante</p>
         <div class="linea"></div>
         <div id="registro" style=" margin-left: 40px;margin-bottom: 10px ;padding: 10px;display: none;margin-top: 5px;width: 850px;">
@@ -345,6 +354,40 @@
 
 <script type="text/javascript">
 
+    jQuery.fn.svtContainer = function () {
+
+        var title = this.find(".css-vertical-text")
+        title.css({"cursor":"pointer"})
+        title.attr("title","Minimizar")
+        var fa=$("<i class='fa fa-arrow-left fa-fw' style='font-size: 20px !important;'></i>")
+        var texto=$("<span class='texto' style='display: none;margin-left: 10px;color:#0088CC'> (Clic aquí para expandir)</span>")
+        title.addClass("open")
+        title.prepend(fa)
+        title.append(texto)
+        title.bind("click",function(){
+            if($(this).parent().attr("skip")!="1"){
+                if($(this).hasClass("open")){
+                    $(this).parent().find(".row").hide("blind")
+                    $(this).removeClass("open");
+                    $(this).addClass("closed")
+                    $(this).removeClass("css-vertical-text")
+                    $(this).find(".texto").show()
+                    setTimeout('$(this).parent().css({"height":"30px"});',30)
+                }else{
+                    $(this).parent().css({"height":"auto"});
+                    $(this).parent().find(".row").show("slide")
+                    $(this).removeClass("closed");
+                    $(this).addClass("open")
+                    $(this).addClass("css-vertical-text")
+                    $(this).attr("title","Maximizar")
+                    $(this).find(".texto").hide()
+                }
+            }
+        });
+        title.click()
+        return this;
+    }
+
     function calculaIva() {
         var iva = ${iva};
         var val = parseFloat($("#iva12").val());
@@ -356,8 +399,10 @@
 
     $(function () {
 
+        $(".vertical-container").svtContainer()
+
         $("#btn-br-prcs").click(function(){
-            bootbox.confirm("Esta seguro? si esta transacción tiene un comprobante, este será anulado. Esta acción es irreversible",function(){$(".br_prcs").submit()})
+            bootbox.confirm("Está seguro? si esta transacción tiene un comprobante, este será anulado. Esta acción es irreversible",function(){$(".br_prcs").submit()})
         });
 
         $("#tipoProceso").change(function(){

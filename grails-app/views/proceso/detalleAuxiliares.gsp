@@ -89,33 +89,86 @@
                             <label>Fecha:</label>
                         </td>
                         <td style="width: 170px">
-                            <elm:datepicker name="pgo_fecha"  title="Fecha" class="datepicker form-control required"   minDate="new Date()"  />
+                            <elm:datepicker name="pgo_fecha"  title="Fecha" class="datepicker form-control required"   maxDate="new Date()"  />
                             %{--<elm:datePicker class="required field ui-corner-all" title="Fecha" name="fecha" id="pgo_fecha" style="width:90px;"/>--}%
                         </td>
-                        <td>
+                        <td class="monto">
                             <label>Monto:</label>
                         </td>
-                        <td>
+                        <td class="monto">
                             <input type="text" class="required form-control number" id="pgo_monto" style="width:100px;text-align: right"/>
                         </td>
+                        <td colspan="2" class="datos-notas" style="display: none"></td>
                     </tr>
                     <tr>
                         <td>
-                            <label>Documento:</label>
+                            <label>Forma de pago:</label>
                         </td>
                         <td>
-                            <g:select id="td" name="tipoDocumento.id" from="${cratos.TipoDocumento.list()}" class="required form-control" value="" optionKey="id" optionValue="descripcion" />
+                            <g:select id="cmb-pago-fp" name="formaDePago.id" from="${formas}" class="required form-control" value="" optionKey="key" optionValue="value" />
                         </td>
-                        <td>
+                        <td class="referencia">
                             <label>Referencia:</label>
                         </td>
-                        <td colspan="2">
+                        <td colspan="3" class="referencia">
                             <input type="text" class="required form-control" name="referencia" id="ref" maxlength="30"/>
                         </td>
+                        <td class="base" style="display: none">
+                            <label>Base imponible:</label>
+                        </td>
+                        <td class="base" style="display: none">
+                            <input type="text" class="required form-control number" id="pgo_base" style="width:100px;text-align: right"  value="0.00"/>
+                        </td>
+                        <td class="base" style="display: none">
+                            <label>IVA:</label>
+                        </td>
+                        <td class="base" style="display: none">
+                            <input type="text" class="required form-control number" id="pgo_iva" style="width:100px;text-align: right" value="0.00"/>
+                        </td>
+                    </tr>
+                    <tr class="datos-notas" style="display: none">
+                        <td>
+                            <label>Fecha emision:</label>
+                        </td>
+                        <td style="width: 170px">
+                            <elm:datepicker name="nota_emision"  title="Fecha de emision" class="datepicker form-control required"   maxDate="new Date()"  />
+                            %{--<elm:datePicker class="required field ui-corner-all" title="Fecha" name="fecha" id="pgo_fecha" style="width:90px;"/>--}%
+                        </td>
+                        <td>
+                            <label>
+                                Número:
+                            </label>
+                        </td>
+                        <td colspan="3">
+                            <input type="text" name="pagoEstablecimiento" id="pagoEst" size="3" maxlength="3"  class=" digits form-control label-shared " validate=" number"
+                                   title="El número de establecimiento del documento "  />
+                            <input type="text" name="pagoPuntoEmision" id="pagoEmi" size="3" maxlength="3" class=" digits form-control label-shared " validate=" number"
+                                   title="El número de punto de emisión del documento"  />
+                            <input type="text" name="pagoSecuencial" id="pagoSec" size="10" maxlength="9"  class=" digits form-control label-shared  " validate=" number"
+                                   title="El número de secuencia del documento"  />
+
+                        </td>
+                    </tr>
+                    <tr class="datos-notas" style="display: none">
+                        <td>
+                            <label>#Autorizacion:</label>
+                        </td>
+                        <td colspan="2">
+                            <input type="text" id="pago-aut" class="form-control" maxlength="30">
+                        </td>
+                        <td>
+                            <a href="#" id="pgo_save_nota" style="margin-left: 10px" class="btn btn-azul">
+                                <i class="fa fa-save"></i>
+                                Guardar
+                            </a>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 </table>
 
-                <div class="fieldcontain  " style="margin-top: 0px;">
+                <div class="fieldcontain  " id="div-btn-guardar" style="margin-top: 0px;">
                     <a href="#" id="pgo_save" style="margin-left: 10px" class="btn btn-azul">
                         <i class="fa fa-save"></i>
                         Guardar
@@ -138,6 +191,7 @@
 
 <script type="text/javascript">
     $(function () {
+
 
         $(".pagos").click(function () {
             openLoader()
@@ -169,6 +223,145 @@
             closeLoader()
             $("#modal-pagos").modal("show");
         });
+
+        $("#cmb-pago-fp").change(function(){
+            if($(this).val()=="-1" || $(this).val()=="-2"){
+                $(".monto").hide()
+                $(".referencia").hide()
+                $(".base").show()
+                $(".datos-notas").show()
+                $("#div-btn-guardar").hide()
+            }else{
+                $(".monto").show()
+                $(".referencia").show()
+                $(".base").hide()
+                $(".datos-notas").hide()
+                $("#div-btn-guardar").show()
+            }
+        });
+
+        $("#pgo_save_nota").click(function(){
+            var errores = "";
+            var base=$("#pgo_base").val()
+            var iva=$("#pgo_iva").val()
+            var monto=base*1+iva*1
+            if(isNaN(monto))
+                monto=0
+            else
+                monto=number_format(monto, 2, ".", "")*1
+
+            if ($("#pgo_gestor").val() == -1) {
+                errores += "<li>Seleccione un gestor</li>";
+            }
+            if (isNaN(base)) {
+                if (errores != "") {
+                    errores += "<br/>";
+                }
+                errores += "<li>La base imponible debe ser un número válido</li>";
+            } else {
+                if (base*1 <= 0) {
+                    if (errores != "") {
+                        errores += "<br/>";
+                    }
+                    errores += "<li>La base imponible debe ser mayor que 0</li>";
+                }
+                if (iva*1 < 0) {
+                    if (errores != "") {
+                        errores += "<br/>";
+                    }
+                    errores += "<li>La valor del impuesto debe ser un número positivo</li>";
+                }
+
+                if (monto > parseFloat($(this).data("restante"))) {
+                    if (errores != "") {
+                        errores += "<br/>";
+                    }
+                    errores += "<li>La suma de los pagos no debe exceder " + number_format($(this).data("max"), 2, ".", "") + "<br/>";
+                    errores += "&nbsp;&nbsp;&nbsp(valor máximo para esta nota de débito / crédito: " + number_format($(this).data("restante"), 2, ".", "") + ")</li>";
+                }
+            }
+            if ($.trim($("#pago-aut").val()) == "") {
+                if (errores != "") {
+                    errores += "<br/>";
+                }
+                errores += "<li>Ingrese el número de autorizacion del documento</li>"
+            }
+            if ($.trim($("#pagoEst").val()) == "") {
+                if (errores != "") {
+                    errores += "<br/>";
+                }
+                errores += "<li>Ingrese el número de establecimiento del documento</li>"
+            }
+            if ($.trim($("#pagoEmi").val()) == "") {
+                if (errores != "") {
+                    errores += "<br/>";
+                }
+                errores += "<li>Ingrese el número de emision del documento</li>"
+            }
+            if ($.trim($("#pagoSec").val()) == "") {
+                if (errores != "") {
+                    errores += "<br/>";
+                }
+                errores += "<li>Ingrese el número secuencial del documento</li>"
+            }
+
+            if ($.trim($("#nota_emision_input").val()) == "") {
+                if (errores != "") {
+                    errores += "<br/>";
+                }
+                errores += "<li>Ingrese la fecha de emision del documento</li>"
+            }
+
+            if (errores == "") {
+                openLoader()
+                $.ajax({
+                    type    : "POST",
+                    url     : "${g.createLink(action: 'savePagoNota')}",
+                    data    : {
+                        "auxiliar.id"      : $("#iden_aux").val(),
+                        fecha              : $("#pgo_fecha_input").val(),
+                        gestor             : $("#pgo_gestor").val(),
+                        fechaEmision       : $("#nota_emision_input").val(),
+                        monto :base,
+                        impuesto:iva,
+                        establecimiento :$("#pagoEst").val(),
+                        emision:$("#pagoEmi").val(),
+                        secuencial:$("#pagoSec").val(),
+                        autorizacion:$("#pago-aut").val(),
+                        tipo:$("#cmb-pago-fp").val()
+
+                    },
+                    success : function (msg) {
+                        if (msg == "ok") {
+                            $.ajax({
+                                type    : "POST",
+                                url     : "${g.createLink(action: 'detallePagos')}",
+                                data    : "id=" + $("#iden_aux").val(),
+                                success : function (msg) {
+                                    closeLoader()
+                                    $("#pgo_ajax").html(msg).show("slide");
+                                    var monto = parseFloat($.trim($("#pgo_monto").val()));
+                                    var pagos = parseFloat($btn.data("pagos")) + monto;
+                                    var restante = parseFloat($btn.data("restante")) - monto;
+                                    var $boton = $btn.data("boton");
+                                    $boton.data("pagos", pagos);
+                                    $btn.data("pagos", pagos);
+                                    $btn.data("restante", restante);
+                                    $("#pgo_monto").val("");
+                                    $("#ref").val("");
+                                    $("#pgo_factura").val("");
+                                    $("#tdPagado").text(number_format(pagos, 2, ".", ""));
+                                    $("#tdPagar").text(number_format(restante, 2, ".", ""));
+                                }
+                            });
+                        }
+
+                    }
+                });
+            } else {
+                bootbox.alert("Por favor corrija lo siguiente:<br/><ul>" + errores + "</ul>")
+            }
+        })
 
         $("#pgo_save").unbind("click")
         $("#pgo_save").bind("click", function () {
@@ -202,6 +395,7 @@
                     }
                     errores += "<li>El monto del pago debe ser mayor que 0</li>";
                 }
+
                 if (parseFloat($.trim($("#pgo_monto").val())) > parseFloat($(this).data("restante"))) {
                     if (errores != "") {
                         errores += "<br/>";
@@ -209,6 +403,13 @@
                     errores += "<li>La suma de los pagos no debe exceder " + number_format($(this).data("max"), 2, ".", "") + "<br/>";
                     errores += "&nbsp;&nbsp;&nbsp(valor máximo para este pago: " + number_format($(this).data("restante"), 2, ".", "") + ")</li>";
                 }
+            }
+            console.log($("#pgo_fecha_input").val(),$("#pgo_fecha_input"))
+            if ($.trim($("#pgo_fecha_input").val()) == "") {
+                if (errores != "") {
+                    errores += "<br/>";
+                }
+                errores += "<li>Ingrese la fecha del pago</li>"
             }
 
             if (errores == "") {
@@ -222,7 +423,7 @@
                         monto              : $("#pgo_monto").val(),
                         factura            : $("#pgo_factura").val(),
                         gestor             : $("#pgo_gestor").val(),
-                        "tipoDocumento.id" : $("#td").val(),
+                        "formaDePago.id" : $("#cmb-pago-fp").val(),
                         referencia         : $("#ref").val()
                     },
                     success : function (msg) {

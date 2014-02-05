@@ -12,17 +12,15 @@
                 </a>
             </g:if>
             <g:else>
+                <g:if test="${!aux}">
+                    <a href="#" class="btn btn-danger" id="desmayo" idComp="${comp?.id}" style="margin-bottom: 10px;">
+                        <i class="fa fa-pencil-square-o "></i>
+                        Desmayorizar
+                    </a>
+                </g:if>
                 <a href="#" class="btn btn-default" id="imprimir" iden="${comp?.proceso?.id}" nombre="${comp.prefijo + comp.numero}" style="margin-bottom: 10px;">
                     <i class="fa fa-print"></i>
                     Imprimir
-                </a>
-                <a href="#" class="btn btn-danger" id="desmayo" idComp="${comp?.id}" style="margin-bottom: 10px;">
-                    <span class="fa-stack fa-lg">
-                        <i class="fa fa-pencil-square-o fa-stack-1x"></i>
-                        <i class="fa fa-ban fa-stack-2x text-danger"></i>
-                    </span>
-
-                    Desmayorizar
                 </a>
             </g:else>
             <g:if test="${cratos.Retencion.countByProceso(comp?.proceso) > 0}">
@@ -72,12 +70,12 @@
             <tr>
                 <td style="width: 40px;" class="auxltd">
                     <g:if test="${asiento.cuenta.auxiliar == 'S' && proceso.tipoProceso!='P' && comp.registrado=='S' }">
-                    <div style="float: left; margin-left: 15px;" class="auxbtn btnpq ui-state-default ui-corner-all" id="axul_${asiento.cuenta.id}"
-                         idAs="${asiento.id}" reg="${comp.registrado}" max="${Math.abs(asiento.debe - asiento.haber)}" aux="${aux ?: 0}"
-                         data-debe="${asiento.debe ?: 0}" data-haber="${asiento.haber ?: 0}">
-                        <span class="ui-icon ui-icon-circle-plus"></span>
-                    </div>
-                </g:if>
+                        <div style="float: left; margin-left: 15px;" class="auxbtn btnpq ui-state-default ui-corner-all" id="axul_${asiento.cuenta.id}"
+                             idAs="${asiento.id}" reg="${comp.registrado}" max="${Math.abs(asiento.debe - asiento.haber)}" aux="${aux ?: 0}"
+                             data-debe="${asiento.debe ?: 0}" data-haber="${asiento.haber ?: 0}">
+                            <span class="ui-icon ui-icon-circle-plus"></span>
+                        </div>
+                    </g:if>
                 </td>
                 <td>
                     <input type="hidden" id="hid_${i}" name="idAsientos" value="${asiento.id}">
@@ -90,10 +88,10 @@
                 </td>
                 <g:if test="${comp.registrado != 'S'}">
                     <td>
-                        <input type="text" name="valor" id="vald_${i}" class="txt_valor debe form-control" style="width: 100px;float: right;text-align: right" value="${asiento.debe ? g.formatNumber(number: asiento.debe, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, currencyCode: 'USD', groupingUsed: " ") : 0.00}"/>
+                        <input type="text" name="valor" id="vald_${i}" class="txt_valor debe number form-control" style="width: 100px;float: right;text-align: right" value="${asiento.debe ? g.formatNumber(number: asiento.debe, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, currencyCode: 'USD', groupingUsed: " ") : 0.00}"/>
                     </td>
                     <td>
-                        <input type="text" name="valor" id="valh_${i}" class="txt_valor haber form-control" style="width: 100px;float: right;text-align: right" value="${asiento.haber ? g.formatNumber(number: asiento.haber, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, currencyCode: 'USD', groupingUsed: " ") : 0.00}"/>
+                        <input type="text" name="valor" id="valh_${i}" class="txt_valor haber number form-control" style="width: 100px;float: right;text-align: right" value="${asiento.haber ? g.formatNumber(number: asiento.haber, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, currencyCode: 'USD', groupingUsed: " ") : 0.00}"/>
                     </td>
                     <td>
                         <div style="float: left; margin-right: 5px;" class="guardarDatos btnpq ui-state-default ui-corner-all" id="guardar_${i}" posicion="${i}">
@@ -104,10 +102,10 @@
                 </g:if>
                 <g:else>
                     <td>
-                        <input type="text" name="valor" id="vald_${i}" style="width: 100px;float: right;color: black;text-align: right" value="${asiento.debe ? g.formatNumber(number: asiento.debe, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'US') : 0.00}" disabled/>
+                        <input type="text" name="valor" id="vald_${i}" class="form-control" style="width: 100px;float: right;color: black;text-align: right" value="${asiento.debe ? g.formatNumber(number: asiento.debe, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'US') : 0.00}" disabled/>
                     </td>
                     <td>
-                        <input type="text" name="valor" id="valh_${i}" style="width: 100px;float: right;color: black;text-align: right" value="${asiento.haber ? g.formatNumber(number: asiento.haber, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'US') : 0.00}" disabled/>
+                        <input type="text" name="valor" id="valh_${i}" class="form-control" style="width: 100px;float: right;color: black;text-align: right" value="${asiento.haber ? g.formatNumber(number: asiento.haber, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'US') : 0.00}" disabled/>
                     </td>
                     <td>
 
@@ -282,7 +280,7 @@
         $("#desmayo").click(function () {
             var id = $(this).attr("idComp")
             bootbox.confirm("Esta seguro de desmayorizar este comprobante? Esta acción modificará los saldos",function(){
-                openLoader("Procesando")
+                openLoader("Desmayorizando")
                 $.ajax({
                     type    : "POST",
                     url     : "${g.createLink(controller: 'proceso',action: 'desmayorizar')}",
@@ -350,8 +348,8 @@
         });
         $(".registrar").click(function () {
             var id = $(this).attr("idComp");
-            if (confirm("Esta seguro de mayorizar este comprobante? Esta acción modificará los saldos")) {
-             openLoader("Mayorizando")
+            bootbox.confirm("Esta seguro de mayorizar este comprobante? Esta acción modificará los saldos",function(){
+                openLoader("Mayorizando")
                 $.ajax({
                     type    : "POST",
                     url     : "${g.createLink(controller: 'proceso',action: 'registrarComprobante')}",
@@ -362,11 +360,11 @@
                             location.reload(true);
                         else {
                             closeLoader()
-                           bootbox.alert("Error al mayorizar")
+                            bootbox.alert("Error al mayorizar")
                         }
                     }
                 });
-            }
+            })
         });
         function cargarAuxiliares() {
             openLoader("Cargando")
@@ -433,6 +431,7 @@
         $("#agregar_axul").click(function () {
             var $btn = $(this);
             var btnRestante = $btn.data("restante");
+            btnRestante=number_format(btnRestante, 2, ".", "")*1
             var btnMax = $btn.data("max");
             var btnEnAux = $btn.data("enAux");
             var errores = "";
@@ -473,7 +472,8 @@
                     errores += "<br/>";
                 }
                 errores += "<li>Ya ha ingresado el valor total de este asiento.</li>"
-            } else if (parseFloat(valor) > btnRestante) {
+            } else if (parseFloat(valor) > btnRestante*1) {
+                console.log(valor,btnRestante)
                 if (errores != "") {
                     errores += "<br/>";
                 }

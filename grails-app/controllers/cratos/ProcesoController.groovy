@@ -92,7 +92,7 @@ class ProcesoController extends cratos.seguridad.Shield {
             } else {
                 def lista = procesoService.registrar(pro, session.perfil, session.usuario)
                 if (lista[0] != false) {
-                    render(view: "detalleProceso", model: [comprobantes: lista[1], asientos: lista[2]])
+                    render(view: "detalleProceso", model: [comprobantes: lista[1], asientos: lista[2],proceso:pro])
 
                 } else {
                     render("Error registrando el proceso")
@@ -113,9 +113,13 @@ class ProcesoController extends cratos.seguridad.Shield {
         if (asientos.size() > 0) {
             asientos.sort { it.cuenta.numero }
         }
-
+        def aux = false
+        asientos.each {
+            if(Auxiliar.findAllByAsiento(it).size()>1)
+                aux=true
+        }
         //println "comp "+comprobantes+" as "+asientos
-        render(view: "detalleProceso", model: [comprobantes: comprobantes, asientos: asientos, proceso: proceso])
+        render(view: "detalleProceso", model: [comprobantes: comprobantes, asientos: asientos, proceso: proceso,aux:aux])
     }
 
     def valorAsiento = {
@@ -248,7 +252,7 @@ class ProcesoController extends cratos.seguridad.Shield {
 
         def numRegistros=lista.size()
         if (!params.reporte) {
-            println "no reporte"
+//            println "no reporte"
             render(view: '../lstaTbla', model: [listaTitulos: listaTitulos, listaCampos: listaCampos, lista: lista, link: link, funciones: funciones, url: url,numRegistros:numRegistros])
         } else {
             /*De esto solo cambiar el dominio, el parametro tabla, el paramtero titulo y el tamaño de las columnas (anchos)*/
@@ -262,14 +266,20 @@ class ProcesoController extends cratos.seguridad.Shield {
     }
 
     def show = {
+//        println "session "+session.contabilidad
         def proceso = Proceso.get(params.id)
         def tiposProceso = ["-1":"Seleccione","C":"Compras","V":"Ventas","O":"Otros","A":"Ajustes"]
         def comprobante = Comprobante.findByProceso(proceso)
         def registro = (Comprobante.findAllByProceso(proceso)?.size() == 0) ? false : true
         def fps=ProcesoFormaDePago.findAllByProceso(proceso)
+        def aux = false
+        Asiento.findAllByComprobante(comprobante).each {
+            if(Auxiliar.findAllByAsiento(it).size()>1)
+                aux=true
+        }
 //        println "registro "+registro
 
-        render(view: "procesoForm", model: [proceso: proceso, registro: registro, comprobante: comprobante,tiposProceso:tiposProceso,fps:fps,registro:registro])
+        render(view: "procesoForm", model: [proceso: proceso, registro: registro, comprobante: comprobante,tiposProceso:tiposProceso,fps:fps,registro:registro,aux:aux])
     }
 
     def comprobarPassword = {
@@ -288,11 +298,19 @@ class ProcesoController extends cratos.seguridad.Shield {
         def msn = null
         def asiento = Asiento.get(params.id);
         def auxiliares = Auxiliar.findAllByAsiento(asiento)
+        def formas=[:]
+        def fps = ProcesoFormaDePago.findAllByProceso(asiento.comprobante.proceso)
+        fps.each {
+            formas.put(it.id,it.tipoPago.descripcion)
+        }
+        formas.put("-1","NOTA DE DEBITO")
+        formas.put("-2","NOTA DE CREDITO")
+//        println "Formas "+formas
         if (auxiliares.size() == 0) {
             msn = "EL asiento no tiene registrado ningun plan de pagos"
         }
         def max = Math.abs(asiento.debe - asiento.haber)
-        render(view: "detalleAuxiliares", model: [auxiliares: auxiliares, asiento: asiento, msn: msn, max: max])
+        render(view: "detalleAuxiliares", model: [auxiliares: auxiliares, asiento: asiento, msn: msn, max: max,formas:formas])
     }
 
     def nuevoAuxiliar = {
@@ -369,6 +387,51 @@ class ProcesoController extends cratos.seguridad.Shield {
         [pagos: pagos, aux: aux]
     }
 
+    def savePagoNota = {
+        println "save pago nota " + params
+        def fecha = params.remove("fecha")
+        def fechaEmi =  new Date().parse("dd-MM-yyyy", params.fechaEmision)
+        params.remove("fechaEmision")
+        def pago = new PagoAux(params)
+        pago.fecha = new Date().parse("dd-MM-yyyy", fecha)
+        pago.fechaEmision =fechaEmi
+        if(params.tipo=="-1")
+            pago.tipo="D"
+        else
+            pago.tipo="C"
+        if (pago.save(flush: true)) {
+            def proceso = new Proceso()
+            proceso.gestor = Gestor.get(params.gestor)
+            proceso.contabilidad = session.contabilidad
+            proceso.descripcion = "Nota de ${(pago.tipo=='C')?'Crédito':'Débito'} " + new Date().format("dd-MM-yyyy hh:mm") + " Monto: " + (pago.monto+pago.impuesto) + " Proveedor: " + pago.auxiliar?.asiento?.comprobante?.proceso?.proveedor
+            proceso.estado = "R"
+            proceso.fecha = new Date()
+            proceso.proveedor = pago.auxiliar.asiento.comprobante.proceso.proveedor
+            proceso.tipoPago = pago.auxiliar.asiento.comprobante.proceso.tipoPago
+            proceso.usuario = session.usuario
+            /*TODO preguntar que es esto?*/
+            //proceso.tipoComprobanteId = TipoComprobanteId.get(3)
+            proceso.valor = pago.monto
+            proceso.impuesto = 0
+            proceso.documento = pago.referencia
+            proceso.pagoAux = pago
+            proceso.tipoProceso="P"
+            proceso.empresa=session.empresa
+            println "valor " + proceso.valor + " inp " + proceso.impuesto
+            if (proceso.save(flush: true)) {
+                procesoService.registrar(proceso, session.perfil, session.usuario)
+                render "ok"
+            } else {
+                println "error en el proceso " + proceso.errors
+                render "error"
+            }
+
+        } else {
+            render "error"
+            println "error save pago nota " + pago.errors
+        }
+    }
+
     def savePago = {
         println "save pago " + params
         def fecha = params.remove("fecha")
@@ -378,7 +441,7 @@ class ProcesoController extends cratos.seguridad.Shield {
             def proceso = new Proceso()
             proceso.gestor = Gestor.get(params.gestor)
             proceso.contabilidad = session.contabilidad
-            proceso.descripcion = "Pago de auxiliar " + new Date().format("dd-MM-yyyy hh:mm") + " Monto: " + pago.monto + " Proveedor: " + pago.auxiliar?.asiento?.comprobante?.proceso?.proveedor
+            proceso.descripcion = "Pago  " + new Date().format("dd-MM-yyyy hh:mm") + " Monto: " + pago.monto + " Proveedor: " + pago.auxiliar?.asiento?.comprobante?.proceso?.proveedor
             proceso.estado = "R"
             proceso.fecha = new Date()
             proceso.proveedor = pago.auxiliar.asiento.comprobante.proceso.proveedor

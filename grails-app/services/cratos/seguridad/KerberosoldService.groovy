@@ -555,7 +555,7 @@ class KerberosoldService {
             }
 
             cn.close()
-           println "depues del close"
+            println "depues del close"
 
         } catch (e) {
             println "\n error try log ob " + e
@@ -569,10 +569,15 @@ class KerberosoldService {
 
     def ejecutarProcedure(nombre, parametros) {
         def p = ""
-        parametros.each {
-            p += "" + it + ","
+        if(!(parametros instanceof java.lang.String)){
+            parametros.each {
+                p += "" + it + ","
+            }
+            p = p.substring(0, p.length() - 1)
+        }else{
+            p=parametros
         }
-        p = p.substring(0, p.length() - 1)
+
         def sql = " select " + nombre + "(" + p + ")"
         println "ejecutar Procedure " + sql
         def template = new JdbcTemplate(dataSource)

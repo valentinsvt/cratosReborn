@@ -19,13 +19,23 @@
         <g:set var="tot" value="${0}"/>
         <g:each var="p" in="${pagos}" status="i">
             <tr>
-                <td>${p.fecha.format("dd/MM/yyyy")}</td>
-                <td>${p.tipoDocumento.descripcion}</td>
-                <td>${p.referencia}</td>
-                <td style="text-align: right;">
-                    <g:formatNumber number="${p.monto}" minFractionDigits="2" maxFractionDigits="2"/>
-                </td>
-                <g:set var="tot" value="${tot.toDouble() + p.monto}"></g:set>
+                <td>${p.fecha.format("dd-MM-yyyy")}</td>
+                <g:if test="${p.tipo=='P'}">
+                    <td>${p.formaDePago?.tipoPago?.descripcion}</td>
+                    <td>${p.referencia}</td>
+                    <td style="text-align: right;">
+                        <g:formatNumber number="${p.monto}" minFractionDigits="2" maxFractionDigits="2"/>
+                    </td>
+                    <g:set var="tot" value="${tot.toDouble() + p.monto}"></g:set>
+                </g:if>
+                <g:else>
+                    <td>${(p.tipo=='D')?'Nota de débito':'Nota de crédito'}</td>
+                    <td>${p.establecimiento+"-"+p.emision+"-"+p.secuencial}</td>
+                    <td style="text-align: right;">
+                        <g:formatNumber number="${p.monto+p.impuesto}" minFractionDigits="2" maxFractionDigits="2"/>
+                    </td>
+                    <g:set var="tot" value="${tot.toDouble() + p.monto+p.impuesto}"></g:set>
+                </g:else>
             </tr>
         </g:each>
         <tr>

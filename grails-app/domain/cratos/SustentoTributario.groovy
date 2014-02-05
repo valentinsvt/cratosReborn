@@ -20,4 +20,7 @@ class SustentoTributario implements Serializable {
     static constraints = {
         descripcion(maxSize: 127)
     }
+    String toString(){
+        return "${this.codigo}: ${this.descripcion}"
+    }
 }

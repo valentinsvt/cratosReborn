@@ -113,7 +113,7 @@ class GestorContableController extends cratos.seguridad.Shield {
                 // println "empeiza genera"
                 if (session.movimientos.size() > 0) {
                     session.movimientos.each {
-                       // println "  size!!!!!!  " + session.movimientos.size()
+                        // println "  size!!!!!!  " + session.movimientos.size()
                         it.gestor = p
                         println " save genera " + it + " " + it.save()
                         p.addToMovimientos(it)
@@ -256,7 +256,11 @@ class GestorContableController extends cratos.seguridad.Shield {
 
     def ordernarLista(lista){
         println "original "+lista
-        def res = lista.sort{it.debeHaber}
+        def res
+        if(lista.size()>1)
+            res = lista.sort{it?.debeHaber}
+        else
+            res=lista
         //res = res.sort{it.cuenta}
         println "despues "+res
         return res
