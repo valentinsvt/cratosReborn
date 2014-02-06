@@ -247,16 +247,16 @@ class ProcesoController extends cratos.seguridad.Shield {
         def lista = []
         listaSinFiltro.each {
             if (it.estado != "B")
-                lista.add(it)
+                lista.add(it.refresh())
         }
 
-        def numRegistros=lista.size()
+        def numRegistros=10
         if (!params.reporte) {
 //            println "no reporte"
             render(view: '../lstaTbla', model: [listaTitulos: listaTitulos, listaCampos: listaCampos, lista: lista, link: link, funciones: funciones, url: url,numRegistros:numRegistros])
         } else {
             /*De esto solo cambiar el dominio, el parametro tabla, el paramtero titulo y el tamaño de las columnas (anchos)*/
-            println "si reporte"
+//            println "si reporte"
             session.dominio = Proceso
             session.funciones = funciones
             def anchos = [16, 70, 14] /*el ancho de las columnas en porcentajes*/

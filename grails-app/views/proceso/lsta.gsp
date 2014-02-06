@@ -30,7 +30,7 @@
         </g:link>
     </div>
 </div>
-<div class="vertical-container-no-padding" style="margin-top: 25px;color: black;min-height: 500px">
+<div class="vertical-container-no-padding" style="margin-top: 25px;color: black;min-height: 460px">
     <div style="width: 1000px;float: left">
         <bsc:buscador name="proceso.id"  accion="listar" campos="${campos}" label="Transacción" tipo="lista"/>
     </div>

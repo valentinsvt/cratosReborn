@@ -12,7 +12,7 @@
             <th>
                 Observaciones
             </th>
-            <th></th>
+            <th style="width: 100px"></th>
         </tr>
         </thead>
         <tbody>
@@ -21,7 +21,7 @@
                 <td>${gestor.nombre}</td>
                 <td>${gestor.descripcion}</td>
                 <td>${gestor.observaciones}</td>
-                <td>
+                <td style="width: 100px">
                     <a href="${g.createLink(action: 'verGestor',id:gestor.id)}" class="btn btn-small btn-info" title="Ver">
                         <i class="fa fa-laptop" title="Ver"></i>
                     </a>

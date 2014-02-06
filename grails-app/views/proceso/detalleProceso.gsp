@@ -279,21 +279,23 @@
 
         $("#desmayo").click(function () {
             var id = $(this).attr("idComp")
-            bootbox.confirm("Esta seguro de desmayorizar este comprobante? Esta acción modificará los saldos",function(){
-                openLoader("Desmayorizando")
-                $.ajax({
-                    type    : "POST",
-                    url     : "${g.createLink(controller: 'proceso',action: 'desmayorizar')}",
-                    data    : "id=" + id,
-                    success : function (msg) {
-                        if (msg == "ok") {
-                            window.location.reload("true")
-                        } else {
-                            closeLoader()
-                            bootbox.alert(msg)
+            bootbox.confirm("Esta seguro de desmayorizar este comprobante? Esta acción modificará los saldos",function(result){
+                if(result){
+                    openLoader("Desmayorizando")
+                    $.ajax({
+                        type    : "POST",
+                        url     : "${g.createLink(controller: 'proceso',action: 'desmayorizar')}",
+                        data    : "id=" + id,
+                        success : function (msg) {
+                            if (msg == "ok") {
+                                window.location.reload("true")
+                            } else {
+                                closeLoader()
+                                bootbox.alert(msg)
+                            }
                         }
-                    }
-                });
+                    });
+                }
             });
         });
 
@@ -348,22 +350,24 @@
         });
         $(".registrar").click(function () {
             var id = $(this).attr("idComp");
-            bootbox.confirm("Esta seguro de mayorizar este comprobante? Esta acción modificará los saldos",function(){
-                openLoader("Mayorizando")
-                $.ajax({
-                    type    : "POST",
-                    url     : "${g.createLink(controller: 'proceso',action: 'registrarComprobante')}",
-                    data    : "id=" + id,
-                    success : function (msg) {
+            bootbox.confirm("Esta seguro de mayorizar este comprobante? Esta acción modificará los saldos",function(result){
+                if(result){
+                    openLoader("Mayorizando")
+                    $.ajax({
+                        type    : "POST",
+                        url     : "${g.createLink(controller: 'proceso',action: 'registrarComprobante')}",
+                        data    : "id=" + id,
+                        success : function (msg) {
 //                    $("#registro").html(msg).show("slide");
-                        if (msg == "ok")
-                            location.reload(true);
-                        else {
-                            closeLoader()
-                            bootbox.alert("Error al mayorizar")
+                            if (msg == "ok")
+                                location.reload(true);
+                            else {
+                                closeLoader()
+                                bootbox.alert("Error al mayorizar")
+                            }
                         }
-                    }
-                });
+                    });
+                }
             })
         });
         function cargarAuxiliares() {

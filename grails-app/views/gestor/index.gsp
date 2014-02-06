@@ -43,9 +43,7 @@
 
     </div>
 
-    <script type="text/javascript">
-        $(".btn").button()
-    </script>
+
 </div> <!-- container -->
 </body>
 

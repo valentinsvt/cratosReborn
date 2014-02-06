@@ -70,7 +70,7 @@
 <script type="text/javascript">
 /*todo arreglar esto que esta dando error, aparentemente cuando hay solo 1*/
     function paginar(id, mostrar) {
-
+//        console.log("paginar!!",id,mostrar)
         var tbody = $("#" + id)
         var num = mostrar
         var rows = tbody.find("tr")
@@ -109,13 +109,13 @@
             var boton = $("<div>")
             boton.css({
                 cursor      : "pointer",
-                width       : 15,
+                width       : 20,
                 height      : 20,
                 float       : "left",
                 marginLeft  : 5,
                 border      : "1px solid black",
                 lineHeight  : "20px",
-                paddingLeft : "7px"
+                textAlign   : "center"
 
             }).html(i + 1).bind("click", show).attr("body", id).addClass("b" + (i + 1) + " paginateButon");
             if (i == 0)

@@ -186,7 +186,7 @@
                 Tipo de documento:
             </div>
             <div class="col-xs-5 negrilla">
-                <g:select class="form-control cmbRequired" name="tipoComprobanteSri.id" id="tipoComprobante" from="${TipoComprobanteSri.list([sort:'codigo'])}" optionKey="id" title="Tipo del documento a registrar" optionValue="descripcion"  noSelection="${['-1':'No aplica']}" value="${proceso?.tipoComprobanteSri?.id}" disabled="${registro?true:false}" />
+                <g:select class="form-control cmbRequired" name="tipoComprobanteSri.id" id="tipoComprobante" from="${TipoComprobanteSri.findAllByIdNotInList([16.toLong(),17.toLong()],[sort:'codigo'])}" optionKey="id" title="Tipo del documento a registrar" optionValue="descripcion"  noSelection="${['-1':'No aplica']}" value="${proceso?.tipoComprobanteSri?.id}" disabled="${registro?true:false}" />
             </div>
             <div class="col-xs-2 " style="font-size: 10px">
                 Tipo del documento a registrar.
@@ -384,7 +384,6 @@
                 }
             }
         });
-        title.click()
         return this;
     }
 
@@ -399,10 +398,19 @@
 
     $(function () {
 
+
+
         $(".vertical-container").svtContainer()
+        <g:if test="${proceso && registro}">
+        $(".css-vertical-text").click()
+        </g:if>
 
         $("#btn-br-prcs").click(function(){
-            bootbox.confirm("Está seguro? si esta transacción tiene un comprobante, este será anulado. Esta acción es irreversible",function(){$(".br_prcs").submit()})
+            bootbox.confirm("Está seguro? si esta transacción tiene un comprobante, este será anulado. Esta acción es irreversible",function(result){
+                if(result){
+                    $(".br_prcs").submit()
+                }
+            })
         });
 
         $("#tipoProceso").change(function(){
@@ -558,8 +566,10 @@
             }else{
                 if(info!=""){
                     info+=" Esta seguro de continuar?"
-                    bootbox.confirm(info,function(){
-                        $(".frmProceso").submit();
+                    bootbox.confirm(info,function(result){
+                        if(result){
+                            $(".frmProceso").submit();
+                        }
                     })
                 }else{
                     $(".frmProceso").submit();
@@ -598,21 +608,24 @@
         });
 
         $("#registrarProceso").click(function () {
-            bootbox.confirm("Esta seguro?.<br>Una vez registrada la transacción no se podrá hacer modificaciones.",function(){
-                openLoader()
-                $.ajax({
-                    type    : "POST",
-                    url     : "${g.createLink(controller: 'proceso',action: 'registrar')}",
-                    data    : "id=" + $("#idProceso").val(),
-                    success : function (msg) {
-                        // $("#registro").html(msg).show("slide");
-                        closeLoader()
-                        location.reload(true);
-                    },
-                    error   : function () {
-                        bootbox.alert("Ha ocurrido un error. Por favor revise el gestor y los valores del proceso.")
-                    }
-                });
+            bootbox.confirm("Esta seguro?.<br>Una vez registrada la transacción no se podrá hacer modificaciones.",function(result){
+                if(result){
+                    openLoader()
+                    $.ajax({
+                        type    : "POST",
+                        url     : "${g.createLink(controller: 'proceso',action: 'registrar')}",
+                        data    : "id=" + $("#idProceso").val(),
+                        success : function (msg) {
+                            // $("#registro").html(msg).show("slide");
+                            closeLoader()
+                            location.reload(true);
+                        },
+                        error   : function () {
+                            bootbox.alert("Ha ocurrido un error. Por favor revise el gestor y los valores del proceso.")
+                        }
+                    });
+                }
+
             })
         });
 

@@ -218,7 +218,7 @@ class BuscadorService {
         }
         println "sql " + sql  + orderby+" --> pars "+res
         lista = dominio.findAll((sql+orderby).toString(), res,[max: 200])
-        println "lista "+lista
+//        println "lista "+lista
         lista.add(lista.size())
         if (lista.size() < 1 && tipo != "excluyente") {
             res = filtro("or", parametros, common, mapa, ignoreCase)

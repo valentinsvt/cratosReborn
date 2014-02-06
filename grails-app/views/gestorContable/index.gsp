@@ -54,7 +54,7 @@
 
         </g:form>
     </div>
-    <div id="divLista" style="clear: both; padding: 5px; margin-top: 5px;max-height: 400px;overflow-y: auto">
+    <div id="divLista" style="clear: both; padding: 5px; margin-top: 5px;max-height: 490px;overflow-y: auto">
     </div>
 </div> <!-- container -->
 <script type="text/javascript">

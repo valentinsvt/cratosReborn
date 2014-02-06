@@ -4,7 +4,6 @@ class GestorContableController extends cratos.seguridad.Shield {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
     def buscadorService
-    def kerberosoldService
     def index = {
         session.movimientos=[]
     }
