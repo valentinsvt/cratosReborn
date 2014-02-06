@@ -7,6 +7,18 @@ class ReportesController {
     def kerberosoldService
 
     def index() {
+        println session.contabilidad.id
+        def camposCliente = ["nombre": ["Nombre", "string"], "ruc": ["Ruc", "string"]]
+
+        def clientes = Proveedor.findAllByEmpresa(session.empresa)
+
+        if (params.msn)
+            [camposCliente: camposCliente, msn: params.msn, clientes: clientes]
+        else
+            [camposCliente: camposCliente, clientes: clientes]
+    }
+
+    def index_old() {
         def camposCliente = ["nombre": ["Nombre", "string"], "ruc": ["Ruc", "string"]]
 
         def clientes = Proveedor.findAllByEmpresa(session.empresa)
@@ -28,9 +40,12 @@ class ReportesController {
 
         }
         def listaTitulos = ["Ruc", "Nombre", "Actividad"]       /*Titulos de la tabla*/
-        def listaCampos = ["ruc", "nombre", "actividad"]           /*campos que van a mostrarse en la tabla, en el mismo orden que los titulos*/
-        def funciones = [null, ["closure": [closure, "&"]], null]   /*funciones para cada campo en caso de ser necesario. Cada campo debe tener un mapa (con el nombre de la funcion como key y los parametros como arreglo) o un null si no tiene funciones... si un parametro es ? sera sustituido por el valor del campo*/
-        def url = g.createLink(action: "listarClientes", controller: "reportes")     /*link de esta accion ...  sive para la opcion de reporte*/
+        def listaCampos = ["ruc", "nombre", "actividad"]
+        /*campos que van a mostrarse en la tabla, en el mismo orden que los titulos*/
+        def funciones = [null, ["closure": [closure, "&"]], null]
+        /*funciones para cada campo en caso de ser necesario. Cada campo debe tener un mapa (con el nombre de la funcion como key y los parametros como arreglo) o un null si no tiene funciones... si un parametro es ? sera sustituido por el valor del campo*/
+        def url = g.createLink(action: "listarClientes", controller: "reportes")
+        /*link de esta accion ...  sive para la opcion de reporte*/
         if (params.campos instanceof java.lang.String) {
             params.campos = [params.campos, "empresa"]
             params.criterios = [params.criterios, session.empresa.id]
@@ -52,7 +67,8 @@ class ReportesController {
             }
             params.operadores = t
         }
-        def lista = buscadorService.buscar(Proveedor, "Proveedor", "excluyente", params, true) /* Dominio, nombre del dominio , excluyente o incluyente ,params tal cual llegan de la interfaz del buscador, ignore case */
+        def lista = buscadorService.buscar(Proveedor, "Proveedor", "excluyente", params, true)
+        /* Dominio, nombre del dominio , excluyente o incluyente ,params tal cual llegan de la interfaz del buscador, ignore case */
         lista.pop()
         render(view: '../tablaBuscador', model: [listaTitulos: listaTitulos, listaCampos: listaCampos, lista: lista, funciones: funciones, url: url])
 
@@ -88,17 +104,17 @@ class ReportesController {
     }
 
     def updatePeriodo() {
-        println "update periodo "+params
+        println "update periodo " + params
         def cont = Contabilidad.get(params.cont)
         def periodos = Periodo.findAllByContabilidad(cont, [sort: 'fechaInicio'])
 
         // <g:select name="contP" from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}" optionKey="id" optionValue="descripcion"
         // class="ui-widget-content ui-corner-all"/>
         def sel
-        if(cont)
-            sel = g.select(name: "periodo" + params.cual, from: periodos, optionKey: "id", "class": "ui-widget-content ui-corner-all dos",noSelection: ["-1":"Todos"])
+        if (cont)
+            sel = g.select(name: "periodo" + params.cual, from: periodos, optionKey: "id", "class": "ui-widget-content ui-corner-all dos", noSelection: ["-1": "Todos"])
         else
-            sel = g.select(name: "periodo" + params.cual, from: periodos, optionKey: "id", "class": "ui-widget-content ui-corner-all dos",noSelection: ["-1":"Todos"])
+            sel = g.select(name: "periodo" + params.cual, from: periodos, optionKey: "id", "class": "ui-widget-content ui-corner-all dos", noSelection: ["-1": "Todos"])
 
         def html = "<label class='uno'>Periodo:</label>" + sel
 
@@ -200,7 +216,6 @@ class ReportesController {
     }
 
 
-
     def comprobante() {
         println "imprimir comprobante " + params
         def comprobantes = cuentasService.getComprobante(params.id)
@@ -216,9 +231,9 @@ class ReportesController {
         def asiento
         def comprobante
         def numero
-        if (comprobantes){
+        if (comprobantes) {
             numero = "" + comprobantes[0].prefijo + "" + comprobantes[0].numero
-            comprobante= comprobantes[0]
+            comprobante = comprobantes[0]
             asiento = cuentasService.getAsiento(comprobantes?.pop()?.id)
         }
         //def cuentas = cuentasService.getCuentas(params.cont, params.emp)
@@ -254,9 +269,9 @@ class ReportesController {
 
         }
 
-        comp[numero].items.sort{ it.cuenta}
+        comp[numero].items.sort { it.cuenta }
 
-        [asiento: asiento, comprobantes: comprobantes, comp: comp, tipoComprobante: tipoComprobante,comprobante:comprobante]
+        [asiento: asiento, comprobantes: comprobantes, comp: comp, tipoComprobante: tipoComprobante, comprobante: comprobante]
 
     }
 
@@ -427,19 +442,19 @@ order by rplnnmro
         def fin
         def periodo
         def perIni
-        if(params.per!="-1"){
+        if (params.per != "-1") {
             periodo = Periodo.get(params.per);
             fini = periodo.fechaInicio
             fin = periodo.fechaFin
-        }else{
+        } else {
 //            println "else"
-            def periodos = Periodo.findAllByContabilidad(contabilidad,[sort:"fechaInicio"]);
-            perIni=periodos[0]
+            def periodos = Periodo.findAllByContabilidad(contabilidad, [sort: "fechaInicio"]);
+            perIni = periodos[0]
 //            println "periodos "     +periodos
             fini = periodos[0].fechaInicio
-            periodo=periodos.last()
+            periodo = periodos.last()
             fin = periodo.fechaFin
-            println " inicio: "+fini+" fin: "+fin+"  periodo "+periodo+"  params "+params
+            println " inicio: " + fini + " fin: " + fin + "  periodo " + periodo + "  params " + params
         }
         //println "inicio "+fini;
         // println "fin "+ fin;
@@ -499,21 +514,19 @@ order by rplnnmro
 
             println("cuentaC: " + cuenta.id)
 
-
-
             def saldoMensual = SaldoMensual.findByCuentaAndPeriodo(cuenta, periodo)?.refresh()
-            println "saldos 1 "+saldoMensual.debe+"  "+saldoMensual.haber+"  "+saldoMensual.saldoInicial
-            if(!saldoMensual){
-                saldoMensual=SaldoMensual.findAllByCuenta(cuenta)
-                saldoMensual.sort{it.periodo.fechaInicio}
-                println "saldos "+saldoMensual.periodo
-                if(saldoMensual.size()>0)
-                    saldoMensual=saldoMensual.pop()
+//            println "saldos 1 " + saldoMensual?.debe + "  " + saldoMensual.haber + "  " + saldoMensual.saldoInicial
+            if (!saldoMensual) {
+                saldoMensual = SaldoMensual.findAllByCuenta(cuenta)
+                saldoMensual.sort { it.periodo.fechaInicio }
+                println "saldos " + saldoMensual.periodo
+                if (saldoMensual.size() > 0)
+                    saldoMensual = saldoMensual.pop()
             }
 
             println("saldoMensual: refresh " + saldoMensual)
 
-            def comprobante = Comprobante.findAllByProcesoInListAndRegistrado(proceso,"S")
+            def comprobante = Comprobante.findAllByProcesoInListAndRegistrado(proceso, "S")
 
 //            println("comprobante" + comprobante)
 
@@ -526,8 +539,8 @@ order by rplnnmro
 
             def saldoInicial
 
-            if(params.per=="-1"){
-                def si=SaldoMensual.findByCuentaAndPeriodo(cuenta, perIni)?.refresh()
+            if (params.per == "-1") {
+                def si = SaldoMensual.findByCuentaAndPeriodo(cuenta, perIni)?.refresh()
                 if (si != null) {
                     saldoInicial = si.saldoInicial;
                 } else {
@@ -535,7 +548,7 @@ order by rplnnmro
                     saldoInicial = 0;
 
                 }
-            }else{
+            } else {
                 if (saldoMensual != null) {
                     saldoInicial = saldoMensual.saldoInicial;
                 } else {
@@ -545,7 +558,7 @@ order by rplnnmro
                 }
             }
 
-            def saldoInicialMostrar=saldoInicial
+            def saldoInicialMostrar = saldoInicial
             println "saldo inicial:" + saldoInicial
 
             asiento.each { v ->
@@ -582,7 +595,7 @@ order by rplnnmro
             }
 
             return [contabilidad: contabilidad, periodo: periodo, proceso: proceso, cuenta: cuenta, asiento:
-                    asiento, saldo: saldo, saldoMensual: saldoMensual, saldoInicial: saldoInicial,saldoInicialMostrar:saldoInicialMostrar]
+                    asiento, saldo: saldo, saldoMensual: saldoMensual, saldoInicial: saldoInicial, saldoInicialMostrar: saldoInicialMostrar]
         }
 
 
@@ -652,115 +665,115 @@ order by rplnnmro
     }
 
 
-    def balanceG (){
-        println "balance g "+params
+    def balanceG() {
+        println "balance g " + params
         def sp = kerberosoldService.ejecutarProcedure("saldos", params.contabilidad)
 
         def contabilidad = Contabilidad.get(params.contabilidad)
         def periodo = Periodo.get(params.periodo)
 
-        def niveles =params.nivel
+        def niveles = params.nivel
         def saldos = [:]
         def paginas = [:]
         def activo = Cuenta.findAll("from Cuenta where empresa = ${contabilidad.institucion.id} and nivel in (${niveles}) and numero like '1%' order by numero")
-        def pasivo=Cuenta.findAll("from Cuenta where empresa = ${contabilidad.institucion.id} and nivel in (${niveles}) and numero like '2%' order by numero")
-        def patrimonio=Cuenta.findAll("from Cuenta where empresa = ${contabilidad.institucion.id} and  numero like '3%' order by numero")
-        def ingresos=Cuenta.findAll("from Cuenta where empresa = ${contabilidad.institucion.id} and nivel in (${niveles}) and numero like '4%' order by numero")
-        def egresos=Cuenta.findAll("from Cuenta where empresa = ${contabilidad.institucion.id} and nivel in (${niveles}) and numero like '5%' order by numero")
-        def total4=0
-        def total5=0
-        def total3=0
+        def pasivo = Cuenta.findAll("from Cuenta where empresa = ${contabilidad.institucion.id} and nivel in (${niveles}) and numero like '2%' order by numero")
+        def patrimonio = Cuenta.findAll("from Cuenta where empresa = ${contabilidad.institucion.id} and  numero like '3%' order by numero")
+        def ingresos = Cuenta.findAll("from Cuenta where empresa = ${contabilidad.institucion.id} and nivel in (${niveles}) and numero like '4%' order by numero")
+        def egresos = Cuenta.findAll("from Cuenta where empresa = ${contabilidad.institucion.id} and nivel in (${niveles}) and numero like '5%' order by numero")
+        def total4 = 0
+        def total5 = 0
+        def total3 = 0
         def uno = Nivel.findByDescripcionIlike("Uno%")
-        def cntaPat=patrimonio[0]
-        def cntaPas=pasivo[0]
-        paginas.put("ACTIVO",activo)
-        paginas.put("PASIVO",pasivo)
-        paginas.put("PATRIMONIO",patrimonio)
-        paginas.put("INGRESOS",ingresos)
-        paginas.put("EGRESOS",egresos)
-        activo.each {cnta->
-            def saldo = SaldoMensual.findByPeriodoAndCuenta(periodo,cnta)
-            if(saldo){
+        def cntaPat = patrimonio[0]
+        def cntaPas = pasivo[0]
+        paginas.put("ACTIVO", activo)
+        paginas.put("PASIVO", pasivo)
+        paginas.put("PATRIMONIO", patrimonio)
+        paginas.put("INGRESOS", ingresos)
+        paginas.put("EGRESOS", egresos)
+        activo.each { cnta ->
+            def saldo = SaldoMensual.findByPeriodoAndCuenta(periodo, cnta)
+            if (saldo) {
                 saldo.refresh()
-                saldos.put(cnta.id.toString(),saldo.saldoInicial+saldo.debe-saldo.haber)
-            }else{
-                saldos.put(cnta.id.toString(),"0.00")
+                saldos.put(cnta.id.toString(), saldo.saldoInicial + saldo.debe - saldo.haber)
+            } else {
+                saldos.put(cnta.id.toString(), "0.00")
             }
         }
-        pasivo.each {cnta->
-            def saldo = SaldoMensual.findByPeriodoAndCuenta(periodo,cnta)
-            if(saldo){
+        pasivo.each { cnta ->
+            def saldo = SaldoMensual.findByPeriodoAndCuenta(periodo, cnta)
+            if (saldo) {
                 saldo.refresh()
-                saldos.put(cnta.id.toString(),saldo.saldoInicial+saldo.debe-saldo.haber)
-            }else{
-                saldos.put(cnta.id.toString(),"0.00")
+                saldos.put(cnta.id.toString(), saldo.saldoInicial + saldo.debe - saldo.haber)
+            } else {
+                saldos.put(cnta.id.toString(), "0.00")
             }
         }
-        patrimonio.each {cnta->
-            def saldo = SaldoMensual.findByPeriodoAndCuenta(periodo,cnta)
-            if(saldo){
+        patrimonio.each { cnta ->
+            def saldo = SaldoMensual.findByPeriodoAndCuenta(periodo, cnta)
+            if (saldo) {
                 saldo.refresh()
-                saldos.put(cnta.id.toString(),saldo.saldoInicial+saldo.debe-saldo.haber)
-            }else{
-                saldos.put(cnta.id.toString(),"0.00")
+                saldos.put(cnta.id.toString(), saldo.saldoInicial + saldo.debe - saldo.haber)
+            } else {
+                saldos.put(cnta.id.toString(), "0.00")
             }
         }
 
-        ingresos.each {cnta->
+        ingresos.each { cnta ->
 //            println "cuenta "+cnta.numero+" "+cnta.nivel.descripcion
-            def saldo = SaldoMensual.findByPeriodoAndCuenta(periodo,cnta)
-            if(saldo){
+            def saldo = SaldoMensual.findByPeriodoAndCuenta(periodo, cnta)
+            if (saldo) {
 //                println "saldo "+saldo
                 saldo.refresh()
-                saldos.put(cnta.id.toString(),saldo.saldoInicial+saldo.debe-saldo.haber)
-                if(cnta.nivel.descripcion.trim()=="Uno") {
+                saldos.put(cnta.id.toString(), saldo.saldoInicial + saldo.debe - saldo.haber)
+                if (cnta.nivel.descripcion.trim() == "Uno") {
 //                    println "entro "+saldo.saldoInicial+" "+saldo.debe+"  "+saldo.haber
-                    total4= saldo.saldoInicial+saldo.debe-saldo.haber
+                    total4 = saldo.saldoInicial + saldo.debe - saldo.haber
                 }
-            }else{
-                saldos.put(cnta.id.toString(),"0.00")
+            } else {
+                saldos.put(cnta.id.toString(), "0.00")
             }
         }
-        egresos.each {cnta->
+        egresos.each { cnta ->
 //            println "cuenta "+cnta.numero+" "+cnta.nivel.descripcion
-            def saldo = SaldoMensual.findByPeriodoAndCuenta(periodo,cnta)
-            if(saldo){
+            def saldo = SaldoMensual.findByPeriodoAndCuenta(periodo, cnta)
+            if (saldo) {
 //                println "saldo "+saldo
                 saldo.refresh()
-                saldos.put(cnta.id.toString(),saldo.saldoInicial+saldo.debe-saldo.haber)
-                if(cnta.nivel.descripcion.trim()=="Uno") {
-                    total5= saldo.saldoInicial+saldo.debe-saldo.haber
+                saldos.put(cnta.id.toString(), saldo.saldoInicial + saldo.debe - saldo.haber)
+                if (cnta.nivel.descripcion.trim() == "Uno") {
+                    total5 = saldo.saldoInicial + saldo.debe - saldo.haber
                 }
-            }else{
-                saldos.put(cnta.id.toString(),"0.00")
+            } else {
+                saldos.put(cnta.id.toString(), "0.00")
             }
         }
-        def resultado = total4+total5
-        def cuentaSuper = Cuenta.findByResultadoAndEmpresa("S",contabilidad.institucion)
-        def cuentaDef = Cuenta.findByResultadoAndEmpresa("D",contabilidad.institucion)
-        if(cuentaSuper && cuentaDef){
-            if(resultado<0){
+        def resultado = total4 + total5
+        def cuentaSuper = Cuenta.findByResultadoAndEmpresa("S", contabilidad.institucion)
+        def cuentaDef = Cuenta.findByResultadoAndEmpresa("D", contabilidad.institucion)
+        if (cuentaSuper && cuentaDef) {
+            if (resultado < 0) {
 //                saldos.put(cuentaSuper.id.toString(),resultado)
-                saldos=actualizaPadre(cuentaSuper,saldos,resultado)
-            }else{
+                saldos = actualizaPadre(cuentaSuper, saldos, resultado)
+            } else {
 //                saldos.put(cuentaDef.id.toString(),resultado)
-                saldos=actualizaPadre(cuentaDef,saldos,resultado)
+                saldos = actualizaPadre(cuentaDef, saldos, resultado)
 
             }
 
         }
 
-        [contabilidad:contabilidad,periodo: periodo,saldos:saldos,paginas:paginas,ceros:params.ceros,firma1:params.firma1,firma2:params.firma2,cntaPat:cntaPat,cntaPas:cntaPas]
+        [contabilidad: contabilidad, periodo: periodo, saldos: saldos, paginas: paginas, ceros: params.ceros, firma1: params.firma1, firma2: params.firma2, cntaPat: cntaPat, cntaPas: cntaPas]
     }
 
 
-    def actualizaPadre(Cuenta cuenta,cuentas,saldo){
+    def actualizaPadre(Cuenta cuenta, cuentas, saldo) {
 //        println "actualiza padre "+cuenta+" "+saldo
-        if(cuenta.padre)
-            cuentas=actualizaPadre(cuenta.padre,cuentas,saldo)
+        if (cuenta.padre)
+            cuentas = actualizaPadre(cuenta.padre, cuentas, saldo)
 
         def valor = cuentas[cuenta.id.toString()]?.toDouble()
-        cuentas[cuenta.id.toString()]=valor+saldo
+        cuentas[cuenta.id.toString()] = valor + saldo
 
         return cuentas
     }

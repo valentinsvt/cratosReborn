@@ -102,13 +102,31 @@ class LoginController {
             user = user[0]
             session.usuario = user
             session.empresa = user.empresa
-            session.contabilidad = Contabilidad.findByFechaInicioLessThanEqualsAndFechaCierreGreaterThanEquals(ahora, ahora)
-            if (!session.contabilidad) {
-                def conts = Contabilidad.list([sort: "fechaCierre", order: "desc"])
-                if (conts) {
-                    session.contabilidad = conts[0]
-                }
+//            session.contabilidad = Contabilidad.findByFechaInicioLessThanEqualsAndFechaCierreGreaterThanEquals(ahora, ahora)
+
+            def cont = Contabilidad.withCriteria {
+                eq("institucion", user.empresa)
+                le("fechaInicio", ahora)
+                ge("fechaCierre", ahora)
+                order("fechaCierre", "desc")
             }
+            if (cont.size() == 0) {
+                def conts = Contabilidad.findAllByInstitucion(user.empresa, [sort: "fechaCierre", order: "desc"])
+                if (conts.size() > 0) {
+                    cont = conts[0]
+                }
+            } else if (cont.size() == 1) {
+                cont = cont[0]
+            } else {
+                cont = cont[0]
+            }
+            session.contabilidad = cont
+//            if (!session.contabilidad) {
+//                def conts = Contabilidad.list([sort: "fechaCierre", order: "desc"])
+//                if (conts) {
+//                    session.contabilidad = conts[0]
+//                }
+//            }
             def perfiles = Sesn.findAllByUsuario(user)
             if (perfiles.size() == 0) {
                 flash.message = "No puede ingresar. Comuníquese con el administrador."

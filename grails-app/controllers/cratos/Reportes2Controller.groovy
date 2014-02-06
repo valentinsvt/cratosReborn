@@ -6,7 +6,6 @@ import com.itextpdf.text.pdf.PdfPTable
 import com.itextpdf.text.pdf.PdfWriter
 
 
-
 class Reportes2Controller {
 
     def buscadorService
@@ -85,7 +84,7 @@ class Reportes2Controller {
                 clientes.each { cliente ->
                     def mapCliente = [:]
                     def tieneAuxiliares = false
-                    def procesos = Proceso.findAllByProveedorAndEstado(cliente,'R', [sort: 'fecha'])
+                    def procesos = Proceso.findAllByProveedorAndEstado(cliente, 'R', [sort: 'fecha'])
                     if (procesos.size() > 0) {
                         mapCliente.cliente = cliente
                         mapCliente.auxiliares = []
@@ -97,7 +96,7 @@ class Reportes2Controller {
 //                                mapProceso.proceso = proceso
 //                                mapProceso.comprobantes = []
                                 comprobantes.each { comprobante ->
-                                    if(comprobante.registrado=="S"){
+                                    if (comprobante.registrado == "S") {
 //                                    def mapComprobante = [:]
                                         def asientos = Asiento.findAllByComprobanteAndCuenta(comprobante, cuenta)
                                         if (asientos.size() > 0) {
@@ -276,7 +275,6 @@ class Reportes2Controller {
     }
 
 
-
     def reporteBuscador = {
 
         // println "reporte buscador params !! "+params
@@ -314,7 +312,8 @@ class Reportes2Controller {
 //        Start a new page
 //        document.newPage();
             //System.getProperty("user.name")
-            addContent(document, catFont, listaCampos.size(), listaTitulos, params.anchos, listaCampos, funciones, lista);            // Los tamaños son porcentajes!!!!
+            addContent(document, catFont, listaCampos.size(), listaTitulos, params.anchos, listaCampos, funciones, lista);
+            // Los tamaños son porcentajes!!!!
             document.close();
             pdfw.close()
             byte[] b = baos.toByteArray();
@@ -332,7 +331,8 @@ class Reportes2Controller {
     }
 
 
-    private static void addContent(Document document, catFont, columnas, headers, anchos, campos, funciones, datos) throws DocumentException {
+    private
+    static void addContent(Document document, catFont, columnas, headers, anchos, campos, funciones, datos) throws DocumentException {
         Font small = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL);
         def parrafo = new Paragraph("")
         createTable(parrafo, columnas, headers, anchos, campos, funciones, datos);
@@ -342,7 +342,8 @@ class Reportes2Controller {
     }
 
 
-    private static void createTable(Paragraph subCatPart, columnas, headers, anchos, campos, funciones, datos) throws BadElementException {
+    private
+    static void createTable(Paragraph subCatPart, columnas, headers, anchos, campos, funciones, datos) throws BadElementException {
         PdfPTable table = new PdfPTable(columnas);
         table.setWidthPercentage(100);
         table.setWidths(arregloEnteros(anchos))
@@ -396,12 +397,9 @@ class Reportes2Controller {
 
 
     def estadoDeResultados = {
-
-
-
 //        def contabilidad = Contabilidad.get(params.cont);
 
-        def sp = kerberosoldService.ejecutarProcedure("saldos",params.cont)
+        def sp = kerberosoldService.ejecutarProcedure("saldos", params.cont)
 //        println "estado de resultados aaaaa " + params
         def periodo = Periodo.get(params.per);
 
@@ -409,63 +407,59 @@ class Reportes2Controller {
         def empresa = Empresa.get(params.empresa)
 //        println("empresa" + empresa)
 
-        def cuenta4 = Cuenta.findAllByNumeroIlikeAndEmpresa("4%", empresa,[sort: "numero"])
-        def cuenta5 = Cuenta.findAllByNumeroIlikeAndEmpresa("5%", empresa,[sort: "numero"])
-        def saldo4=[:]
-        def saldo5=[:]
-        def total4=0
-        def total5 =0
-        def maxLvl=1
+        def cuenta4 = Cuenta.findAllByNumeroIlikeAndEmpresa("4%", empresa, [sort: "numero"])
+        def cuenta5 = Cuenta.findAllByNumeroIlikeAndEmpresa("5%", empresa, [sort: "numero"])
+        def saldo4 = [:]
+        def saldo5 = [:]
+        def total4 = 0
+        def total5 = 0
+        def maxLvl = 1
 
 
-        if(cuenta4){
-            cuenta4.eachWithIndex {i,j->
+        if (cuenta4) {
+            cuenta4.eachWithIndex { i, j ->
                 //println "each "+i+" j "+j
 
-                def saldo=SaldoMensual.findByCuentaAndPeriodo(i,periodo)
+                def saldo = SaldoMensual.findByCuentaAndPeriodo(i, periodo)
 
-                if(saldo){
-                    saldo=SaldoMensual.findByCuentaAndPeriodo(i,periodo).refresh()
-                    saldo4.put(i.id.toString(),saldo.saldoInicial+saldo.debe-saldo.haber)
-                }
-                    else
-                    saldo4.put(i.id.toString(),0)
-                if(j==0)
-                    total4=saldo4[i.id.toString()]
-                if(i.nivel.id>maxLvl)
-                    maxLvl=i.nivel.id
+                if (saldo) {
+                    saldo = SaldoMensual.findByCuentaAndPeriodo(i, periodo).refresh()
+                    saldo4.put(i.id.toString(), saldo.saldoInicial + saldo.debe - saldo.haber)
+                } else
+                    saldo4.put(i.id.toString(), 0)
+                if (j == 0)
+                    total4 = saldo4[i.id.toString()]
+                if (i.nivel.id > maxLvl)
+                    maxLvl = i.nivel.id
             }
         }
-        if(cuenta5){
-            cuenta5.eachWithIndex {i,j->
-                def saldo=SaldoMensual.findByCuentaAndPeriodo(i,periodo)
-                if(saldo){
-                    saldo=SaldoMensual.findByCuentaAndPeriodo(i,periodo).refresh()
-                    saldo5.put(i.id.toString(),saldo.saldoInicial+saldo.debe-saldo.haber)
-                }
-                else
-                    saldo5.put(i.id.toString(),0)
-                if(j==0)
-                    total5=saldo5[i.id.toString()]
-                if(i.nivel.id>maxLvl)
-                    maxLvl=i.nivel.id
+        if (cuenta5) {
+            cuenta5.eachWithIndex { i, j ->
+                def saldo = SaldoMensual.findByCuentaAndPeriodo(i, periodo)
+                if (saldo) {
+                    saldo = SaldoMensual.findByCuentaAndPeriodo(i, periodo).refresh()
+                    saldo5.put(i.id.toString(), saldo.saldoInicial + saldo.debe - saldo.haber)
+                } else
+                    saldo5.put(i.id.toString(), 0)
+                if (j == 0)
+                    total5 = saldo5[i.id.toString()]
+                if (i.nivel.id > maxLvl)
+                    maxLvl = i.nivel.id
             }
 
         }
         //println "saldo4 "+cuenta4
-        return[periodo: periodo, empresa: empresa, cuenta4: cuenta4, cuenta5: cuenta5, saldo4:saldo4,saldo5:saldo5,total4:total4,total5:total5,maxLvl:maxLvl]
+        return [periodo: periodo, empresa: empresa, cuenta4: cuenta4, cuenta5: cuenta5, saldo4: saldo4, saldo5: saldo5, total4: total4, total5: total5, maxLvl: maxLvl]
     }
 
 
-
-    def reportePagos () {
-
+    def reportePagos() {
 
 //       println("---->>" + params)
 
 
-        def fechaInicio = new Date().parse("yyyy-MM-dd",params.fechaInicio)
-        def fechaFin = new Date().parse("yyyy-MM-dd",params.fechaFin)
+        def fechaInicio = new Date().parse("yyyy-MM-dd", params.fechaInicio)
+        def fechaFin = new Date().parse("yyyy-MM-dd", params.fechaFin)
         def empresa = Empresa.get(params.empresa)
         def proveedor = Proveedor.get(params.prove)
 
@@ -480,21 +474,20 @@ class Reportes2Controller {
 
         def pagos = []
 
-        auxiliar.each {i->
+        auxiliar.each { i ->
 
 
             pago = PagoAux.findAllByAuxiliar(i)
 
 //          println("pagos" + pago.id)
 
-            pagos+=pago
+            pagos += pago
 
         }
 
 //        println(pagos)
 
-        return[auxiliar: auxiliar, pagos: pagos, fechaInicio: fechaInicio, fechaFin: fechaFin, empresa: empresa]
-
+        return [auxiliar: auxiliar, pagos: pagos, fechaInicio: fechaInicio, fechaFin: fechaFin, empresa: empresa]
 
 
     }

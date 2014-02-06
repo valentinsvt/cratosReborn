@@ -21,10 +21,33 @@ class UtilitariosTagLib {
         ]
         def str = attrs.str
 
-        replace.each { busca, nuevo ->
-            str = str.replaceAll(busca, nuevo)
+        if (str) {
+            replace.each { busca, nuevo ->
+                str = str.replaceAll(busca, nuevo)
+            }
         }
-        out << str
+        def replace2 = [
+                "á": "a",
+                "é": "e",
+                "í": "i",
+                "ó": "o",
+                "ú": "u",
+                "ñ": "ni",
+                "Á": "A",
+                "É": "E",
+                "Í": "I",
+                "Ó": "O",
+                "Ú": "U",
+                "Ñ": "NI",
+        ]
+        if (str) {
+            replace2.each { busca, nuevo ->
+                str = str.replaceAll(busca, nuevo)
+            }
+        }
+
+//        out << str
+        out << attrs.str
     }
 
     Closure capitalize = { attrs, body ->

@@ -114,7 +114,7 @@
         Balance general
     </h1>
     %{--<h1>${contabilidad.descripcion}</h1>--}%
-    <h3>Al ${periodo.fechaFin.format("dd-MM-yyyy")}</h3>
+    <h3>Al ${periodo?.fechaFin?.format("dd-MM-yyyy")}</h3>
 
     <g:each in="${paginas}" var="p">
         <div style="width: 100%;margin-top: 10px;${(p.key!="EGRESOS")?"page-break-after:always":""}">
@@ -124,7 +124,7 @@
                 <g:set var="cont" value="${0}"></g:set>
                 <g:each in="${p.value}" var="cnta" status="i">
                     <g:if test="${i==0}">
-                        <g:set var="tot" value="${saldos[cnta.id.toString()].round(2)}"></g:set>
+                        <g:set var="tot" value="${saldos[cnta.id.toString()]?.toDouble()?.round(2)}"></g:set>
                     </g:if>
                     <g:else>
                         <g:if test="${ceros=='1'}">
