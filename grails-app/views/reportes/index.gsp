@@ -914,8 +914,19 @@
                 $(".btnAceptarBalanceAux").click(function () {
                     var cont = $("#contP0").val();
                     var per = $("#periodo0").val();
-                    url = "${g.createLink(controller:'reportes3' , action: 'balanceGeneralAuxiliares')}?cont=" + cont + "Wemp=${session.empresa.id}" + "Wper=" + per;
-                    location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=balancexAuxiliar.pdf"
+
+                    if(cont == '-1'){
+
+                        alert("Debe elegir una contabilidad!")
+
+                    }else {
+
+                        url = "${g.createLink(controller:'reportes4' , action: 'balanceGeneralAux')}?cont=" + cont + "&emp=${session.empresa.id}" + "&per=" + per + "&filename=balancexAuxiliar";
+                        location.href = url
+                    }
+
+
+             %{--location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=balancexAuxiliar.pdf"--}%
                 });
 
                 $(".btnAceptarGeneral").click(function () {
