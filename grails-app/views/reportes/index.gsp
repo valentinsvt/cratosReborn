@@ -366,7 +366,7 @@
                             <label class="uno">Contabilidad:</label>
                             <g:select name="contP" id="contP"
                                       from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                                      optionKey="id" optionValue="descripcion" noSelection="['':'Seleccione la contabilidad']"
+                                      optionKey="id" optionValue="descripcion" noSelection="['': 'Seleccione la contabilidad']"
                                       class="ui-widget-content ui-corner-all dos"/>
                         </div>
 
@@ -401,7 +401,7 @@
                             <label class="uno">Contabilidad:</label>
                             <g:select name="contP8" id="contP8"
                                       from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                                      optionKey="id" optionValue="descripcion" noSelection="['':'Seleccione la contabilidad']"
+                                      optionKey="id" optionValue="descripcion" noSelection="['': 'Seleccione la contabilidad']"
                                       class="ui-widget-content ui-corner-all dos"/>
                         </div>
 
@@ -435,7 +435,7 @@
 
                             <g:select name="contP9" id="contP9"
                                       from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                                      optionKey="id" optionValue="descripcion" noSelection="['':'Seleccione la contabilidad']"
+                                      optionKey="id" optionValue="descripcion" noSelection="['': 'Seleccione la contabilidad']"
                                       class="ui-widget-content ui-corner-all dos"/>
                         </div>
 
@@ -470,7 +470,7 @@
 
                             <g:select name="contP3" id="contP3"
                                       from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                                      optionKey="id" optionValue="descripcion" noSelection="['':'Seleccione la contabilidad']"
+                                      optionKey="id" optionValue="descripcion" noSelection="['': 'Seleccione la contabilidad']"
                                       class="ui-widget-content ui-corner-all dos"/>
                         </div>
 
@@ -511,7 +511,7 @@
                             <label class="uno">Contabilidad:</label>
                             <g:select name="contP4" id="contP4"
                                       from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                                      optionKey="id" optionValue="descripcion" noSelection="['':'Seleccione la contabilidad']"
+                                      optionKey="id" optionValue="descripcion" noSelection="['': 'Seleccione la contabilidad']"
                                       class="ui-widget-content ui-corner-all dos"/>
                         </div>
 
@@ -551,7 +551,7 @@
                             <label class="uno">Contabilidad:</label>
                             <g:select name="contP0" id="contP0"
                                       from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                                      optionKey="id" optionValue="descripcion" noSelection="['':'Seleccione la contabilidad']"
+                                      optionKey="id" optionValue="descripcion" noSelection="['': 'Seleccione la contabilidad']"
                                       class="ui-widget-content ui-corner-all dos"/>
                         </div>
 
@@ -590,7 +590,7 @@
                             <label class="uno">Contabilidad:</label>
                             <g:select name="contP6" id="contP6"
                                       from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                                      optionKey="id" optionValue="descripcion" noSelection="['':'Seleccione la contabilidad']"
+                                      optionKey="id" optionValue="descripcion" noSelection="['': 'Seleccione la contabilidad']"
                                       class="ui-widget-content ui-corner-all dos"/>
                         </div>
 
@@ -828,8 +828,8 @@
                     var cont = $("#contP4").val();
                     var per = $("#periodo4").val();
                     var cli = $("#listaClientes").val();
-                    url = "${g.createLink(controller:'reportes3' , action: 'auxiliarPorCliente')}?cont=" + cont + "Wemp=${session.empresa.id}" + "Wper=" + per + "Wcli=" + cli;
-                    location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=auxiliaresXcliente.pdf"
+                    var url = "${g.createLink(controller:'reportesNew' , action: 'auxiliarPorCliente')}?cont=" + cont + "&emp=${session.empresa.id}" + "&per=" + per + "&cli=" + cli + "&filename=auxiliaresXcliente.pdf";
+                    location.href = url
                 });
 
                 $(".btnAceptarBalanceAux").click(function () {

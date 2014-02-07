@@ -42,7 +42,6 @@ class ProveedorController extends cratos.seguridad.Shield {
 
         def persona
 
-
         //save
 
         if (params.fecha) {
@@ -52,7 +51,7 @@ class ProveedorController extends cratos.seguridad.Shield {
         }
         if (params.fechaCaducidad) {
 
-           params.fechaCaducidad = new Date().parse("yyyy-MM-dd", params.fechaCaducidad)
+            params.fechaCaducidad = new Date().parse("yyyy-MM-dd", params.fechaCaducidad)
 
         }
 
@@ -63,7 +62,7 @@ class ProveedorController extends cratos.seguridad.Shield {
             proveedorInstance.properties = params
 
 
-        }else{
+        } else {
             proveedorInstance = new Proveedor()
             proveedorInstance.properties = params
             proveedorInstance.estado = '1'
@@ -164,17 +163,16 @@ class ProveedorController extends cratos.seguridad.Shield {
         }
     }
 
-
     /* ************************ COPIAR DESDE AQUI ****************************/
 
     def list() {
         params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
-        def proveedorInstanceList = Proveedor.list(params)
-        def proveedorInstanceCount = Proveedor.count()
+        def proveedorInstanceList = Proveedor.findAllByEmpresa(session.empresa, params)
+        def proveedorInstanceCount = Proveedor.countByEmpresa(session.empresa)
         if (proveedorInstanceList.size() == 0 && params.offset && params.max) {
             params.offset = params.offset - params.max
         }
-        proveedorInstanceList = Proveedor.list(params)
+        proveedorInstanceList = Proveedor.findAllByEmpresa(session.empresa, params)
         return [proveedorInstanceList: proveedorInstanceList, proveedorInstanceCount: proveedorInstanceCount]
     } //list
 
@@ -237,7 +235,7 @@ class ProveedorController extends cratos.seguridad.Shield {
                 notFound_ajax()
                 return
             }
-        }else {
+        } else {
 
             proveedorInstance = new Proveedor()
             proveedorInstance.properties = params
@@ -256,9 +254,6 @@ class ProveedorController extends cratos.seguridad.Shield {
         }
         render "OK_${params.id ? 'Actualización' : 'Creación'} de Proveedor exitosa."
     } //save para grabar desde ajax
-
-
-
 
 
     def delete_ajax() {
@@ -282,7 +277,6 @@ class ProveedorController extends cratos.seguridad.Shield {
     protected void notFound_ajax() {
         render "NO_No se encontró Proveedor."
     } //notFound para ajax
-
 
 
 }

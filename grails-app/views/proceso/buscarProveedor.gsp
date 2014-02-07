@@ -18,7 +18,7 @@
             </td>
             <td>${p.ruc}</td>
             <td>${p.nombre}</td>
-            <td>${p.tipoProveedor.descripcion}</td>
+            <td>${p.tipoProveedor?.descripcion}</td>
         </tr>
     </g:each>
     </tbody>

@@ -65,7 +65,7 @@ class Reportes3Controller {
 
     def auxiliarPorCliente() {
 //        println "\n\n\n\n"
-//        println ("params:-->" + params)
+        println("params:-->" + params)
 
         if (!params.cli) {
             params.cli = "-1"
@@ -276,7 +276,7 @@ class Reportes3Controller {
         }
 
         html = header + html
-//        println html
+        println html
         return [html: html]
     }
 
