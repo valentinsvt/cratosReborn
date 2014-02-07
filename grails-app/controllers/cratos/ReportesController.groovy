@@ -104,7 +104,7 @@ class ReportesController {
     }
 
     def updatePeriodo() {
-        println "update periodo " + params
+//        println "update periodo " + params
         def cont = Contabilidad.get(params.cont)
         def periodos = Periodo.findAllByContabilidad(cont, [sort: 'fechaInicio'])
 
@@ -132,6 +132,33 @@ class ReportesController {
         render html
     }
 
+    def updatePeriodoSinTodo() {
+//        println "update periodo " + params
+        def cont = Contabilidad.get(params.cont)
+        def periodos = Periodo.findAllByContabilidad(cont, [sort: 'fechaInicio'])
+        def sel
+        if (cont)
+            sel = g.select(name: "periodo" + params.cual, from: periodos, optionKey: "id", "class": "ui-widget-content ui-corner-all dos")
+        else
+            sel = g.select(name: "periodo" + params.cual, from: periodos, optionKey: "id", "class": "ui-widget-content ui-corner-all dos")
+
+        def html = "<label class='uno'>Periodo:</label>" + sel
+
+        def js = ""
+        if (params.cual == "2") {
+            js += "<script>"
+            js += "updateCuenta();"
+            js += '$("#periodo2").change(function() {'
+            js += "updateCuenta();"
+            js += '});'
+            js += "</script>"
+
+            html += js
+        }
+        render html
+    }
+
+
     def planDeCuentas() {
 
         println("params" + params)
@@ -142,28 +169,39 @@ class ReportesController {
 
     def balanceComprobacion() {
 
-//        println("paramsBC" + params )
+        println("paramsBC" + params )
 
-        def sp = kerberosoldService.ejecutarProcedure("saldos", params.cont)
+           def sp = kerberosoldService.ejecutarProcedure("saldos", params.cont)
+           def periodo = []
+           def saldos = []
+           def saldoPeriodo = []
 
-        def contabilidad = Contabilidad.get(params.cont)
-        def periodo = Periodo.get(params.per)
 
+            def contabilidad = Contabilidad.get(params.cont)
 
-        def saldos = SaldoMensual.findAllByPeriodo(periodo)
-//        println "saldos "+saldos+" periodo "+periodo.id
-//        saldos.each {
-//            println "saldo "+it.cuenta.numero+" "+it.saldoInicial+" d "+it.debe+" h "+it.haber
-//        }
+            if(params.per == '-1'){
 
-        saldos.sort {
-            it.refresh()
-            it.cuenta.numero
-        }
+                periodo = Periodo.findAllByContabilidad(contabilidad)
+                periodo.each {
 
-//        println cuentas
-//        println res
+                   saldoPeriodo = SaldoMensual.findAllByPeriodo(it)
+
+//                    saldos.add(saldoPeriodo)
+//                    saldos += saldoPeriodo
+                    saldos = saldoPeriodo
+                }
+            }else {
+
+                periodo = Periodo.get(params.per)
+                saldos = SaldoMensual.findAllByPeriodo(periodo)
+            }
+
+          saldos.sort {
+                it.refresh()
+                it.cuenta.numero
+            }
         return [res: saldos, contabilidad: contabilidad, periodo: periodo]
+
     }
 
     def presupuesto() {
