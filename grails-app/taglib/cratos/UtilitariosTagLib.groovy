@@ -26,25 +26,25 @@ class UtilitariosTagLib {
                 str = str.replaceAll(busca, nuevo)
             }
         }
-        def replace2 = [
-                "á": "a",
-                "é": "e",
-                "í": "i",
-                "ó": "o",
-                "ú": "u",
-                "ñ": "ni",
-                "Á": "A",
-                "É": "E",
-                "Í": "I",
-                "Ó": "O",
-                "Ú": "U",
-                "Ñ": "NI",
-        ]
-        if (str) {
-            replace2.each { busca, nuevo ->
-                str = str.replaceAll(busca, nuevo)
-            }
-        }
+//        def replace2 = [
+//                "á": "a",
+//                "é": "e",
+//                "í": "i",
+//                "ó": "o",
+//                "ú": "u",
+//                "ñ": "ni",
+//                "Á": "A",
+//                "É": "E",
+//                "Í": "I",
+//                "Ó": "O",
+//                "Ú": "U",
+//                "Ñ": "NI",
+//        ]
+//        if (str) {
+//            replace2.each { busca, nuevo ->
+//                str = str.replaceAll(busca, nuevo)
+//            }
+//        }
 
 //        out << str
         out << attrs.str

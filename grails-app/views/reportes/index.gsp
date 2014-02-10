@@ -70,12 +70,13 @@
         }
 
         .textoUno {
-            float: left;
-            width: 250px;
+            float : left;
+            width : 250px;
 
         }
+
         .textoDos {
-            float: left;
+            float : left;
 
         }
 
@@ -90,7 +91,6 @@
                     <ul class="fa-ul">
                         <li>
                             <span id="planDeCuentas">
-
 
                                 <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#planCuentas">
                                     Plan de Cuentas
@@ -379,7 +379,7 @@
                             <label class="uno">Contabilidad:</label>
                             <g:select name="contP" id="contP"
                                       from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                                      optionKey="id" optionValue="descripcion" noSelection="['-1':'Seleccione la contabilidad']"
+                                      optionKey="id" optionValue="descripcion" noSelection="['-1': 'Seleccione la contabilidad']"
                                       class="ui-widget-content ui-corner-all dos"/>
                         </div>
 
@@ -414,7 +414,7 @@
                             <label class="uno">Contabilidad:</label>
                             <g:select name="contP8" id="contP8"
                                       from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                                      optionKey="id" optionValue="descripcion" noSelection="['-1':'Seleccione la contabilidad']"
+                                      optionKey="id" optionValue="descripcion" noSelection="['-1': 'Seleccione la contabilidad']"
                                       class="ui-widget-content ui-corner-all dos"/>
                         </div>
 
@@ -448,7 +448,7 @@
 
                             <g:select name="contP9" id="contP9"
                                       from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                                      optionKey="id" optionValue="descripcion" noSelection="['-1':'Seleccione la contabilidad']"
+                                      optionKey="id" optionValue="descripcion" noSelection="['-1': 'Seleccione la contabilidad']"
                                       class="ui-widget-content ui-corner-all dos"/>
                         </div>
 
@@ -483,7 +483,7 @@
 
                             <g:select name="contP3" id="contP3"
                                       from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                                      optionKey="id" optionValue="descripcion" noSelection="['-1':'Seleccione la contabilidad']"
+                                      optionKey="id" optionValue="descripcion" noSelection="['-1': 'Seleccione la contabilidad']"
                                       class="ui-widget-content ui-corner-all dos"/>
                         </div>
 
@@ -524,7 +524,7 @@
                             <label class="uno">Contabilidad:</label>
                             <g:select name="contP4" id="contP4"
                                       from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                                      optionKey="id" optionValue="descripcion" noSelection="['-1':'Seleccione la contabilidad']"
+                                      optionKey="id" optionValue="descripcion" noSelection="['-1': 'Seleccione la contabilidad']"
                                       class="ui-widget-content ui-corner-all dos"/>
                         </div>
 
@@ -534,7 +534,8 @@
 
                         <div id="divCliente" class="fila">
                             <label class="uno">Clientes:</label>
-                            <g:select name="listaClientes" from="${clientes}" optionValue="nombre" optionKey="id" class="dos"/>
+                            <g:select name="listaClientes" from="${clientes}" optionValue="nombre" optionKey="id"
+                                      class="dos" noSelection="['-1': 'Todos']"/>
 
                         </div>
                     </div>
@@ -603,7 +604,7 @@
                             <label class="uno">Contabilidad:</label>
                             <g:select name="contP6" id="contP6"
                                       from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                                      optionKey="id" optionValue="descripcion" noSelection="['-1':'Seleccione la contabilidad']"
+                                      optionKey="id" optionValue="descripcion" noSelection="['-1': 'Seleccione la contabilidad']"
                                       class="ui-widget-content ui-corner-all dos"/>
                         </div>
 
@@ -694,22 +695,21 @@
                 });
             }
 
-                function updatePeriodoSinTodo(cual) {
-                    var cont = $("#contP" + cual).val();
-                    $.ajax({
-                        type    : "POST",
-                        url     : "${createLink(action:'updatePeriodoSinTodo')}",
-                        data    : {
-                            cont : cont,
-                            cual : cual
-                        },
-                        success : function (msg) {
-                            $("#divPeriodo" + cual).html(msg);
-                        }
-                    });
+            function updatePeriodoSinTodo(cual) {
+                var cont = $("#contP" + cual).val();
+                $.ajax({
+                    type    : "POST",
+                    url     : "${createLink(action:'updatePeriodoSinTodo')}",
+                    data    : {
+                        cont : cont,
+                        cual : cual
+                    },
+                    success : function (msg) {
+                        $("#divPeriodo" + cual).html(msg);
+                    }
+                });
 
             }
-
 
             $(function () {
                 prepare();
@@ -776,15 +776,12 @@
                     updatePeriodoSinTodo("0");
                 });
 
-
                 $("#contP3").change(function () {
                     updatePeriodo("3");
                 });
                 $("#contP4").change(function () {
                     updatePeriodo("4");
                 });
-
-
 
                 $(".btnAceptarPlan").click(function () {
 
@@ -828,18 +825,16 @@
                     var cont = $("#contP").val();
                     var per = $("#periodo").val();
 
-                    if(cont == '-1'){
+                    if (cont == '-1') {
 
                         alert("Debe elegir una contabilidad!")
 
-                    }else {
+                    } else {
 
                         url = "${g.createLink(controller:'reportes' , action: 'balanceComprobacion')}?cont=" + cont + "Wempresa=${session.empresa.id}" + "Wper=" + per;
                         location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=balanceComprobacion.pdf"
 
                     }
-
-
 
                 });
 
@@ -848,16 +843,15 @@
                     var cont = $("#contP8").val();
                     var per = $("#periodo8").val();
 
-                    if(cont == '-1'){
+                    if (cont == '-1') {
 
                         alert("Debe elegir una contabilidad!")
 
-                    }else {
+                    } else {
 
                         url = "${g.createLink(controller:'reportes2' , action: 'situacionFinanciera')}?cont=" + cont + "Wempresa=${session.empresa.id}" + "Wper=" + per;
                         location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=situacionFinanciera.pdf"
                     }
-
 
                 });
 
@@ -866,11 +860,11 @@
                     var cont = $("#contP9").val();
                     var per = $("#periodo9").val();
 
-                    if(cont == '-1'){
+                    if (cont == '-1') {
 
                         alert("Debe elegir una contabilidad!")
 
-                    }else {
+                    } else {
                         url = "${g.createLink(controller:'reportes2' , action: 'estadoDeResultados')}?cont=" + cont + "Wempresa=${session.empresa.id}" + "Wper=" + per;
                         location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=resultadoIntegral.pdf"
                     }
@@ -881,15 +875,14 @@
                     var per = $("#periodo3").val();
                     var cnta = $("#cnta3").val();
 
-                    if(cont == '-1'){
+                    if (cont == '-1') {
                         alert("Debe elegir una contabilidad!")
-                    }else {
+                    } else {
                         if (per != null) {
                             url = "${g.createLink(controller:'reportes' , action: 'auxiliaresContables')}?cont=" + cont + "Wemp=${session.empresa.id}" + "Wper=" + per + "Wcnta=" + cnta;
                             location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=auxiliares.pdf"
                         }
                     }
-
 
                 });
 
@@ -898,17 +891,15 @@
                     var per = $("#periodo4").val();
                     var cli = $("#listaClientes").val();
 
-                    if(cont == '-1'){
+                    if (cont == '-1') {
 
                         alert("Debe elegir una contabilidad!")
 
-                    }else {
+                    } else {
                         var url = "${g.createLink(controller:'reportesNew' , action: 'auxiliarPorCliente')}?cont=" + cont + "&emp=${session.empresa.id}" + "&per=" + per + "&cli=" + cli + "&filename=auxiliaresXcliente.pdf";
                         location.href = url
                     }
 
-
-                   
                 });
 
                 $(".btnAceptarBalanceAux").click(function () {
@@ -944,19 +935,16 @@
                         ceros = "0"
                     }
 
-
-                    if(cont == '-1'){
+                    if (cont == '-1') {
 
                         alert("Debe elegir una contabilidad!")
 
-                    }else {
-
+                    } else {
 
                         url = "${g.createLink(controller:'reportes' , action: 'balanceG')}?contabilidad=" + cont + "Wperiodo=" + per + "Wempresa=${session.empresa.id}Wnivel=" + $("#nivel").val() + "Wceros=" + ceros + "Wfirma1=" + firma1 + "Wfirma2=" + firma2;
 //                            console.log(url)
                         location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=BalanceG.pdf"
                     }
-
 
                 });
 
