@@ -812,8 +812,9 @@
                         success : function (msg) {
                             var parts = msg.split("_");
                             if (parts[0] != "NO") {
-                                var url = "${createLink(controller: 'reportes', action: 'comprobante')}" + "?id=" + msg;
-                                location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=comprobante.pdf"
+                                var url = "${createLink(controller: 'reportesNew', action: 'imprimirComprobante')}" + "?id=" + msg + "&filename=comprobante";
+                                location.href = url
+                                %{--location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=comprobante.pdf"--}%
                             } else {
                                 alert(parts[1]);
                             }
@@ -896,7 +897,7 @@
                         alert("Debe elegir una contabilidad!")
 
                     } else {
-                        var url = "${g.createLink(controller:'reportesNew' , action: 'auxiliarPorCliente')}?cont=" + cont + "&emp=${session.empresa.id}" + "&per=" + per + "&cli=" + cli + "&filename=auxiliaresXcliente.pdf";
+                        var url = "${g.createLink(controller:'reportesNew' , action: 'auxiliarPorCliente')}?cont=" + cont + "&emp=${session.empresa.id}" + "&per=" + per + "&cli=" + cli + "&filename=auxiliaresXcliente";
                         location.href = url
                     }
 
@@ -906,18 +907,17 @@
                     var cont = $("#contP0").val();
                     var per = $("#periodo0").val();
 
-                    if(cont == '-1'){
+                    if (cont == '-1') {
 
                         alert("Debe elegir una contabilidad!")
 
-                    }else {
+                    } else {
 
                         url = "${g.createLink(controller:'reportes4' , action: 'balanceGeneralAux')}?cont=" + cont + "&emp=${session.empresa.id}" + "&per=" + per + "&filename=balancexAuxiliar";
                         location.href = url
                     }
 
-
-             %{--location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=balancexAuxiliar.pdf"--}%
+                    %{--location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=balancexAuxiliar.pdf"--}%
                 });
 
                 $(".btnAceptarGeneral").click(function () {
