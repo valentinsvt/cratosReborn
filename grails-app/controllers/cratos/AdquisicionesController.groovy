@@ -618,7 +618,7 @@ class AdquisicionesController extends cratos.seguridad.Shield {
         def proceso = Proceso.findByAdquisicion(adq)
         adq.estado = "R"
         if (adq.save(flush: true)) {
-            procesoService.registrar(proceso, session.perfil, session.usuario)
+            procesoService.registrar(proceso, session.perfil, session.usuario,session.contabilidad)
             proceso.estado = "N"
 
             proceso.save(flush: true)

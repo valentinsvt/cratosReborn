@@ -15,7 +15,7 @@ class ProcesoController extends cratos.seguridad.Shield {
     def index = { redirect(action: "lsta") }
 
     def lsta = {
-        def campos = ["estado": ["Estado", "string"], "descripcion": ["Descripción", "string"], "fecha": ["Fecha", "date"]]
+        def campos = ["estado": ["Estado", "string"], "descripcion": ["Descripción", "string"], "fecha": ["Fecha", "date"],"comp":["Comprobante","string"]]
         [campos: campos]
     }
     def nuevoProceso = {
@@ -90,7 +90,7 @@ class ProcesoController extends cratos.seguridad.Shield {
             if (pro.estado == "R") {
                 render("El proceso ya ha sido registrado previamente")
             } else {
-                def lista = procesoService.registrar(pro, session.perfil, session.usuario)
+                def lista = procesoService.registrar(pro, session.perfil, session.usuario,session.contabilidad)
                 if (lista[0] != false) {
                     render(view: "detalleProceso", model: [comprobantes: lista[1], asientos: lista[2],proceso:pro])
 
@@ -225,23 +225,93 @@ class ProcesoController extends cratos.seguridad.Shield {
 
     def listar = {
         //println "buscar proceso"
+        def extraComp=""
+        if (params.campos instanceof java.lang.String) {
+            if (params.campos == "comp") {
+                def comps = Comprobante.findAll("from Comprobante where numero like '%${params.criterios.toUpperCase()}%' or prefijo like '%${params.criterios.toUpperCase()}%' ")
+                params.criterios = ""
+                comps.eachWithIndex { p, i ->
+                    extraComp += "" + p.proceso.id
+                    if (i < comps.size() - 1)
+                        extraComp += ","
+                }
+                if (extraComp.size() < 1)
+                    extraComp = "-1"
+                params.campos = ""
+                params.operadores = ""
+            }
+        }else{
+            def remove = []
+            params.campos.eachWithIndex { p, i ->
+                if (p == "comp") {
+                    def comps = Comprobante.findAll("from Comprobante where numero like '%${params.criterios[i].toUpperCase()}%' or prefijo like '%${params.criterios[i].toUpperCase()}%' ")
+
+                    comps.eachWithIndex { c, j ->
+                        extraComp += "" + c.proceso.id
+                        if (j < comps.size() - 1)
+                            extraComp += ","
+                    }
+                    if (extraComp.size() < 1)
+                        extraComp = "-1"
+                    remove.add(i)
+                }
+            }
+            remove.each {
+                params.criterios[it] = null
+                params.campos[it] = null
+                params.operadores[it] = null
+            }
+        }
+        def extras=" and empresa=${session.empresa.id}"
+        if (extraComp.size() > 1)
+            extras += " and id in (${extraComp})"
+
         def closure = { estado ->
             if (estado == "R")
                 return "Registrado"
             else
                 return "No registrado"
         }
-        def listaTitulos = ["Fecha", "Descripcion", "Registrado"]       /*Titulos de la tabla*/
-        def listaCampos = ["fecha", "descripcion", "estado"]
+        def comp={proceso->
+            def c = Comprobante.findByProceso(proceso)
+            if(c)
+                return c.prefijo+""+c.numero
+            else
+                return ""
+        }
+        def tipo = { t ->
+            switch (t){
+                case "P":
+                    return "Pago"
+                    break;
+                case "C":
+                    return "Compra"
+                    break;
+                case "V":
+                    return "Venta"
+                    break;
+                case "A":
+                    return "Ajuste"
+                    break;
+                case "O":
+                    return "Otro"
+                    break;
+                default:
+                    return "Otro"
+                    break;
+            }
+        }
+        def listaTitulos = ["Fecha", "Descripcion", "Registrado","Comprobante","Tipo"]       /*Titulos de la tabla*/
+        def listaCampos = ["fecha", "descripcion", "estado","comprobante","tipoProceso"]
         /*campos que van a mostrarse en la tabla, en el mismo orden que los titulos*/
-        def funciones = [["format": ["dd/MM/yyyy hh:mm"]], null, ["closure": [closure, "?"]]]
+        def funciones = [["format": ["dd-MM-yyyy "]], null, ["closure": [closure, "?"]],["closure": [comp, "&"]],["closure": [tipo, "?"]]]
         /*funciones para cada campo en caso de ser necesari. Cada campo debe tener un mapa (con el nombre de la funcion como key y los parametros como arreglo) o un null si no tiene funciones... si un parametro es ? sera sustituido por el valor del campo, si es & sera sustituido por el objeto */
         def link = "descripcion"                                      /*nombre del campo que va a llevar el link*/
         def url = g.createLink(action: "listar", controller: "proceso")
         /*link de esta accion ...  sive para la opcion de reporte*/
 //        params.ordenado="fecha"
 //        params.orden="desc"
-        def listaSinFiltro = buscadorService.buscar(Proceso, "Proceso", "excluyente", params, true," and empresa=${session.empresa.id}")
+        def listaSinFiltro = buscadorService.buscar(Proceso, "Proceso", "excluyente", params, true,extras)
         /* Dominio, nombre del dominio , excluyente dejar asi,params tal cual llegan de la interfaz del buscador, ignore case */
         listaSinFiltro.pop()
         def lista = []
@@ -419,7 +489,7 @@ class ProcesoController extends cratos.seguridad.Shield {
             proceso.empresa=session.empresa
             println "valor " + proceso.valor + " inp " + proceso.impuesto
             if (proceso.save(flush: true)) {
-                procesoService.registrar(proceso, session.perfil, session.usuario)
+                procesoService.registrar(proceso, session.perfil, session.usuario,session.contabilidad)
                 render "ok"
             } else {
                 println "error en el proceso " + proceso.errors
@@ -457,7 +527,7 @@ class ProcesoController extends cratos.seguridad.Shield {
             proceso.empresa=session.empresa
             println "valor " + proceso.valor + " inp " + proceso.impuesto
             if (proceso.save(flush: true)) {
-                procesoService.registrar(proceso, session.perfil, session.usuario)
+                procesoService.registrar(proceso, session.perfil, session.usuario,session.contabilidad)
                 render "ok"
             } else {
                 println "error en el proceso " + proceso.errors

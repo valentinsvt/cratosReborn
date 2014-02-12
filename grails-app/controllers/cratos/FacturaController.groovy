@@ -285,7 +285,7 @@ class FacturaController extends cratos.seguridad.Shield {
 
 
             if (proceso.save(flush: true)) {
-                procesoService.registrar(proceso, session.perfil, session.usuario)
+                procesoService.registrar(proceso, session.perfil, session.usuario,session.contabilidad)
 
                 /*todo cambiar la pantalla del show adquisicion*/
             } else {
@@ -491,7 +491,7 @@ class FacturaController extends cratos.seguridad.Shield {
 
 
             if (proceso.save(flush: true)) {
-                procesoService.registrar(proceso, session.perfil, session.usuario)
+                procesoService.registrar(proceso, session.perfil, session.usuario,session.contabilidad)
                 //render factura.id
                 /*todo cambiar la pantalla del show adquisicion*/
             } else {

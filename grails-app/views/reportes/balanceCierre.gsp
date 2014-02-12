@@ -33,9 +33,9 @@
         width           : 100%;
     }
 
-        /*th, td {*/
-        /*vertical-align : middle;*/
-        /*}*/
+    /*th, td {*/
+    /*vertical-align : middle;*/
+    /*}*/
 
     th {
         background : #bbb;
@@ -124,7 +124,7 @@
                 <g:set var="cont" value="${0}"></g:set>
                 <g:each in="${p.value}" var="cnta" status="i">
                     <g:if test="${i==0}">
-                        %{--<g:set var="tot" value="${saldos[cnta.id.toString()]?.toDouble()?.round(2)}"></g:set>--}%
+                    %{--<g:set var="tot" value="${saldos[cnta.id.toString()]?.toDouble()?.round(2)}"></g:set>--}%
                         <g:set var="tot" value="${saldos[cnta.id.toString()]}"></g:set>
                     </g:if>
                     <g:else>
@@ -170,7 +170,7 @@
             </table>
             <h1 style="text-align: left;float: left;width: 100%;">TOTAL ${p.key}: ${tot.toDouble().round(2)}</h1>
             <g:if test="${(p.key=="PATRIMONIO")}">
-                %{--<h1 style="text-align: left;float: left;width: 100%;">TOTAL PASIVO Y PATRIMONIO: ${(saldos[cntaPas.id.toString()].toDouble()+saldos[cntaPat.id.toString()].toDouble())?.round(2)}</h1>--}%
+            %{--<h1 style="text-align: left;float: left;width: 100%;">TOTAL PASIVO Y PATRIMONIO: ${(saldos[cntaPas.id.toString()].toDouble()+saldos[cntaPat.id.toString()].toDouble())?.round(2)}</h1>--}%
                 <h1 style="text-align: left;float: left;width: 100%;">TOTAL PASIVO Y PATRIMONIO: ${(saldos[cntaPas.id.toString()]+saldos[cntaPat.id.toString()]).toDouble().round(2)}</h1>
             </g:if>
             <g:if test="${firma1}">

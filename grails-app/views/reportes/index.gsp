@@ -259,6 +259,20 @@
                                 <p>Balance general</p>
                             </div>
                         </li>
+                        <li>
+                            <span id="balanceGeneralCierre">
+                                <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#generalCierre">
+                                    Balance de cierre
+                                </a>
+                                Balance de cierre
+                            </span>
+
+                            <div class="descripcion hide">
+                                <h4>Balance de cierre del periodo contable</h4>
+
+                                <p>Balance de cierre del periodo contable</p>
+                            </div>
+                        </li>
                     </ul>
                 </div>
 
@@ -648,6 +662,65 @@
             </div>
         </div>
 
+    <div class="modal fade" id="generalCierre" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modalGeneralCierre">Balance General de cierre </h4>
+                </div>
+
+                <div class="modal-body" id="bodyGeneralCierre">
+
+                    <div style="margin-bottom: 10px;">
+                        Antes de generar este reporte asegurese de configurar las cuentas para el cálculo de resultados <a href="${g.createLink(controller: 'cuenta', action: 'cuentaResultados')}" style="color: blue">Aquí</a>
+                    </div>
+
+                    <div class="fila">
+                        <label class="uno">Contabilidad:</label>
+                        <g:select name="contP6" id="contP6Cierre"
+                                  from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
+                                  optionKey="id" optionValue="descripcion" noSelection="['-1': 'Seleccione la contabilidad']"
+                                  class="ui-widget-content ui-corner-all dos"/>
+                    </div>
+
+
+                    <div class="fila">
+                        <label class="uno">Nivel:</label>
+                        <select id="nivelCierre" class="dos">
+                            <option value="1,2">DOS</option>
+                            <option value="1,2,3">TRES</option>
+                            <option value="1,2,3,4">CUATRO</option>
+                            <option value="1,2,3,4,5">CINCO</option>
+                        </select>
+                    </div>
+
+                    <div class="fila">
+                        Mostrar cuentas con saldo cero? <input type="checkbox" id="ceroCierre" value="1" checked="true">
+                    </div>
+
+                    <div class="fila">
+                        <label class="uno">Firma:</label>
+                        <input type="text" id="firma1Cierre" class="dos">
+                    </div>
+
+                    <div class="fila">
+                        <label class="uno">Firma:</label>
+                        <input type="text" id="firma2Cierre" class="dos">
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btnAceptarGeneralCierre btn-success"><i class="fa fa-print"></i> Aceptar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
         <!-------------------------------------------- MODALES ----------------------------------------------------->
 
         <script type="text/javascript">
@@ -944,6 +1017,33 @@
                         url = "${g.createLink(controller:'reportes' , action: 'balanceG')}?contabilidad=" + cont + "Wperiodo=" + per + "Wempresa=${session.empresa.id}Wnivel=" + $("#nivel").val() + "Wceros=" + ceros + "Wfirma1=" + firma1 + "Wfirma2=" + firma2;
 //                            console.log(url)
                         location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=BalanceG.pdf"
+                    }
+
+                });
+                $(".btnAceptarGeneralCierre").click(function () {
+                    var cont = $("#contP6Cierre").val();
+                    //var per = $("#periodo6").val();
+                    var ceros = "1"
+                    var firma1 = $("#firma1Cierre").val()
+                    var firma2 = $("#firma2Cierre").val()
+                    firma1 = $.trim(firma1)
+                    firma1 = firma1.replace(new RegExp(" ", "g"), "_");
+                    firma2 = $.trim(firma2)
+                    firma2 = firma2.replace(new RegExp(" ", "g"), "_");
+//                            console.log(firma1,firma2)
+                    if ($("#ceroCierre").attr("checked") != "checked") {
+                        ceros = "0"
+                    }
+
+                    if (cont == '-1') {
+
+                        alert("Debe elegir una contabilidad!")
+
+                    } else {
+
+                        url = "${g.createLink(controller:'reportes' , action: 'balanceCierre')}?contabilidad=" + cont + "Wempresa=${session.empresa.id}Wnivel=" + $("#nivelCierre").val() + "Wceros=" + ceros + "Wfirma1=" + firma1 + "Wfirma2=" + firma2;
+//                            console.log(url)
+                        location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=BalanceCierre.pdf"
                     }
 
                 });

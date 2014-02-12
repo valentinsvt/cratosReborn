@@ -1,5 +1,7 @@
 package cratos.utilitarios
 
+import cratos.Cuenta
+import cratos.Nivel
 import cratos.TipoComprobanteSri
 
 class FuncionesController extends cratos.seguridad.Shield{
@@ -47,7 +49,7 @@ class FuncionesController extends cratos.seguridad.Shield{
             gestor.fuente=cratos.Fuente.get(1)
             gestor.observaciones="Saldos iniciales - cratos"
             if (!gestor.save(flush: true)){
-               println "error al crear el gestor "+ gestor.errors
+                println "error al crear el gestor "+ gestor.errors
             }
         }
 
@@ -55,7 +57,7 @@ class FuncionesController extends cratos.seguridad.Shield{
 //        def cuentasGnra= gnra.cuenta
         def cuentas = cratos.Cuenta.findAllByMovimiento("1",[sort: "numero"])
         cuentas.each {c->
-         def gnra = cratos.Genera.findByCuentaAndGestor(c,gestor)
+            def gnra = cratos.Genera.findByCuentaAndGestor(c,gestor)
             if (!gnra){
                 gnra= new cratos.Genera()
                 gnra.gestor=gestor
@@ -91,6 +93,90 @@ class FuncionesController extends cratos.seguridad.Shield{
             tp.descripcion=datos[1]
             if(!tp.save(flush: true))
                 println "no save "+datos+"  "+tp.errors
+        }
+    }
+    def cargaCuentas(){
+        def file = new File("C:\\Users\\svt\\Desktop\\cuentas.csv")
+        Cuenta.list().each {
+            it.delete(flush: true)
+        }
+        file.eachLine {l->
+            println l
+            def datos= l.split(",")
+            def num = datos[0].trim()
+            if(datos[1].trim()!="ELIMINADO"){
+                def padre =null
+                def nivel = 1
+                if(num.size()>2){
+                    padre=Cuenta.findByNumero(num.substring(0,num.size()-2))
+                    println "busca padre "+num.substring(0,num.size()-2)+" padre "+padre
+                }else{
+                    if(num.size()>1){
+                        padre=Cuenta.findByNumero(num.substring(0,1))
+                        println "busca padre chiquito "+num.substring(0,1)+" padre "+padre
+                    }
+                }
+                switch (num.size()){
+                    case 1:
+                        nivel=1
+                        break;
+                    case 2:
+                        nivel=1
+                        break;
+                    case 3:
+                        nivel=2
+                        break;
+                    case 4:
+                        nivel=2
+                        break;
+                    case 5:
+                        nivel=3
+                        break;
+                    case 6:
+                        nivel=3
+                        break;
+                    case 7:
+                        nivel=4
+                        break;
+                    case 8:
+                        nivel=4
+                        break;
+                    case 9:
+                        nivel=5
+                        break;
+                    case 10:
+                        nivel=5
+                        break;
+                    default:
+                        nivel=6
+                        break;
+                }
+                nivel = Nivel.get(nivel)
+                def cuenta = new Cuenta()
+                cuenta.numero=num
+                if(padre)
+                    cuenta.padre=padre
+                cuenta.nivel=nivel
+                cuenta.descripcion=datos[1].trim()
+                cuenta.estado="A"
+                cuenta.auxiliar="S"
+                if(!cuenta.save(flush: true))
+                    println "error save cuenta "+cuenta.errors
+            }
+        }
+    }
+
+    def fixMovimientoCuenta(){
+        Cuenta.list().each {
+            def hijas = Cuenta.findAllByPadre(it)
+            if(hijas.size()==0){
+                println "movimiento "+it.numero
+                it.movimiento="1"
+                it.save(flush: true)
+            }else{
+                it.movimiento="0"
+                it.save(flush: true)
+            }
         }
     }
 

@@ -39,7 +39,7 @@ class Cuenta implements Serializable {
     static constraints = {
         auxiliar(size: 1..1, inList: ['S', 'N'], blank: true, nullable: true, attributes: [title: 'Si puede o no tener auxiliares'])
         movimiento(size: 1..1, inList: ['1', '0'], blank: true, nullable: true, attributes: [title: 'Si puede o no tener movimientos'])
-        descripcion(size: 1..127, blank: false, attributes: [title: 'Descripción'])
+        descripcion(size: 1..255, blank: false, attributes: [title: 'Descripción'])
         padre(size: 1..20, blank: true, nullable: true, attributes: [title: 'Cuenta padre'])
         numero(size: 1..20, blank: false, attributes: [title: 'Número de cuenta'])
         empresa(blank: true, nullable: true, attributes: [title: 'Empresa a la que pertenece la cuenta'])

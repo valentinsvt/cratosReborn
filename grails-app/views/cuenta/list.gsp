@@ -13,7 +13,7 @@
         #tree {
             background : #DEDEDE;
             overflow-y : auto;
-            width      : 550px;
+            width      : 950px;
             height     : 700px;
         }
         </style>

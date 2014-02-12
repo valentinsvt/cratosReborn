@@ -6,7 +6,7 @@ class ProcesoService {
     def dbConnectionService
     def kerberosoldService
 
-    List registrar(proceso, perfil, usuario) {
+    List registrar(proceso, perfil, usuario,contabilidad) {
         def lista = [true]
         def p = new Proceso()
         p = proceso
@@ -76,7 +76,7 @@ class ProcesoService {
         tipoComprobante.each {
             def cn = dbConnectionService.getConnection()
             def num = null
-            def sql = "SELECT max(CAST( c.cmprnmro AS int )) from cmpr c,prcs p,gstr g where c.prcs__id=p.prcs__id and p.gstr__id=g.gstr__id and g.empr__id=${empresa.id} and c.tpcp__id=${it.id}"
+            def sql = "SELECT max(CAST( c.cmprnmro AS int )) from cmpr c,prcs p,gstr g where c.prcs__id=p.prcs__id and p.gstr__id=g.gstr__id and g.empr__id=${empresa.id} and c.tpcp__id=${it.id} and p.cont__id=${contabilidad?.id}"
             // println "sql "+sql
             cn.eachRow(sql) { rs ->
                 num = rs[0]

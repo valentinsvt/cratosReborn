@@ -301,7 +301,7 @@ class TransferenciaController {
             def proceso = Proceso.findByTransferencia(trans)
             trans.estado = "R"
             if (trans.save(flush: true)) {
-                procesoService.registrar(proceso, session.perfil, session.usuario)
+                procesoService.registrar(proceso, session.perfil, session.usuario,session.contabilidad)
                 proceso.estado = "R"
                 proceso.save(flush: true)
                 render "OK"
