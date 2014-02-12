@@ -28,9 +28,15 @@
         <g:link class="btn btn-primary" action="nuevoProceso">
             <i class="fa fa-file-o"></i> Nueva transacción contable
         </g:link>
+        <span style="height: 30px;line-height: 30px;font-size: 12px;font-weight: bold;margin-left: 10px;vertical-align: middle">
+            Usted esta trabajando en la contabilidad: ${session.contabilidad}
+            <g:link class="btn btn-azul" action="cambiar" controller="contabilidad" style="margin-left:10px">
+                <i class="fa fa-refresh"></i> Cambiar
+            </g:link>
+        </span>
     </div>
 </div>
-<div class="vertical-container-no-padding" style="margin-top: 25px;color: black;min-height: 460px">
+<div class="vertical-container-no-padding" style="margin-top: 25px;color: black;min-height: 460px;border: none">
     <div style="width: 1000px;float: left">
         <bsc:buscador name="proceso.id"  accion="listar" campos="${campos}" label="Transacción" tipo="lista"/>
     </div>

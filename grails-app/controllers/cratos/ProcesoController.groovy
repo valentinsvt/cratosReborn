@@ -262,7 +262,7 @@ class ProcesoController extends cratos.seguridad.Shield {
                 params.operadores[it] = null
             }
         }
-        def extras=" and empresa=${session.empresa.id}"
+        def extras=" and empresa=${session.empresa.id} and contabilidad=${session.contabilidad.id}"
         if (extraComp.size() > 1)
             extras += " and id in (${extraComp})"
 
@@ -301,10 +301,10 @@ class ProcesoController extends cratos.seguridad.Shield {
                     break;
             }
         }
-        def listaTitulos = ["Fecha", "Descripcion", "Registrado","Comprobante","Tipo"]       /*Titulos de la tabla*/
-        def listaCampos = ["fecha", "descripcion", "estado","comprobante","tipoProceso"]
+        def listaTitulos = ["Fecha", "Descripcion", "Estado","Comprobante","Tipo","Proveedor"]       /*Titulos de la tabla*/
+        def listaCampos = ["fecha", "descripcion", "estado","comprobante","tipoProceso","proveedor"]
         /*campos que van a mostrarse en la tabla, en el mismo orden que los titulos*/
-        def funciones = [["format": ["dd-MM-yyyy "]], null, ["closure": [closure, "?"]],["closure": [comp, "&"]],["closure": [tipo, "?"]]]
+        def funciones = [["format": ["dd-MM-yyyy "]], null, ["closure": [closure, "?"]],["closure": [comp, "&"]],["closure": [tipo, "?"]],null]
         /*funciones para cada campo en caso de ser necesari. Cada campo debe tener un mapa (con el nombre de la funcion como key y los parametros como arreglo) o un null si no tiene funciones... si un parametro es ? sera sustituido por el valor del campo, si es & sera sustituido por el objeto */
         def link = "descripcion"                                      /*nombre del campo que va a llevar el link*/
         def url = g.createLink(action: "listar", controller: "proceso")
@@ -591,13 +591,7 @@ class ProcesoController extends cratos.seguridad.Shield {
 //        println "proc anulados "+params
         def contabilidad
         if (!params.contabilidad) {
-            contabilidad = Contabilidad.findAllByInstitucion(session.empresa, [sort: "fechaInicio", order: "asc"])
-            if (contabilidad) {
-                contabilidad = contabilidad.pop()
-            } else {
-                render "no existen contabilidades creadeas en esta empresa"
-                return
-            }
+            contabilidad = session.contabilidad
         } else {
             contabilidad = Contabilidad.get(params.contabilidad)
         }

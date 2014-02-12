@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="layout" content="main"/>
-    <g:includeJQuery archivo="transacciones"/>
+    %{--<g:includeJQuery archivo="transacciones"/>--}%
     <title>Transacciones anuladas</title>
     <style type="text/css">
     .etiqueta {
@@ -19,8 +19,9 @@
 <div class="container entero ui-corner-all">
     <fieldset style="margin-left: 25px;width: 800px;float: left" class="ui-corner-all">
         <legend>Transacciones anuladas</legend>
-        <b>Contabilidad:</b> <g:select name="contabilidad"  id="contabilidad" from="${cratos.Contabilidad.findAllByInstitucion(session.empresa,[sort:'id',order:'desc'])}" value="${contabilidad.id}" optionKey="id"></g:select>
-        <table style="margin-top: 10px;border: 1px solid black;padding:5px;">
+        <b>Contabilidad:</b>
+        <g:select name="contabilidad"  class="form-control label-shared" id="contabilidad" style="width:450px" from="${cratos.Contabilidad.findAllByInstitucion(session.empresa,[sort:'id',order:'desc'])}" value="${contabilidad.id}" optionKey="id"></g:select>
+        <table style="margin-top: 10px;border: 1px solid black;padding:5px;" class="table table-striped">
             <thead>
             <tr>
                 <th>Descripción</th>
