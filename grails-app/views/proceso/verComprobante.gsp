@@ -50,7 +50,6 @@
             </th>
 
         </tr>
-
         <g:set var="totalDebe"  value="${0}"/>
         <g:set var="totalHaber" value="${0}"/>
 

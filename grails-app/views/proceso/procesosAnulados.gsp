@@ -15,7 +15,7 @@
     }
     </style>
 </head>
-<body>
+<body>  
 <div class="container entero ui-corner-all">
     <fieldset style="margin-left: 25px;width: 800px;float: left" class="ui-corner-all">
         <legend>Transacciones anuladas</legend>
