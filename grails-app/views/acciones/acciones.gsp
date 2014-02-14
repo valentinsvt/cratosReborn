@@ -41,7 +41,7 @@
                 </g:each>
             </div>
 
-            <div id="ajx" style="width:820px; height: 520px; margin-top: 15px;"></div>
+            <div id="ajx" style="width:900px; height: 520px; margin-top: 15px;"></div>
 
         </div>
 

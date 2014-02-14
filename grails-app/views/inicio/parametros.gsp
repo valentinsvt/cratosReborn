@@ -39,13 +39,15 @@
         }
 
         .left {
-            width : 710px;
+            width : 600px;
+            text-align: justify;
             /*background : red;*/
         }
 
         .right {
             width       : 300px;
-            margin-left : 40px;
+            margin-left : 20px;
+            padding: 20px;
             /*background  : blue;*/
         }
 
