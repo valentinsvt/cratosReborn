@@ -38,7 +38,7 @@
     <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'codigo', 'error')} required">
         <span class="grupo">
             <label for="codigo" class="col-md-3 control-label text-info">
-                Codigo
+                Código
             </label>
             <div class="col-md-8">
                 <g:textField name="codigo" maxlength="15" required="" class=" form-control required" value="${itemInstance?.codigo}"/>
@@ -46,6 +46,19 @@
             *
         </span>
     </div>
+
+    <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'grupo', 'error')} ">
+        <span class="grupo">
+            <label for="grupo" class="col-md-3 control-label text-info">
+                Grupo
+            </label>
+            <div class="col-md-8">
+                <g:select id="grupo" name="grupo.id" from="${cratos.Grupo.list()}" optionKey="id" value="${itemInstance?.grupo?.id}" class="many-to-one form-control" noSelection="['null': '']"/>
+            </div>
+
+        </span>
+    </div>
+
 
     <div class="col2">
 
@@ -125,11 +138,12 @@
 
     <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'estado', 'error')} ">
         <span class="grupo">
-            <label for="estado" class="col-md-6 control-label text-info">
+            <label for="estado" class="col-md-4 control-label text-info">
                 Estado
             </label>
             <div class="col-md-5">
-                <g:textField name="estado" maxlength="1" class=" form-control" value="${itemInstance?.estado}"/>
+                %{--<g:textField name="estado" maxlength="1" class=" form-control" value="${itemInstance?.estado}"/>--}%
+                <g:select from="['A': 'Activo', 'B': 'Dado de baja']" name="estado" class="input-medium" value="${itemInstance?.estado}" optionKey="key" optionValue="value"/>
             </div>
 
         </span>
@@ -142,7 +156,8 @@
                     Iva
                 </label>
                 <div class="col-md-7">
-                    <g:field name="iva" type="number" value="${itemInstance.iva}" class="digits form-control required" required=""/>
+                    %{--<g:field name="iva" type="number" value="${itemInstance.iva}" class="digits form-control required" required=""/>--}%
+                    <g:select from="[1: 'Con IVA', 0: 'Sin IVA']" name="iva" class="input-medium" value="${itemInstance?.iva}" optionKey="key" optionValue="value"/>
                 </div>
                  *
             </span>
@@ -197,19 +212,6 @@
             </span>
         </div>
         
-
-        
-        <div class="form-group keeptogether ${hasErrors(bean: itemInstance, field: 'grupo', 'error')} ">
-            <span class="grupo">
-                <label for="grupo" class="col-md-4 control-label text-info">
-                    Grupo
-                </label>
-                <div class="col-md-7">
-                    <g:select id="grupo" name="grupo.id" from="${cratos.Grupo.list()}" optionKey="id" value="${itemInstance?.grupo?.id}" class="many-to-one form-control" noSelection="['null': '']"/>
-                </div>
-                
-            </span>
-        </div>
 
     </div>
         

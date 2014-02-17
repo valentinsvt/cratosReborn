@@ -22,4 +22,8 @@ class Grupo implements Serializable {
         cuenta(blank: true, nullable: true, attributes: [title: 'cuenta'])
         descripcion(blank: true, nullable: true, size: 1..63, attributes: [title: 'descripcion'])
     }
+
+    String toString() {
+        descripcion
+    }
 }
