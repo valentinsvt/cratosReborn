@@ -13,6 +13,13 @@ class ActivoFijoController extends cratos.seguridad.Shield {
     } //index
 
     def listGeneral() {
+        if (params.id) {
+            def proc = Proceso.get(params.id)
+            if (!proc) {
+                params.remove("id")
+            }
+        }
+
         params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
         if (!params.sort) {
             params.sort = 'fechaInicioDepreciacion'
@@ -77,7 +84,7 @@ class ActivoFijoController extends cratos.seguridad.Shield {
 
     def depreciar() {
 
-        def ok = "", error = ""
+        def error = ""
 
         def periodo = Periodo.get(params.per)
         def fin = periodo.fechaFin
@@ -155,6 +162,13 @@ class ActivoFijoController extends cratos.seguridad.Shield {
 //        def proceso = Proceso.get(341)
 //        procesoService.registrar(proceso, session.perfil, session.usuario, session.contabilidad)
 
+//        println "gestorDepreciacion"
+//        println gestorDepreciacion
+//        println "gestorDepreciacion movimientos"
+//        println gestorDepreciacion.movimientos
+//        println "gestorDepreciacion movimientos array"
+//        println gestorDepreciacion.movimientos?.toArray()
+
         // lo de la contabilidad
         def procesoContable = new Proceso()
         procesoContable.gestor = gestorDepreciacion
@@ -186,7 +200,7 @@ class ActivoFijoController extends cratos.seguridad.Shield {
                 def depreciaciones = Depreciacion.findAllByActivoFijo(activoFijo)
                 depreciaciones = depreciaciones.sort({ it.periodo.fechaInicio })
 
-                str += "+++++++++++++++++++++++++++++++++++++++++++" + enter
+                str += enter + "+++++++++++++++++++++++++++++++++++++++++++" + enter
                 str += "activo fijo: " + activoFijo.nombre + enter
                 str += "precio: " + activoFijo.precio + enter
                 str += "depreciaciones: " + depreciaciones + enter
@@ -261,32 +275,50 @@ class ActivoFijoController extends cratos.seguridad.Shield {
                             if (activoFijo.save(flush: true)) {
                                 str += espacio + espacio + "ACTIVO FIJO GUARDADO" + enter
                             } else {
-                                str += espacio + espacio + "ERROR: " + renderErrors(bean: activoFijo)
+                                str += espacio + espacio + "ERROR: " + renderErrors(bean: activoFijo) + enter
                                 error += "<li>" + "error al guardar el activo fijo: " + renderErrors(bean: activoFijo) + "</li>"
                             }
                         } else {
-                            str += espacio + espacio + "ERROR: " + renderErrors(bean: depreciacion)
+                            str += espacio + espacio + "ERROR: " + renderErrors(bean: depreciacion) + enter
                             error += "<li>" + "error al guardar la depreciación: " + renderErrors(bean: depreciacion) + "<li>"
                         }
                     } else {
-                        str += espacio + "ya se deprecio este periodo..."
+                        str += espacio + "ya se deprecio este periodo..." + enter
                         error += "<li>Ya se ha realizado una depreciación para este periodo</li>"
                     } // depreciar
 
-                    procesoContable.valor = depTotalTotal
-                    procesoContable.descripcion = "Depreciación activos fijos de ${periodo.toString()} , efectuada el " + new Date().format("dd-MM-yyyy hh:mm") + " Monto: " + (util.numero(number: depTotalTotal, decimales: 2))
-                    if (procesoContable.save(flush: true)) {
-                        procesoService.registrar(procesoContable, session.perfil, session.usuario, session.contabilidad)
-                        str += espacio + espacio + "Proceso guardado (2)"
-                    } else {
-                        str += espacio + espacio + "Error: " + renderErrors(bean: procesoContable)
-                        error += "<li>" + "error al guardar el proceso contable: " + renderErrors(bean: procesoContable) + "</li>"
-                    }
+//                    procesoContable.valor = depTotalTotal
+//                    procesoContable.descripcion = "Depreciación activos fijos de ${periodo.toString()} , efectuada el " + new Date().format("dd-MM-yyyy hh:mm") + " Monto: " + (util.numero(number: depTotalTotal, decimales: 2))
+//
+//                    str += "DEP DESC: " + procesoContable.descripcion
+                    str += espacio + espacio + espacio + "depTotalTotal: " + depTotalTotal + enter
+//
+//                    if (procesoContable.save(flush: true)) {
+//                        procesoService.registrar(procesoContable, session.perfil, session.usuario, session.contabilidad)
+//                        str += espacio + espacio + "Proceso guardado (2)"
+//                    } else {
+//                        str += espacio + espacio + "Error: " + renderErrors(bean: procesoContable)
+//                        error += "<li>" + "error al guardar el proceso contable: " + renderErrors(bean: procesoContable) + "</li>"
+//                    }
 
                 } // si se deberia depreciar
 
             } // el activo fijo aun esta en estado A
         } // foreach activo fijo
+
+        procesoContable.valor = depTotalTotal
+        procesoContable.descripcion = "Depreciación activos fijos de ${periodo.toString()} , efectuada el " + new Date().format("dd-MM-yyyy hh:mm") + " Monto: " + (util.numero(number: depTotalTotal, decimales: 2))
+
+        str += "DEP DESC: " + procesoContable.descripcion + enter
+        str += "DEP TOTAL TOTAL: " + procesoContable.valor + enter
+
+        if (procesoContable.save(flush: true)) {
+            procesoService.registrar(procesoContable, session.perfil, session.usuario, session.contabilidad)
+            str += espacio + espacio + "Proceso guardado (2)"
+        } else {
+            str += espacio + espacio + "Error: " + renderErrors(bean: procesoContable)
+            error += "<li>" + "error al guardar el proceso contable: " + renderErrors(bean: procesoContable) + "</li>"
+        }
 
         println str
 

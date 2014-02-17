@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="3107866970">
+    <data-source source="LOCAL" name="cratosReborn" uuid="8268ed52-7065-4d26-a45e-a7e7b8893bb2">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/cratosReborn</jdbc-url>
+      <user-name>postgres</user-name>
+      <user-password>dfdadfc5dfd9dfdedfcddfd8dfcfdfd9</user-password>
+      <schema-pattern>cratosReborn.public</schema-pattern>
+      <default-schemas>cratosReborn.public</default-schemas>
+      <libraries />
+    </data-source>
+  </component>
+</project>
+
