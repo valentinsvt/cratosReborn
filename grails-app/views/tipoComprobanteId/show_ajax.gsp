@@ -7,12 +7,12 @@
 
     <g:if test="${tipoComprobanteIdInstance?.tipoIdentificacion}">
         <div class="row">
-            <div class="col-md-2 text-info">
-                Tipo Identificacion
+            <div class="col-md-4 text-info">
+                Tipo Identificación
             </div>
 
-            <div class="col-md-3">
-                ${tipoComprobanteIdInstance?.tipoIdentificacion?.encodeAsHTML()}
+            <div class="col-md-5">
+                ${tipoComprobanteIdInstance?.tipoIdentificacion?.descripcion?.encodeAsHTML()}
             </div>
 
         </div>
@@ -20,12 +20,12 @@
 
     <g:if test="${tipoComprobanteIdInstance?.tipoComprobanteSri}">
         <div class="row">
-            <div class="col-md-2 text-info">
+            <div class="col-md-4 text-info">
                 Tipo Comprobante Sri
             </div>
 
-            <div class="col-md-3">
-                ${tipoComprobanteIdInstance?.tipoComprobanteSri?.encodeAsHTML()}
+            <div class="col-md-5">
+                ${tipoComprobanteIdInstance?.tipoComprobanteSri?.descripcion?.encodeAsHTML()}
             </div>
 
         </div>

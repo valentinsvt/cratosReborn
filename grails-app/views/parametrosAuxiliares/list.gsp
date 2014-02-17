@@ -1,23 +1,22 @@
-<%@ page import="cratos.TipoComprobanteId" %>
+
+<%@ page import="cratos.ParametrosAuxiliares" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="layout" content="main">
-        <title>Tipo de Comprobante Id</title>
+        <title>Parámetros Auxiliares</title>
     </head>
-
     <body>
 
         <elm:flashMessage tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
 
-        <!-- botones -->
+    <!-- botones -->
         <div class="btn-toolbar toolbar">
             <div class="btn-group">
                 <g:link action="form" class="btn btn-default btnCrear">
                     <i class="fa fa-file-o"></i> Crear
                 </g:link>
             </div>
-
             <div class="btn-group pull-right col-md-3">
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="Buscar">
@@ -31,30 +30,32 @@
         </div>
 
         <div class="vertical-container vertical-container-list">
-            <p class="css-vertical-text">Tipo de Comprobante Id</p>
+            <p class="css-vertical-text">Parámetros Auxiliares</p>
 
             <div class="linea"></div>
             <table class="table table-condensed table-bordered table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Tipo Identificacion</th>
-                        <th>Tipo Comprobante Sri</th>
+                        
+                        <g:sortableColumn property="iva" title="Iva" />
+                        
                         <th width="110">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <g:each in="${tipoComprobanteIdInstanceList}" status="i" var="tipoComprobanteIdInstance">
-                        <tr data-id="${tipoComprobanteIdInstance.id}">
-                            <td>${tipoComprobanteIdInstance.tipoIdentificacion.descripcion}</td>
-                            <td>${tipoComprobanteIdInstance.tipoComprobanteSri.descripcion}</td>
+                    <g:each in="${parametrosAuxiliaresInstanceList}" status="i" var="parametrosAuxiliaresInstance">
+                        <tr data-id="${parametrosAuxiliaresInstance.id}">
+                            
+                            <td>${fieldValue(bean: parametrosAuxiliaresInstance, field: "iva")}</td>
+                            
                             <td>
-                                <a href="#" data-id="${tipoComprobanteIdInstance.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver">
+                                <a href="#" data-id="${parametrosAuxiliaresInstance.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver">
                                     <i class="fa fa-laptop"></i>
                                 </a>
-                                <a href="#" data-id="${tipoComprobanteIdInstance.id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar">
+                                <a href="#" data-id="${parametrosAuxiliaresInstance.id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar">
                                     <i class="fa fa-pencil"></i>
                                 </a>
-                                <a href="#" data-id="${tipoComprobanteIdInstance.id}" class="btn btn-danger btn-sm btn-delete btn-ajax" title="Eliminar">
+                                <a href="#" data-id="${parametrosAuxiliaresInstance.id}" class="btn btn-danger btn-sm btn-delete btn-ajax" title="Eliminar">
                                     <i class="fa fa-trash-o"></i>
                                 </a>
                             </td>
@@ -63,12 +64,12 @@
                 </tbody>
             </table>
         </div>
-        <elm:pagination total="${tipoComprobanteIdInstanceCount}" params="${params}"/>
+        <elm:pagination total="${parametrosAuxiliaresInstanceCount}" params="${params}"/>
 
         <script type="text/javascript">
             var id = null;
             function submitForm() {
-                var $form = $("#frmTipoComprobanteId");
+                var $form = $("#frmParametrosAuxiliares");
                 var $btn = $("#dlgCreateEdit").find("#btnSave");
                 if ($form.valid()) {
                     $btn.replaceWith(spinner);
@@ -77,26 +78,26 @@
                         type    : "POST",
                         url     : $form.attr("action"),
                         data    : $form.serialize(),
-                        success : function (msg) {
-                            var parts = msg.split("_");
-                            log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
-                            if (parts[0] == "OK") {
-                                location.reload(true);
-                            } else {
-                                closeLoader();
-                                spinner.replaceWith($btn);
-                                return false;
-                            }
+                            success : function (msg) {
+                        var parts = msg.split("_");
+                        log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                        if (parts[0] == "OK") {
+                            location.reload(true);
+                        } else {
+                            closeLoader();
+                            spinner.replaceWith($btn);
+                            return false;
                         }
-                    });
-                } else {
-                    return false;
-                } //else
+                    }
+                });
+            } else {
+                return false;
+            } //else
             }
             function deleteRow(itemId) {
                 bootbox.dialog({
                     title   : "Alerta",
-                    message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar el Tipo de Comprobante Id seleccionado? Esta acción no se puede deshacer.</p>",
+                    message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar el Parámetro Auxiliar seleccionado? Esta acción no se puede deshacer.</p>",
                     buttons : {
                         cancelar : {
                             label     : "Cancelar",
@@ -134,7 +135,7 @@
             }
             function createEditRow(id) {
                 var title = id ? "Editar" : "Crear";
-                var data = id ? { id : id } : {};
+                var data = id ? { id: id } : {};
                 $.ajax({
                     type    : "POST",
                     url     : "${createLink(action:'form_ajax')}",
@@ -142,7 +143,7 @@
                     success : function (msg) {
                         var b = bootbox.dialog({
                             id      : "dlgCreateEdit",
-                            title   : title + " Tipo de Comprobante Id",
+                            title   : title + " Parámetros Auxiliares",
                             message : msg,
                             buttons : {
                                 cancelar : {
@@ -170,7 +171,7 @@
 
             $(function () {
 
-                $(".btnCrear").click(function () {
+                $(".btnCrear").click(function() {
                     createEditRow();
                     return false;
                 });
@@ -185,7 +186,7 @@
                         },
                         success : function (msg) {
                             bootbox.dialog({
-                                title   : "Ver Tipo de Comprobante Id",
+                                title   : "Ver Parámetros Auxiliares",
                                 message : msg,
                                 buttons : {
                                     ok : {

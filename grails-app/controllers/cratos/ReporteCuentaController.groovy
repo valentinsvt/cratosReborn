@@ -137,12 +137,6 @@ class ReporteCuentaController extends cratos.seguridad.Shield {
 
 //        println("params:" + params)
 
-//        params.each { k, v ->
-//            if (v != "date.struct" && v instanceof java.lang.String) {
-//                params[k] = v.toUpperCase()
-//            }
-//        }
-
         //nuevo
 
         def persona

@@ -10,12 +10,12 @@
 
         <div class="form-group ${hasErrors(bean: tipoComprobanteIdInstance, field: 'tipoIdentificacion', 'error')} required">
             <span class="grupo">
-                <label for="tipoIdentificacion" class="col-md-2 control-label text-info">
-                    Tipo Identificacion
+                <label for="tipoIdentificacion" class="col-md-5 control-label text-info">
+                    Tipo de Identificación
                 </label>
 
                 <div class="col-md-6">
-                    <g:select id="tipoIdentificacion" name="tipoIdentificacion.id" from="${cratos.TipoIdentificacion.list()}" optionKey="id" required="" value="${tipoComprobanteIdInstance?.tipoIdentificacion?.id}" class="many-to-one form-control"/>
+                    <g:select id="tipoIdentificacion" name="tipoIdentificacion.id" from="${cratos.TipoIdentificacion.list()}" optionKey="id" required="" optionValue="descripcion" value="${tipoComprobanteIdInstance?.tipoIdentificacion?.id}" class="many-to-one form-control"/>
                 </div>
                 *
             </span>
@@ -23,12 +23,12 @@
 
         <div class="form-group ${hasErrors(bean: tipoComprobanteIdInstance, field: 'tipoComprobanteSri', 'error')} required">
             <span class="grupo">
-                <label for="tipoComprobanteSri" class="col-md-2 control-label text-info">
-                    Tipo Comprobante Sri
+                <label for="tipoComprobanteSri" class="col-md-5 control-label text-info">
+                    Tipo de Comprobante Sri
                 </label>
 
                 <div class="col-md-6">
-                    <g:select id="tipoComprobanteSri" name="tipoComprobanteSri.id" from="${cratos.TipoComprobanteSri.list()}" optionKey="id" required="" value="${tipoComprobanteIdInstance?.tipoComprobanteSri?.id}" class="many-to-one form-control"/>
+                    <g:select id="tipoComprobanteSri" name="tipoComprobanteSri.id" from="${cratos.TipoComprobanteSri.list()}" optionKey="id" required="" optionValue="descripcion" value="${tipoComprobanteIdInstance?.tipoComprobanteSri?.id}" class="many-to-one form-control"/>
                 </div>
                 *
             </span>

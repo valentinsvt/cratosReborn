@@ -134,7 +134,7 @@ class BancoController extends cratos.seguridad.Shield {
 
     def save_ajax() {
 
-        println("params:" + params)
+//        println("params:" + params)
 
 //        params.each { k, v ->
 //            if (v != "date.struct" && v instanceof java.lang.String) {
