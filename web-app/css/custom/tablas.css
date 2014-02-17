@@ -1,6 +1,8 @@
 th {
     background-color : #1260B3;
     color            : #ffab19;
+    vertical-align   : middle !important;
+    text-align       : center;
 }
 
 th.sortable {

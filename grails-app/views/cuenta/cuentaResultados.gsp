@@ -36,6 +36,30 @@
                 <div class="col-md-3">
                     <g:select name="deficit" class="form-control" from="${cuentas}" optionKey="id" value="${cuentaD?.id}"/>
                 </div>
+
+                <div class="form-group">
+                </div>
+                <label for="deficit" class="col-md-2 control-label">Cuenta de Activos Fijos</label>
+
+                <div class="col-md-3">
+                    <g:select name="activo" class="form-control" from="${cuentas1}" optionKey="id" value="${cuentaA?.id}"/>
+                </div>
+
+                <div class="form-group">
+                </div>
+                <label for="deficit" class="col-md-2 control-label">Cuenta de Depreciación</label>
+
+                <div class="col-md-3">
+                    <g:select name="depreciacion" class="form-control" from="${cuentas2}" optionKey="id" value="${cuentaP?.id}"/>
+                </div>
+
+                <div class="form-group">
+                </div>
+                <label for="gasto" class="col-md-2 control-label">Cuenta de Gasto</label>
+
+                <div class="col-md-3">
+                    <g:select name="gasto" class="form-control" from="${cuentas5}" optionKey="id" value="${cuentaG?.id}"/>
+                </div>
             </div>
 
             <div class="row">

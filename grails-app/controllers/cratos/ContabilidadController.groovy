@@ -7,6 +7,8 @@ class ContabilidadController extends cratos.seguridad.Shield {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST", delete: "GET"]
 
+    def utilitarioService
+
     def cambiar() {
         def yo = Persona.get(session.usuario.id)
         def cont = Contabilidad.get(session.contabilidad.id)
@@ -98,7 +100,7 @@ class ContabilidadController extends cratos.seguridad.Shield {
         if (Periodo.countByContabilidad(contabilidadInstance) == 0) {
             12.times {
                 def ini = new Date().parse("dd-MM-yyyy", "01-" + ((it + 1).toString().padLeft(2, '0')) + "-" + contabilidadInstance.fechaInicio.format("yyyy"))
-                def fin = getLastDayOfMonth(ini)
+                def fin = utilitarioService.getLastDayOfMonth(ini)
                 def periodoInstance = new Periodo()
 
                 if (periodoInstance.save(flush: true)) {
@@ -195,7 +197,7 @@ class ContabilidadController extends cratos.seguridad.Shield {
 
         12.times {
             def ini = new Date().parse("dd-MM-yyyy", "01-" + ((it + 1).toString().padLeft(2, '0')) + "-" + contabilidadInstance.fechaInicio.format("yyyy"))
-            def fin = getLastDayOfMonth(ini)
+            def fin = utilitarioService.getLastDayOfMonth(ini)
             def periodoInstance = new Periodo()
 
             if (periodoInstance.save(flush: true)) {
@@ -212,19 +214,6 @@ class ContabilidadController extends cratos.seguridad.Shield {
 
         redirect(action: "show", id: contabilidadInstance.id)
     }
-
-    def getLastDayOfMonth(fecha) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(fecha);
-
-        calendar.add(Calendar.MONTH, 1);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.add(Calendar.DATE, -1);
-
-        Date lastDayOfMonth = calendar.getTime();
-        return lastDayOfMonth
-    }
-
 
     def show() {
         def contabilidadInstance = Contabilidad.get(params.id)

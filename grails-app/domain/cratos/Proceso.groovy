@@ -48,7 +48,7 @@ class Proceso implements Serializable {
     String facturaPuntoEmision
     String facturaSecuencial
     Empresa empresa
-    String tipoProceso /*para saber si es compra, venta etc etc........... C--> compra, V---> venta, A--> Ajuste, O--> otros*/
+    String tipoProceso /*para saber si es compra, venta etc etc........... C--> compra, V---> venta, A--> Ajuste, O--> otros, R->Depreciacion*/
 
     static auditable = true
     static mapping = {

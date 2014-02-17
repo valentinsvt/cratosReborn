@@ -3,6 +3,9 @@ package cratos
 import groovy.xml.MarkupBuilder
 
 class XmlController extends cratos.seguridad.Shield {
+
+    def utilitarioService
+
     def test1() {
         def writer = new StringWriter()
 //        def xml = new MarkupBuilder(writer)
@@ -41,7 +44,7 @@ class XmlController extends cratos.seguridad.Shield {
         }
         def per = Periodo.withCriteria {
             ge("fechaInicio", new Date().parse("dd-MM-yyyy", "01-01-" + hoy.format("yyyy")))
-            le("fechaFin", getLastDayOfMonth(hoy))
+            le("fechaFin", utilitarioService.getLastDayOfMonth(hoy))
             order("fechaInicio", "asc")
         }
         def periodos = []
@@ -96,7 +99,7 @@ class XmlController extends cratos.seguridad.Shield {
 
         def per = Periodo.withCriteria {
             ge("fechaInicio", primero)
-            le("fechaFin", getLastDayOfMonth(primero))
+            le("fechaFin", utilitarioService.getLastDayOfMonth(primero))
             order("fechaInicio", "asc")
         }
 
@@ -277,18 +280,6 @@ class XmlController extends cratos.seguridad.Shield {
 
         list = list.sort { it.fecha }
         return [list: list, empresa: empresa]
-    }
-
-    def getLastDayOfMonth(fecha) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(fecha);
-
-        calendar.add(Calendar.MONTH, 1);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.add(Calendar.DATE, -1);
-
-        Date lastDayOfMonth = calendar.getTime();
-        return lastDayOfMonth
     }
 
     private String fechaConFormato(fecha, formato) {

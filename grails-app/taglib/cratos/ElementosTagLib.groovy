@@ -41,21 +41,54 @@ class ElementosTagLib {
         }
 
         if (contenido) {
+            def size = 2
+//            if (attrs.size) {
+//                size = attrs.size
+//            }
+            if (attrs.title) {
+                contenido = "<h3>" + attrs.title + "</h3>" + contenido
+                size = 4
+            }
             def finHtml = "</p></div>"
+            def clase, icon
+            def tipo = attrs.tipo ? attrs.tipo.toLowerCase() : "noTipo"
+            switch (tipo) {
+                case "error":
+                case "no":
+                    clase = "alert-danger"
+                    icon = "<i class=\"fa fa-warning fa-${size}x pull-left iconMargin text-shadow\"></i> "
+                    break;
+                case "crit":
+                case "critical":
+                case "critico":
+                    clase = "alert-danger"
+                    icon = "<i class=\"icon-bomb fa-${size}x pull-left iconMargin text-shadow\"></i> "
+                    break;
+                case "bug":
+                    clase = "alert-danger"
+                    icon = "<i class=\"fa fa-bug fa-${size}x pull-left iconMargin text-shadow\"></i> "
+                    break;
+                case "success":
+                case "ok":
+                    clase = "alert-success"
+                    icon = "<i class=\"fa fa-check-square fa-${size}x pull-left iconMargin text-shadow\"></i> "
+                    break;
+                case "notfound":
+                    clase = "alert-info";
+                    icon = "<i class=\"icon-ghost fa-${size}x pull-left iconMargin text-shadow\"></i> "
+                    break;
+                default:
+                    clase = "alert-info";
+                    icon = ""
+            }
 
-            def html = "<div class=\"alert ${attrs.tipo?.toLowerCase() == 'error' ? 'alert-danger' : attrs.tipo?.toLowerCase() == 'success' ? 'alert-success' : 'alert-info'} ${attrs.clase}\">"
+            def html = "<div class=\"alert ${clase} ${attrs.clase}\">"
             html += "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>"
 
             if (attrs.icon) {
                 html += "<i class=\"${attrs.icon} fa-2x pull-left iconMargin\"></i> "
             } else {
-                if (attrs.tipo?.toLowerCase() == 'error') {
-                    html += "<i class=\"fa fa-warning fa-2x pull-left iconMargin\"></i> "
-                } else if (attrs.tipo?.toLowerCase() == 'success') {
-                    html += "<i class=\"fa fa-check-square fa-2x pull-left iconMargin\"></i> "
-                } else if (attrs.tipo?.toLowerCase() == 'notfound') {
-                    html += "<i class=\"icon-ghost fa-2x pull-left iconMargin\"></i> "
-                }
+                html += icon
             }
             html += "<p>"
             out << html << contenido << finHtml

@@ -21,11 +21,29 @@ class CuentaController extends cratos.seguridad.Shield {
             eq("movimiento", "1")
             eq("empresa", session.empresa)
         }
+        def cuentas1 = Cuenta.withCriteria {
+            ilike("numero", "1%")
+            eq("movimiento", "1")
+            eq("empresa", session.empresa)
+        }
+        def cuentas2 = Cuenta.withCriteria {
+            ilike("numero", "1%")
+            eq("movimiento", "1")
+            eq("empresa", session.empresa)
+        }
+        def cuentas5 = Cuenta.withCriteria {
+            ilike("numero", "5%")
+            eq("movimiento", "1")
+            eq("empresa", session.empresa)
+        }
 
-        def cuentaS = Cuenta.findByResultadoAndEmpresa("S", session.empresa)
-        def cuentaD = Cuenta.findByResultadoAndEmpresa("D", session.empresa)
+        def cuentaS = Cuenta.findByResultadoAndEmpresa("S", session.empresa) // superavit
+        def cuentaD = Cuenta.findByResultadoAndEmpresa("D", session.empresa) // deficit
+        def cuentaA = Cuenta.findByResultadoAndEmpresa("A", session.empresa) // activos fijos
+        def cuentaP = Cuenta.findByResultadoAndEmpresa("P", session.empresa) // depreciacion
+        def cuentaG = Cuenta.findByResultadoAndEmpresa("G", session.empresa) // gasto
 
-        return [cuentas: cuentas, cuentaS: cuentaS, cuentaD: cuentaD]
+        return [cuentas: cuentas, cuentas1: cuentas1, cuentas2: cuentas2, cuentas5: cuentas5, cuentaS: cuentaS, cuentaD: cuentaD, cuentaA: cuentaA, cuentaP: cuentaP, cuentaG: cuentaG]
     }
 
     def grabarCuentaResultado() {
@@ -34,33 +52,82 @@ class CuentaController extends cratos.seguridad.Shield {
         def supOld = Cuenta.findByResultadoAndEmpresa("S", session.empresa)
         def deficitOld = Cuenta.findByResultadoAndEmpresa("D", session.empresa)
 
+        def activoOld = Cuenta.findByResultadoAndEmpresa("A", session.empresa)
+        def depreciacionOld = Cuenta.findByResultadoAndEmpresa("P", session.empresa)
+        def gastoOld = Cuenta.findByResultadoAndEmpresa("G", session.empresa)
+
         def sup = Cuenta.get(params.super)
-        if (sup.id != supOld.id) {
-            supOld.resultado = null
+        if (!supOld || sup.id != supOld.id) {
+            if (supOld) {
+                supOld.resultado = null
+                if (!supOld.save(flush: true)) {
+                    println supOld.errors
+                }
+            }
             sup.resultado = "S"
             if (!sup.save(flush: true)) {
                 println sup.errors
             }
-            if (!supOld.save(flush: true)) {
-                println supOld.errors
-            }
         }
 
         def deficit = Cuenta.get(params.deficit)
-        if (deficit.id != deficitOld.id) {
-            deficitOld.resultado = null
+        if (!deficitOld || deficit.id != deficitOld.id) {
+            if (deficitOld) {
+                deficitOld.resultado = null
+                if (!deficitOld.save(flush: true)) {
+                    println deficitOld.errors
+                }
+            }
             deficit.resultado = "D"
             if (!deficit.save(flush: true)) {
                 println deficit.errors
             }
-            if (!deficitOld.save(flush: true)) {
-                println deficitOld.errors
+        }
+
+        def activo = Cuenta.get(params.activo)
+        if (!activoOld || activo.id != activoOld.id) {
+            if (activoOld) {
+                activoOld.resultado = null
+                if (!activoOld.save(flush: true)) {
+                    println activoOld.errors
+                }
+            }
+            activo.resultado = "A"
+            if (!activo.save(flush: true)) {
+                println activo.errors
+            }
+        }
+
+        def depreciacion = Cuenta.get(params.depreciacion)
+        if (!depreciacionOld || depreciacion.id != depreciacionOld.id) {
+            if (depreciacionOld) {
+                depreciacionOld.resultado = null
+                if (!depreciacionOld.save(flush: true)) {
+                    println depreciacionOld.errors
+                }
+            }
+            depreciacion.resultado = "P"
+            if (!depreciacion.save(flush: true)) {
+                println depreciacion.errors
+            }
+        }
+
+        def gasto = Cuenta.get(params.gasto)
+        if (!gastoOld || gasto.id != gastoOld.id) {
+            if (gastoOld) {
+                gastoOld.resultado = null
+                if (!gastoOld.save(flush: true)) {
+                    println gastoOld.errors
+                }
+            }
+            gasto.resultado = "G"
+            if (!gasto.save(flush: true)) {
+                println gasto.errors
             }
         }
         flash.message = "Datos guardados"
         redirect(action: 'cuentaResultados')
     }
-
 
     def loadForm() {
 

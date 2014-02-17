@@ -13,7 +13,7 @@ class Cuenta implements Serializable {
     String estado
     String retencion    /*     S --> si    N--> no      */
     Impuesto impuesto
-    String resultado = ""  /* Cuenta para el calculo de resultados S--> superavit D--> deficit */
+    String resultado = ""  /* Cuenta para el calculo de resultados S-->superavit D-->deficit A-->activos fijos P-->depreciacion G-->gasto*/
     static mapping = {
         table 'cnta'
         cache usage: 'read-write', include: 'non-lazy'
