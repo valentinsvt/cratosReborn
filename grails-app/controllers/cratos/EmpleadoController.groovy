@@ -178,12 +178,29 @@ class EmpleadoController extends cratos.seguridad.Shield {
 
     def list() {
         params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
-        def empleadoInstanceList = Empleado.list(params)
-        def empleadoInstanceCount = Empleado.count()
+//        def empleadoInstanceList = Empleado.list(params)
+        def c = Empleado.createCriteria()
+        def empleadoInstanceList = c.list(params) {
+            persona {
+                eq("empresa", session.empresa)
+            }
+        }
+        def c2 = Empleado.createCriteria()
+        def todos = c2.list() {
+            persona {
+                eq("empresa", session.empresa)
+            }
+        }
+        def empleadoInstanceCount = todos.size()
         if (empleadoInstanceList.size() == 0 && params.offset && params.max) {
             params.offset = params.offset - params.max
         }
-        empleadoInstanceList = Empleado.list(params)
+        c = Empleado.createCriteria()
+        empleadoInstanceList = c.list(params) {
+            persona {
+                eq("empresa", session.empresa)
+            }
+        }
         return [empleadoInstanceList: empleadoInstanceList, empleadoInstanceCount: empleadoInstanceCount]
     } //list
 
@@ -216,7 +233,7 @@ class EmpleadoController extends cratos.seguridad.Shield {
         println("entro loadPersona")
 
         def ci = params.ci
-        def persona = Persona.findByCedula(ci)
+        def persona = Persona.findByCedulaAndEmpresa(ci, session.empresa)
 
         def datos = [:]
         if (persona) {
@@ -247,32 +264,44 @@ class EmpleadoController extends cratos.seguridad.Shield {
     }
 
     def validarCedula_ajax() {
-
+//        println params
         params.cedula = params.persona.cedula.toString().trim()
+        def pers = Persona.findByCedula(params.cedula)
+
+        def empOk = true
+        if (pers && pers.empresaId.toLong() != session.empresa.id.toLong()) {
+            empOk = false
+        }
 
         if (params.id) {
             def emp = Empleado.get(params.id)
+
             if (emp.persona.cedula == params.cedula) {
+//                println "1"
                 render true
                 return
             } else {
                 def emps = Empleado.withCriteria {
                     persona {
+//                        eq("empresa", session.empresa)
                         eq("cedula", params.cedula)
                     }
                 }
-//                render emps.size() == 0
-                  render errors
+//                println "2: " + emps.size()
+                render(emps.size() == 0) && empOk
+//                render errors
                 return
             }
         } else {
             def emps = Empleado.withCriteria {
                 persona {
+//                    eq("empresa", session.empresa)
                     eq("cedula", params.cedula)
                 }
             }
-//            render emps.size() == 0
-            render errors
+//            println "3: " + emps.size()
+            render emps.size() == 0 && empOk
+//            render errors
             return
         }
     }
@@ -297,9 +326,7 @@ class EmpleadoController extends cratos.seguridad.Shield {
         personaInstance.properties = params.persona
 
         if (!params.persona.id) {
-
-
-
+            personaInstance.empresa = session.empresa
             personaInstance.login = "empleado_${personaInstance.cedula}"
             personaInstance.password = personaInstance.cedula
             personaInstance.autorizacion = personaInstance.cedula

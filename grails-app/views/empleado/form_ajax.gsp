@@ -86,7 +86,7 @@
                     <div class="col-md-8">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                            <g:textField name="persona.email" maxlength="63" class="persona form-control email" value="${empleadoInstance.persona?.email}" />
+                            <g:textField name="persona.email" maxlength="63" class="persona form-control email" value="${empleadoInstance.persona?.email}"/>
                         </div>
                     </div>
                 </span>
@@ -108,18 +108,18 @@
                 </span>
             </div>
 
-        <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'barrio', 'error')} ">
-            <span class="grupo">
-                <label for="persona.barrio" class="col-md-3 control-label text-info">
-                    Barrio
-                </label>
+            <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'barrio', 'error')} ">
+                <span class="grupo">
+                    <label for="persona.barrio" class="col-md-3 control-label text-info">
+                        Barrio
+                    </label>
 
-                <div class="col-md-8">
-                    <g:textField name="persona.barrio" maxlength="127" class="persona form-control" value="${empleadoInstance.persona?.barrio}"/>
-                </div>
+                    <div class="col-md-8">
+                        <g:textField name="persona.barrio" maxlength="127" class="persona form-control" value="${empleadoInstance.persona?.barrio}"/>
+                    </div>
 
-            </span>
-        </div>
+                </span>
+            </div>
 
             <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'direccion', 'error')} ">
                 <span class="grupo">
@@ -133,9 +133,6 @@
 
                 </span>
             </div>
-
-
-
 
 
             <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'discapacitado', 'error')} ">
@@ -238,33 +235,32 @@
                 </span>
             </div>
 
-        <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'fechaFin', 'error')} ">
-            <span class="grupo">
-                <label for="empleado.fechaFin" class="col-md-4 control-label text-info">
-                    Fecha Fin
-                </label>
+            <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'fechaFin', 'error')} ">
+                <span class="grupo">
+                    <label for="empleado.fechaFin" class="col-md-4 control-label text-info">
+                        Fecha Fin
+                    </label>
 
-                <div class="col-md-6">
-                    <elm:datepicker id="fechaFin" name="empleado.fechaFin" title="fechaFin" class="datepicker form-control" value="${empleadoInstance?.fechaFin}"/>
-                </div>
+                    <div class="col-md-6">
+                        <elm:datepicker id="fechaFin" name="empleado.fechaFin" title="fechaFin" class="datepicker form-control" value="${empleadoInstance?.fechaFin}"/>
+                    </div>
 
-            </span>
-        </div>
+                </span>
+            </div>
 
 
-        <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'direccionReferencia', 'error')} ">
-            <span class="grupo">
-                <label for="persona.direccionReferencia" class="col-md-4 control-label text-info">
-                    Referencias dirección
-                </label>
+            <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'direccionReferencia', 'error')} ">
+                <span class="grupo">
+                    <label for="persona.direccionReferencia" class="col-md-4 control-label text-info">
+                        Referencias dirección
+                    </label>
 
-                <div class="col-md-6">
-                    <g:textArea name="persona.direccionReferencia" maxlength="127" class="persona form-control" value="${empleadoInstance.persona?.direccionReferencia}" style="resize: none"/>
-                </div>
+                    <div class="col-md-6">
+                        <g:textArea name="persona.direccionReferencia" maxlength="127" class="persona form-control" value="${empleadoInstance.persona?.direccionReferencia}" style="resize: none"/>
+                    </div>
 
-            </span>
-        </div>
-
+                </span>
+            </div>
 
 
             <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'sueldo', 'error')} required">
@@ -280,19 +276,19 @@
                 </span>
             </div>
 
-        <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'porcentajeComision', 'error')} required">
-            <span class="grupo">
-                <label for="empleado.porcentajeComision" class="col-md-4 control-label text-info">
-                    Porcentaje Comisión
-                </label>
+            <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'porcentajeComision', 'error')} required">
+                <span class="grupo">
+                    <label for="empleado.porcentajeComision" class="col-md-4 control-label text-info">
+                        Porcentaje Comisión
+                    </label>
 
-                <div class="col-md-4">
-                    <g:select name="empleado.porcentajeComision" type="number" value="${empleadoInstance.porcentajeComision ?: 0}"
-                              from="${0..100}" class="number form-control  required" required=""/>
-                </div>
-                *
-            </span>
-        </div>
+                    <div class="col-md-4">
+                        <g:select name="empleado.porcentajeComision" type="number" value="${empleadoInstance.porcentajeComision ?: 0}"
+                                  from="${0..100}" class="number form-control  required" required=""/>
+                    </div>
+                    *
+                </span>
+            </div>
 
             <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'cuenta', 'error')} ">
                 <span class="grupo">
@@ -425,9 +421,12 @@
         });
 
         $("#persona\\.cedula").blur(function () {
+            var ci = $(this).val();
+//            console.log("1");
             setTimeout(function () {
+//                console.log("2");
                 if (validator.element("#persona\\.cedula")) {
-                    var ci = $(this).val();
+//                    console.log("3");
                     $.ajax({
                         type     : "POST",
                         dataType : "json",
@@ -436,6 +435,7 @@
                             ci : ci
                         },
                         success  : function (msg) {
+//                            console.log("4");
                             if ($.isEmptyObject(msg)) {
                                 $(".persona").not("#persona\\.cedula").val("");
                             } else {
