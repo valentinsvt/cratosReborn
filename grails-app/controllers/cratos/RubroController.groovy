@@ -10,18 +10,30 @@ class RubroController extends cratos.seguridad.Shield {
         redirect(action: "list", params: params)
     }
 
-    def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [rubroInstanceList: Rubro.list(params), rubroInstanceTotal: Rubro.count()]
-    }
+//    def list() {
+//        params.max = Math.min(params.max ? params.int('max') : 10, 100)
+//        [rubroInstanceList: Rubro.list(params), rubroInstanceTotal: Rubro.count()]
+//    }
 
 
     def rubros(){
         def tipos = TipoRubro.list([sort:"descripcion"])
-        [tipos:tipos]
+
+        def rubroInstance = new Rubro(params)
+        if (params.id) {
+            rubroInstance = Rubro.get(params.id)
+            if (!rubroInstance) {
+                notFound_ajax()
+//                return
+            }
+        }
+        return [rubroInstance: rubroInstance, tipos: tipos]
+
+
     }
 
     def cargaRubros(){
+
         def rubros = Rubro.findAllByTipoRubro(TipoRubro.get(params.id),[sort:"descripcion"])
         [rubros:rubros]
     }
@@ -57,10 +69,15 @@ class RubroController extends cratos.seguridad.Shield {
     }
 
 
+
+
     def composicion(){
         def tipos = TipoContrato.list([sort:"descripcion"])
         def tiposRubro=TipoRubro.list([sort: "descripcion"])
         def rubros = Rubro.findAllByTipoRubro(tiposRubro[0])
+
+
+
         [tipos:tipos,tiposRubro:tiposRubro,rubros:rubros]
     }
     def cargaRubrosCombo(){
@@ -70,13 +87,15 @@ class RubroController extends cratos.seguridad.Shield {
 
     def getDatosRubro(){
         def rubro = Rubro.get(params.id)
-        render ""+rubro.valor+";"+rubro.porcentaje+";"+rubro.iess+";"+rubro.gravable+";"+rubro.decimo+";"+rubro.decimo
+        render ""+rubro.valor+";"+rubro.porcentaje+";"+rubro.iess+";"+rubro.gravable+";"+rubro.decimo+";"+rubro.editable
     }
 
-
+//
     def addRubroContrato(){
         println "add rubro contrato "+params
         def rubro
+
+
         if(params.id!=""){
             rubro=RubroTipoContrato.get(params.id)
         }else{
@@ -96,12 +115,77 @@ class RubroController extends cratos.seguridad.Shield {
         redirect(action: "cargaRubrosContrato",id: params.tipoContrato)
     }
 
+//    def agregarRubro() {
+//
+//        println("params " + params)
+//
+//        def rubroTipoContrato
+//
+//        def rubro = Rubro.get(params.rubro)
+//        def tipoContrato = TipoContrato.get(params.tipoContrato)
+//
+//        if(params.gravable == true){
+//
+//            params.gravable = '1'
+//        }else {
+//
+//            params.gravable = '0'
+//        }
+//
+//        if(params.decimo == true){
+//
+//            params.decimo = '1'
+//        }else {
+//            params.decimo = '0'
+//        }
+//
+//        if(params.iess == true){
+//            params.iess = '1'
+//        }else {
+//            params.iess = '0'
+//
+//        }
+//
+//        def comp = RubroTipoContrato.findByRubroAndTipoContrato(rubro, tipoContrato)
+//
+//        if(comp != null){
+//
+//            render "EL rubro elegido ya está asignado a dicho Tipo de Contrato"
+//
+//        }else {
+//
+//            rubroTipoContrato = new RubroTipoContrato()
+//
+//            rubroTipoContrato.rubro = rubro
+//            rubroTipoContrato.tipoContrato = tipoContrato
+//            rubroTipoContrato.porcentaje = params.porcentaje.toDouble()
+//            rubroTipoContrato.valor = params.valor.toDouble()
+//            rubroTipoContrato.gravable = params.gravable
+//            rubroTipoContrato.iess = params.iess
+//            rubroTipoContrato.decimo = params.decimo
+//
+//            render "Rubro asignado correctamente"
+//
+//        }
+//
+//
+//    }
+
 
     def cargaRubrosContrato(){
         def rubros = RubroTipoContrato.findAllByTipoContrato(TipoContrato.get(params.id))
         rubros.sort{it.rubro.tipoRubro.descripcion}
         [rubros:rubros]
     }
+
+
+    def cargarValores () {
+
+        def rubro = Rubro.get(params.id)
+
+        return [rubro: rubro]
+    }
+
 
     def generarRol(){
         println "rol de pagos "+params
@@ -412,4 +496,178 @@ class RubroController extends cratos.seguridad.Shield {
         }
         render "OK"
     }
+
+
+    /* ************************ COPIAR DESDE AQUI ****************************/
+
+    def list() {
+        params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+        def rubroInstanceList = Rubro.list(params)
+        def rubroInstanceCount = Rubro.count()
+        if (rubroInstanceList.size() == 0 && params.offset && params.max) {
+            params.offset = params.offset - params.max
+        }
+        rubroInstanceList = Rubro.list(params)
+        return [rubroInstanceList: rubroInstanceList, rubroInstanceCount: rubroInstanceCount]
+    } //list
+
+    def show_ajax() {
+
+
+        if (params.id) {
+            def rubroInstance = Rubro.get(params.id)
+            if (!rubroInstance) {
+                notFound_ajax()
+                return
+            }
+            return [rubroInstance: rubroInstance]
+        } else {
+            notFound_ajax()
+        }
+    } //show para cargar con ajax en un dialog
+
+    def form_ajax() {
+        def rubroInstance = new Rubro(params)
+        if (params.id) {
+            rubroInstance = Rubro.get(params.id)
+            if (!rubroInstance) {
+                notFound_ajax()
+                return
+            }
+        }
+        return [rubroInstance: rubroInstance]
+    } //form para cargar con ajax en un dialog
+
+    def save_ajax() {
+
+//        println("params:" + params)
+
+
+
+        params.descripcion = params.descripcion.toUpperCase()
+        params.codigo = params.codigo.toUpperCase()
+
+        //original
+        def rubroInstance = new Rubro()
+        if (params.id) {
+            rubroInstance = Rubro.get(params.id)
+            rubroInstance.properties = params
+            if (!rubroInstance) {
+                notFound_ajax()
+                return
+            }
+        }else {
+
+            rubroInstance = new Rubro()
+            rubroInstance.properties = params
+//            rubroInstance.estado = '1'
+//            rubroInstance.empresa = session.empresa
+
+
+        } //update
+
+
+        if (!rubroInstance.save(flush: true)) {
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Rubro."
+            msg += renderErrors(bean: rubroInstance)
+            render msg
+            return
+        }
+        render "OK_${params.id ? 'Actualización' : 'Creación'} de Rubro."
+    } //save para grabar desde ajax
+
+
+
+    def delete_ajax() {
+        if (params.id) {
+            def rubroInstance = Rubro.get(params.id)
+            if (rubroInstance) {
+                try {
+                    rubroInstance.delete(flush: true)
+                    render "OK_Eliminación de Rubro."
+                } catch (e) {
+                    render "NO_No se pudo eliminar el Rubro"
+                }
+            } else {
+                notFound_ajax()
+            }
+        } else {
+            notFound_ajax()
+        }
+    } //delete para eliminar via ajax
+
+    protected void notFound_ajax() {
+        render "NO_No se encontró el Rubro."
+    } //notFound para ajax
+
+
+    def saveRubro() {
+
+//        println("params:" + params)
+
+
+        if(params.decimo == 'true'){
+            params.decimo = '1'
+        }else {
+            params.decimo = '0'
+        }
+
+        if(params.iess == 'true'){
+            params.iess = '1'
+        }else{
+            params.iess = '0'
+        }
+
+        if(params.gravable == 'true'){
+            params.gravable = '1'
+        }else{
+            params.gravable = '0'
+        }
+
+        if(params.editable ==  'true'){
+            params.editable = '1'
+        }else {
+            params.editable = '0'
+        }
+
+
+        def mensaje = ''
+
+        //original
+        def rubroInstance = new Rubro()
+
+        if (params.id) {
+            rubroInstance = Rubro.get(params.id)
+            rubroInstance.properties = params
+            if (!rubroInstance) {
+                notFound_ajax()
+
+            }
+
+
+        }else {
+
+            rubroInstance = new Rubro()
+            rubroInstance.properties = params
+
+        } //update
+
+
+        if (!rubroInstance.save(flush: true)) {
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Rubro."
+            msg += renderErrors(bean: rubroInstance)
+            render msg
+            return
+        }else {
+
+            render "OK"
+            return
+        }
+//
+//        render "OK_${params.id ? 'Actualización' : 'Creación'} de Rubro."
+
+
+    } //save para grabar desde ajax
+    
+    
 }

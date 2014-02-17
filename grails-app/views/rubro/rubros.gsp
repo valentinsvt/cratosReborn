@@ -26,39 +26,101 @@
     td,th{
         border: 1px solid #000000;
     }
+    .izquierda {
+        float: left;
+
+    }
+    .fila {
+        clear: both;
+
+    }
+    .uno{
+
+      width: 150px;
+
+    }
+
+    .dos {
+        width: 80px;
+        margin-left: 15px;
+
+    }
+
+
     </style>
 </head>
 <body>
-<g:if test="${flash.message}">
-    <div class="message">${flash.message}</div>
-</g:if>
 
-<div class="container entero ui-widget-content ui-corner-all">
-    <h1 class="titulo center ui-widget-header ui-corner-all" style="margin-bottom: 15px; margin-left: 8px;padding-left: 10px;height: 30px;line-height: 30px">
-        Detalle
-    </h1>
+<div class="vertical-container vertical-container-list">
+    <p class="css-vertical-text">Rubros</p>
+    <div class="linea"></div>
 
-    <div class="etiqueta margen">  Tipo: </div>
-    <g:select name="tipo" from="${tipos}" id="tipoRubro" optionKey="id"></g:select>
-    <div style="width: 95%;height: 30px;margin-left: 20px;margin-bottom: 10px;">
-        <input type="hidden" id="rubro_id">
-        <div class="etiqueta"> Porcentaje: </div><input type="text" id="rubro_porcentaje" style="width: 50px;">
-        <div class="etiqueta" style="width: 40px;">Valor:    </div> <input type="text" id="rubro_valor" style="width: 50px;">
-        <div class="etiqueta">Descripción:</div><input type="text" id="rubro_descripcion" style="width: 250px;">
-        <div class="etiqueta" style="width: 35px;"> IESS:</div> <input type="checkbox" id="rubro_iess" value="1">
-        <div class="etiqueta" style="width: 35px;"> Grav.:</div> <input type="checkbox" id="rubro_gravable" value="1">
-        <div class="etiqueta" style="width: 45px;">Décimo:</div> <input type="checkbox" id="rubro_decimo" value="1">
-        <div class="agregarCuenta  " id="agregar" style="margin-left: 5px;">
-            Agregar
-        </div>
+    <g:hiddenField name="id" id="${rubroInstance?.id}"/>
+
+    <div class="fila">
+        <label class="izquierda uno">Tipo: </label>
+      <g:select class="form-control izquierda required" name="tipoRubro.id" from="${tipos}" id="tipoRubro" optionKey="id" style="width: 250px; margin-bottom: 10px" required=""/>
+
+   </div>
+
+    <div class="fila">
+        <label class="izquierda uno"> Porcentaje: </label>
+
+        <g:textField class="form-control izquierda required" name="porcentaje"  id="porcentaje" style="width: 50px; margin-bottom: 10px"/>
+
+
+        <label class="izquierda" style="margin-left: 30px; width: 120px">Valor: </label>
+        <g:textField name="valor" id="valor" style="width: 50px; margin-bottom: 10px" class="form-control izquierda required"/>
     </div>
+
+    <div class="fila">
+        <label class="izquierda uno">Descripción: </label>
+        <g:textField name="descripcion" id="descripcion" style="width: 250px; margin-bottom: 10px" class="form-control required"/>
+    </div>
+
+    <div class="fila">
+        <label class="izquierda dos">IESS:</label>
+        <g:checkBox name="iess" id="iess" class="form-control izquierda required"/>
+
+        <label class="izquierda dos">Gravable:</label>
+        <g:checkBox name="gravable" id="gravable" class=" form-control izquierda required"/>
+
+        <label class="izquierda dos">Décimo:</label>
+        <g:checkBox name="decimo" id="decimo" class="form-control izquierda required"/>
+
+        <label class="izquierda dos">Editable:</label>
+        <g:checkBox name="editable" id="editable" class="form-control izquierda required"/>
+    </div>
+
+
+    <div class="fila" style="margin-top: 40px; margin-bottom: 15px">
+        <g:link class="btn agregar btn-success btn-ajax" id="agregar"><i class="fa fa-plus"></i> Agregar</g:link>
+        <g:link class="btn lista btn-info btn-ajax" id="lista"><i class="fa fa-list-alt"></i> Lista de Rubros</g:link>
+
+    </div>
+
     <fieldset style="width: 90%;margin-left: 20px;">
         <legend>Rubros</legend>
+
         <div id="detalle" style="width: 95%"></div>
+
+        <legend style="margin-top: 20px"></legend>
+
     </fieldset>
+
     <div id="errors" style="display: none"></div>
 </div>
+
+
+
 <script type="text/javascript">
+
+
+    $(".lista").click(function () {
+     location.href="${g.createLink(controller: 'rubro', action: 'list')}"
+    });
+
+
     $("#tipoRubro").change(function(){
 
         $.ajax({
@@ -72,73 +134,67 @@
         });
     });
 
-    $("#errors").dialog({
-        width:400,
-        height:200,
-        title:"Errores",
-        autoOpen:false,
-        modal:true,
-        buttons:{
-            "Cerrar":function(){
-                $(this).dialog("close")
-            }
-        }
-    })
-
-    $("#agregar").button().click(function(){
-
-        var id = $("#rubro_id").val()
-        var porcentaje = $("#rubro_porcentaje").val()
-        var valor = $("#rubro_valor").val()
-        var descripcion =$("#rubro_descripcion").val()
-        var iess=0
-        var grav=0
-        var decimo=0
-        var msn=""
-        if(isNaN(porcentaje) || porcentaje=="")
-            porcentaje=-1
-        if(porcentaje*1<0)
-            msn+="<br>Error: El porcentaje debe ser un número positivo"
-        if(isNaN(valor) || valor=="")
-            valor=-1
-        if(valor*1<0)
-            msn+="<br>Error: El valor debe ser un número positivo"
-        if(descripcion.length>62)
-            msn+="<br>Error: la descripcíon debe tener máximo 62 caracteres"
-        if(descripcion=="")
-            msn+="<br>Error: ingrese una descripción"
-        if($("#rubro_iess").attr("checked")=="checked")
-            iess=1
-        if($("#rubro_decimo").attr("checked")=="checked")
-            decimo=1
-        if($("#rubro_gravable").attr("checked")=="checked")
-            grav=1
-
-        if(msn==""){
-            $.ajax({
-                type    : "POST",
-                url     : "${g.createLink(controller: 'rubro',action: 'addRubro')}",
-                data    : "id=" +id+"&porcentaje="+porcentaje+"&valor="+valor+"&descripcion="+descripcion+"&iess="+iess+"&decimo="+decimo+"&grav="+grav+"&tipo="+$("#tipoRubro").val(),
-                success : function (msg) {
-                    $("#rubro_gravable").attr("checked","false")
-                    $("#rubro_iess").attr("checked","false")
-                    $("#rubro_decimo").attr("checked","false")
-                    $("#detalle").html(msg).show("slide")
-                    $("#rubro_porcentaje").val("")
-                    $("#rubro_valor").val("")
-                    $("#rubro_id").val("")
-                    $("#rubro_descripcion").val("")
-                }
-            });
-        }else{
-            $("#errors").html(msn)
-            $("#errors").dialog("open")
-
-        }
-
-
-    });
     $("#tipoRubro").change()
+
+    $(".agregar").click(function () {
+
+
+        $.ajax({
+           type : "POST",
+           url  : "${g.createLink(controller: 'rubro', action: 'saveRubro')}",
+           data : {
+              tipoRubro : $("#tipoRubro").val(),
+              porcentaje : $("#porcentaje").val(),
+              valor: $("#valor").val(),
+              descripcion : $("#descripcion").val(),
+              iess:         $("#iess").is(':checked'),
+              gravable     :$("#gravable").is(':checked'),
+              decimo       :$("#decimo").is(':checked'),
+              editable     :$("#editable").is(':checked')
+
+           },
+           success : function (msg) {
+
+//               var part = msg.split('_')
+               var part = msg
+
+               console.log("-->" + part)
+
+               if(part == 'OK'){
+
+                   bootbox.alert("Rubro grabado correctamente!")
+
+                   $.ajax({
+                       type    : "POST",
+                       url     : "${g.createLink(controller: 'rubro',action: 'cargaRubros')}",
+                       data    : "id=" +$("#tipoRubro").val(),
+                       success : function (msg) {
+
+                           $("#detalle").html(msg)
+                       }
+                   });
+
+
+
+               }else {
+
+                   bootbox.alert("Error al grabar el rubro")
+
+               }
+
+
+
+
+
+           }
+
+
+
+        });
+
+        return false;
+    });
+
 
 </script>
 </body>

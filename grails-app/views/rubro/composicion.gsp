@@ -26,45 +26,92 @@
     td,th{
         border: 1px solid #000000;
     }
+
+    .izquierda {
+        float: left;
+
+    }
+    .fila {
+        clear: both;
+
+    }
+    .uno{
+
+        width: 150px;
+
+    }
+
+    .dos {
+        width: 80px;
+        margin-left: 15px;
+
+    }
     </style>
 </head>
 <body>
-<g:if test="${flash.message}">
-    <div class="message">${flash.message}</div>
-</g:if>
 
-<div class="container entero ui-widget-content ui-corner-all">
-    <h1 class="titulo center ui-widget-header ui-corner-all" style="margin-bottom: 15px; margin-left: 8px;padding-left: 10px;height: 30px;line-height: 30px">
-        Detalle
-    </h1>
+<div class="vertical-container vertical-container-list">
+    <p class="css-vertical-text">Asignación de Rubros</p>
+    <div class="linea"></div>
 
-    <div class="etiqueta margen" style="width: 120px">  Tipo de contrato: </div>
-    <g:select name="tipo" from="${tipos}" id="tipoContrato" optionKey="id" optionValue="descripcion"></g:select>
-    <div class="etiqueta margen">  Tipo de rubro: </div>
-    <g:select name="tipo" from="${tiposRubro}" id="tipoRubro" optionKey="id"></g:select>
-    <div class="etiqueta margen">  Rubros: </div>
-    <span id="div_rubros">
-    <g:select name="tipo" from="${rubros}" id="rubros" optionKey="id"></g:select>
-    </span>
-    <div style="width: 95%;height: 30px;margin-left: 20px;margin-bottom: 10px;">
-        <input type="hidden" id="rubro_id">
-        <div class="etiqueta"> Porcentaje: </div><input type="text" id="rubro_porcentaje" style="width: 50px;">
-        <div class="etiqueta" style="width: 40px;">Valor:    </div> <input type="text" id="rubro_valor" style="width: 50px;">
-        <div class="etiqueta" style="width: 35px;"> IESS:</div> <input type="checkbox" id="rubro_iess" value="1">
-        <div class="etiqueta" style="width: 35px;"> Grav.:</div> <input type="checkbox" id="rubro_gravable" value="1">
-        <div class="etiqueta" style="width: 45px;">Décimo:</div> <input type="checkbox" id="rubro_decimo" value="1">
-        <div class="agregarCuenta  " id="agregar" style="margin-left: 5px;">
-            Agregar
-        </div>
+    <g:hiddenField name="id" id="rubro_id"/>
+
+
+    <div class="fila">
+        <label class="izquierda uno">Tipo de Contrato: </label>
+        <g:select name="tipoContrato" from="${tipos}" id="tipoContrato" optionKey="id" optionValue="descripcion" class="form-control izquierda" style="width: 250px; margin-bottom: 10px"/>
     </div>
+    <div class="fila">
+        <label class="izquierda uno">Tipo de Rubro: </label>
+        <g:select name="tipoRubro" from="${tiposRubro}" id="tipoRubro" optionKey="id" class="form-control izquierda"  style="width: 250px; margin-bottom: 10px"/>
+    </div>
+    <div class="fila">
+        <label class="izquierda uno">Rubros: </label>
+        <div id="div_rubros"></div>
+        %{--<g:select name="rubros" from="${rubros}" id="rubros" optionKey="id" class="form-control izquierda"  style="width: 250px; margin-bottom: 10px"/>--}%
+    </div>
+
+    <div id="valores">
+
+    <div class="fila">
+        <label class="izquierda uno"> Porcentaje: </label>
+
+        <g:textField class="form-control izquierda required" name="rubro_porcentaje"  id="rubro_porcentaje" style="width: 100px; margin-bottom: 10px"/>
+
+
+        <label class="izquierda" style="margin-left: 10px; width: 50px">Valor: </label>
+        <g:textField name="rubro_valor" id="rubro_valor" style="width: 90px; margin-bottom: 10px" class="form-control izquierda required"/>
+    </div>
+
+
+    <div class="fila" >
+        <label class="izquierda dos">IESS:</label>
+        <g:checkBox name="rubro_iess" id="rubro_iess" class="form-control izquierda required" checked=""/>
+        <label class="izquierda dos">Gravable:</label>
+        <g:checkBox name="rubro_gravable" id="rubro_gravable" class=" form-control izquierda required" checked=""/>
+        <label class="izquierda dos">Décimo:</label>
+        <g:checkBox name="rubro_decimo" id="rubro_decimo" class="form-control izquierda required" checked=""/>
+        %{--<label class="izquierda dos">Editable:</label>--}%
+        %{--<g:checkBox name="editable" id="editable" class="form-control izquierda required"/>--}%
+    </div>
+
+    </div>
+
+    <div class="fila" style="margin-top: 40px; margin-bottom: 15px">
+        <g:link class="btn agregar btn-success btn-ajax" id="agregar"><i class="fa fa-plus"></i> Agregar</g:link>
+
+    </div>
+
     <fieldset style="width: 90%;margin-left: 20px;">
         <legend>Rubros</legend>
         <div id="detalle" style="width: 95%"></div>
+        <legend style="margin-top: 20px"></legend>
     </fieldset>
     <div id="errors" style="display: none"></div>
 </div>
 <script type="text/javascript">
     $("#tipoRubro").change(function(){
+
 
         $.ajax({
             type    : "POST",
@@ -73,71 +120,24 @@
             success : function (msg) {
 
                 $("#div_rubros").html(msg).show()
+
+                $("#rubro_iess").attr("checked", false);
+                $("#rubro_gravable").attr("checked", false);
+                $("#rubro_decimo").attr("checked", false);
+
+                $("#rubro_valor").val('');
+                $("#rubro_porcentaje").val('');
+
+
+
+
+
+
             }
         });
     });
     $("#tipoRubro").change()
-    $("#errors").dialog({
-        width:400,
-        height:200,
-        title:"Errores",
-        autoOpen:false,
-        modal:true,
-        buttons:{
-            "Cerrar":function(){
-                $(this).dialog("close")
-            }
-        }
-    })
 
-    $("#agregar").button().click(function(){
-
-        var id = $("#rubro_id").val()
-        var porcentaje = $("#rubro_porcentaje").val()
-        var valor = $("#rubro_valor").val()
-        var iess=0
-        var grav=0
-        var decimo=0
-        var msn=""
-        if(isNaN(porcentaje) || porcentaje=="")
-            porcentaje=-1
-        if(porcentaje*1<0)
-            msn+="<br>Error: El porcentaje debe ser un número positivo"
-        if(isNaN(valor) || valor=="")
-            valor=-1
-        if(valor*1<0)
-            msn+="<br>Error: El valor debe ser un número positivo"
-        if($("#rubro_iess").attr("checked")=="checked")
-            iess=1
-        if($("#rubro_decimo").attr("checked")=="checked")
-            decimo=1
-        if($("#rubro_gravable").attr("checked")=="checked")
-            grav=1
-
-        if(msn==""){
-            $.ajax({
-                type    : "POST",
-                url     : "${g.createLink(controller: 'rubro',action: 'addRubroContrato')}",
-                data    : "id=" +id+"&porcentaje="+porcentaje+"&valor="+valor+"&iess="+iess+"&decimo="+decimo+"&grav="+grav+"&tipo="+$("#tipoRubro").val()+"&rubro="+$("#rubros").val()+"&tipoContrato="+$("#tipoContrato").val(),
-                success : function (msg) {
-                    $("#rubro_gravable").attr("checked","false")
-                    $("#rubro_iess").attr("checked","false")
-                    $("#rubro_decimo").attr("checked","false")
-                    $("#detalle").html(msg).show("slide")
-                    $("#rubro_porcentaje").val("")
-                    $("#rubro_valor").val("")
-                    $("#rubro_id").val("")
-                    $("#rubro_descripcion").val("")
-                }
-            });
-        }else{
-            $("#errors").html(msn)
-            $("#errors").dialog("open")
-
-        }
-
-
-    });
     $("#tipoContrato").change(function(){
         $.ajax({
             type    : "POST",
@@ -150,6 +150,69 @@
         });
     })
     $("#tipoContrato").change()
+
+
+
+    $(".agregar").click(function(){
+
+
+        //old
+
+        var id = $("#rubro_id").val()
+
+        var porcentaje = $("#rubro_porcentaje").val()
+        var valor = $("#rubro_valor").val()
+        var iess=0
+        var grav=0
+        var decimo=0
+        var msn=""
+        if(isNaN(porcentaje) || porcentaje=="")
+            porcentaje=-1
+        if(porcentaje*1<0)
+            msn+="Error: El porcentaje debe ser un número positivo <br>"
+        if(isNaN(valor) || valor=="")
+            valor=-1
+        if(valor*1<0)
+            msn+="Error: El valor debe ser un número positivo"
+//        if($("#rubro_iess").attr("checked")=="checked")
+        if($("#rubro_iess").is("checked"))
+            iess=1
+//        if($("#rubro_decimo").attr("checked")=="checked")
+        if($("#rubro_decimo").is("checked"))
+            decimo=1
+//        if($("#rubro_gravable").attr("checked")=="checked")
+        if($("#rubro_gravable").is("checked"))
+            grav=1
+
+        if(msn==""){
+            $.ajax({
+                type    : "POST",
+                url     : "${g.createLink(controller: 'rubro',action: 'addRubroContrato')}",
+                data    : "id=" +id+"&porcentaje="+porcentaje+"&valor="+valor+"&iess="+iess+"&decimo="+decimo+"&grav="+grav+"&tipo="+$("#tipoRubro").val()+"&rubro="+$("#rubros").val()+"&tipoContrato="+$("#tipoContrato").val(),
+                success : function (msg) {
+                    $("#rubro_gravable").attr("checked",false)
+                    $("#rubro_iess").attr("checked",false)
+                    $("#rubro_decimo").attr("checked",false)
+                    $("#detalle").html(msg).show("slide")
+                    $("#rubro_porcentaje").val("")
+                    $("#rubro_valor").val("")
+                    $("#rubro_id").val("")
+                    $("#rubro_descripcion").val("")
+                }
+            });
+        }else{
+
+            bootbox.alert(msn)
+
+        }
+
+
+        return false;
+
+
+    });
+
+
 
 </script>
 </body>

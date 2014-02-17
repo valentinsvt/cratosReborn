@@ -67,19 +67,7 @@
 
 
 
-        <div class="form-group ${hasErrors(bean: rubroInstance, field: 'editable', 'error')} required">
-            <span class="grupo">
-                <label for="editable" class="col-md-3 control-label text-info">
-                    Editable
-                </label>
 
-                <div class="col-md-6">
-                    <g:textField name="editable" maxlength="1" required="" class="allCaps form-control required"
-                                 value="${rubroInstance?.editable}"/>
-                </div>
-                *
-            </span>
-        </div>
 
         <div class="form-group ${hasErrors(bean: rubroInstance, field: 'decimo', 'error')} required">
             <span class="grupo">
@@ -118,6 +106,22 @@
                 <div class="col-md-6">
                     <g:textField name="gravable" maxlength="1" required="" class="allCaps form-control required"
                                  value="${rubroInstance?.gravable}"/>
+                </div>
+                *
+            </span>
+        </div>
+
+        <div class="form-group ${hasErrors(bean: rubroInstance, field: 'editable', 'error')} required">
+            <span class="grupo">
+                <label for="editable" class="col-md-3 control-label text-info">
+                    Editable
+                </label>
+
+                <div class="col-md-2">
+                    %{--<g:textField name="editable" maxlength="1" required="" class="allCaps form-control required"--}%
+                                 %{--value="${rubroInstance?.editable}"/>--}%
+
+                    <g:select name="editable" from="${['1': 'SI', '0': 'NO']}" optionValue="value" optionKey="key" class="form-control required"/>
                 </div>
                 *
             </span>
