@@ -544,9 +544,6 @@ class RubroController extends cratos.seguridad.Shield {
 
 
 
-        params.descripcion = params.descripcion.toUpperCase()
-        params.codigo = params.codigo.toUpperCase()
-
         //original
         def rubroInstance = new Rubro()
         if (params.id) {

@@ -72,12 +72,13 @@
         <div class="form-group ${hasErrors(bean: rubroInstance, field: 'decimo', 'error')} required">
             <span class="grupo">
                 <label for="decimo" class="col-md-3 control-label text-info">
-                    Decimo
+                    Décimo
                 </label>
 
-                <div class="col-md-6">
-                    <g:textField name="decimo" maxlength="1" required="" class="allCaps form-control required"
-                                 value="${rubroInstance?.decimo}"/>
+                <div class="col-md-2">
+                    %{--<g:textField name="decimo" maxlength="1" required="" class="allCaps form-control required"--}%
+                                 %{--value="${rubroInstance?.decimo}"/>--}%
+                    <g:select name="decimo" from="${['1': 'SI', '0': 'NO']}" optionValue="value" optionKey="key" class="form-control required"/>
                 </div>
                 *
             </span>
@@ -89,9 +90,11 @@
                     IESS
                 </label>
 
-                <div class="col-md-6">
-                    <g:textField name="iess" maxlength="1" required="" class="allCaps form-control required"
-                                 value="${rubroInstance?.iess}"/>
+                <div class="col-md-2">
+                    %{--<g:textField name="iess" maxlength="1" required="" class="allCaps form-control required"--}%
+                                 %{--value="${rubroInstance?.iess}"/>--}%
+
+                    <g:select name="iess" from="${['1': 'SI', '0': 'NO']}" optionValue="value" optionKey="key" class="form-control required"/>
                 </div>
                 *
             </span>
@@ -103,9 +106,10 @@
                     Gravable
                 </label>
 
-                <div class="col-md-6">
-                    <g:textField name="gravable" maxlength="1" required="" class="allCaps form-control required"
-                                 value="${rubroInstance?.gravable}"/>
+                <div class="col-md-2">
+                    %{--<g:textField name="gravable" maxlength="1" required="" class="allCaps form-control required"--}%
+                                 %{--value="${rubroInstance?.gravable}"/>--}%
+                    <g:select name="gravable" from="${['1': 'SI', '0': 'NO']}" optionValue="value" optionKey="key" class="form-control required"/>
                 </div>
                 *
             </span>
