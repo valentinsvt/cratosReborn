@@ -213,6 +213,8 @@ class EmpleadoController extends cratos.seguridad.Shield {
     } //form para cargar con ajax en un dialog
 
     def loadPersona() {
+        println("entro loadPersona")
+
         def ci = params.ci
         def persona = Persona.findByCedula(ci)
 
@@ -245,7 +247,9 @@ class EmpleadoController extends cratos.seguridad.Shield {
     }
 
     def validarCedula_ajax() {
+
         params.cedula = params.persona.cedula.toString().trim()
+
         if (params.id) {
             def emp = Empleado.get(params.id)
             if (emp.persona.cedula == params.cedula) {
@@ -257,7 +261,8 @@ class EmpleadoController extends cratos.seguridad.Shield {
                         eq("cedula", params.cedula)
                     }
                 }
-                render emps.size() == 0
+//                render emps.size() == 0
+                  render errors
                 return
             }
         } else {
@@ -266,7 +271,8 @@ class EmpleadoController extends cratos.seguridad.Shield {
                     eq("cedula", params.cedula)
                 }
             }
-            render emps.size() == 0
+//            render emps.size() == 0
+            render errors
             return
         }
     }
@@ -291,6 +297,9 @@ class EmpleadoController extends cratos.seguridad.Shield {
         personaInstance.properties = params.persona
 
         if (!params.persona.id) {
+
+
+
             personaInstance.login = "empleado_${personaInstance.cedula}"
             personaInstance.password = personaInstance.cedula
             personaInstance.autorizacion = personaInstance.cedula

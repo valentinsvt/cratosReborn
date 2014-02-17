@@ -17,7 +17,7 @@
                         Cédula
                     </label>
 
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <g:textField name="persona.cedula" maxlength="10" cedula="true" required="" class="persona form-control required" value="${empleadoInstance.persona?.cedula}"/>
                     </div>
                     *
@@ -30,7 +30,7 @@
                         Nombre
                     </label>
 
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <g:textField name="persona.nombre" maxlength="31" required="" class="persona form-control required" value="${empleadoInstance.persona?.nombre}"/>
                     </div>
                     *
@@ -43,7 +43,7 @@
                         Apellido
                     </label>
 
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <g:textField name="persona.apellido" maxlength="31" required="" class="persona form-control required" value="${empleadoInstance.persona?.apellido}"/>
                     </div>
                     *
@@ -56,7 +56,7 @@
                         Sigla
                     </label>
 
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <g:textField name="persona.sigla" maxlength="8" required="" class="persona form-control required" value="${empleadoInstance.persona?.sigla}"/>
                     </div>
                     *
@@ -69,7 +69,7 @@
                         Fecha Nacimiento
                     </label>
 
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <elm:datepicker id="fechaNacimiento" name="persona.fechaNacimiento" title="Fecha de Nacimiento" class="persona datepicker form-control" maxDate="-15y"
                                         value="${empleadoInstance.persona?.fechaNacimiento}"/>
                     </div>
@@ -83,10 +83,10 @@
                         E-mail
                     </label>
 
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                            <g:textField name="persona.email" maxlength="63" class="persona form-control" value="${empleadoInstance.persona?.email}"/>
+                            <g:textField name="persona.email" maxlength="63" class="persona form-control email" value="${empleadoInstance.persona?.email}" />
                         </div>
                     </div>
                 </span>
@@ -98,15 +98,28 @@
                         Teléfono
                     </label>
 
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-phone"></i></span>
-                            <g:textField name="persona.telefono" maxlength="63" class="persona form-control" value="${empleadoInstance.persona?.telefono}"/>
+                            <g:textField name="persona.telefono" maxlength="63" class="persona form-control digits" value="${empleadoInstance.persona?.telefono}"/>
                         </div>
                     </div>
 
                 </span>
             </div>
+
+        <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'barrio', 'error')} ">
+            <span class="grupo">
+                <label for="persona.barrio" class="col-md-3 control-label text-info">
+                    Barrio
+                </label>
+
+                <div class="col-md-8">
+                    <g:textField name="persona.barrio" maxlength="127" class="persona form-control" value="${empleadoInstance.persona?.barrio}"/>
+                </div>
+
+            </span>
+        </div>
 
             <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'direccion', 'error')} ">
                 <span class="grupo">
@@ -114,42 +127,20 @@
                         Dirección
                     </label>
 
-                    <div class="col-md-6">
-                        <g:textArea name="persona.direccion" maxlength="127" class="persona form-control" value="${empleadoInstance.persona?.direccion}"/>
+                    <div class="col-md-8">
+                        <g:textArea name="persona.direccion" maxlength="127" class="persona form-control" value="${empleadoInstance.persona?.direccion}" style="resize: none"/>
                     </div>
 
                 </span>
             </div>
 
-            <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'direccionReferencia', 'error')} ">
-                <span class="grupo">
-                    <label for="persona.direccionReferencia" class="col-md-3 control-label text-info">
-                        Referencias dirección
-                    </label>
 
-                    <div class="col-md-6">
-                        <g:textArea name="persona.direccionReferencia" maxlength="127" class="persona form-control" value="${empleadoInstance.persona?.direccionReferencia}"/>
-                    </div>
 
-                </span>
-            </div>
 
-            <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'barrio', 'error')} ">
-                <span class="grupo">
-                    <label for="persona.barrio" class="col-md-3 control-label text-info">
-                        Barrio
-                    </label>
-
-                    <div class="col-md-6">
-                        <g:textField name="persona.barrio" maxlength="127" class="persona form-control" value="${empleadoInstance.persona?.barrio}"/>
-                    </div>
-
-                </span>
-            </div>
 
             <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'discapacitado', 'error')} ">
                 <span class="grupo">
-                    <label for="persona.discapacitado" class="col-md-3 control-label text-info">
+                    <label for="persona.discapacitado" class="col-md-4 control-label text-info">
                         Discapacitado
                     </label>
 
@@ -163,7 +154,7 @@
 
             <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'sexo', 'error')} required">
                 <span class="grupo">
-                    <label for="persona.sexo" class="col-md-3 control-label text-info">
+                    <label for="persona.sexo" class="col-md-4 control-label text-info">
                         Sexo
                     </label>
 
@@ -177,7 +168,7 @@
 
             <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'nacionalidad', 'error')} required">
                 <span class="grupo">
-                    <label for="persona.nacionalidad" class="col-md-3 control-label text-info">
+                    <label for="persona.nacionalidad" class="col-md-4 control-label text-info">
                         Nacionalidad
                     </label>
 
@@ -191,7 +182,7 @@
 
             <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'profesion', 'error')} ">
                 <span class="grupo">
-                    <label for="persona.profesion.id" class="col-md-3 control-label text-info">
+                    <label for="persona.profesion.id" class="col-md-4 control-label text-info">
                         Profesión
                     </label>
 
@@ -205,7 +196,7 @@
 
             <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'estadoCivil', 'error')} ">
                 <span class="grupo">
-                    <label for="persona.estadoCivil" class="col-md-3 control-label text-info">
+                    <label for="persona.estadoCivil" class="col-md-4 control-label text-info">
                         Estado Civil
                     </label>
 
@@ -218,23 +209,11 @@
             </div>
 
             <!-------------------------------------------------- EMPLEADO DESDE AQUI -------------------------------------------------------------------->
-            <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'porcentajeComision', 'error')} required">
-                <span class="grupo">
-                    <label for="empleado.porcentajeComision" class="col-md-2 control-label text-info">
-                        Porcentaje Comisión
-                    </label>
 
-                    <div class="col-md-3">
-                        <g:select name="empleado.porcentajeComision" type="number" value="${empleadoInstance.porcentajeComision ?: 0}"
-                                  from="${0..100}" class="number form-control  required" required=""/>
-                    </div>
-                    *
-                </span>
-            </div>
 
             <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'estado', 'error')} ">
                 <span class="grupo">
-                    <label for="empleado.estado" class="col-md-2 control-label text-info">
+                    <label for="empleado.estado" class="col-md-4 control-label text-info">
                         Estado
                     </label>
 
@@ -248,7 +227,7 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'fechaInicio', 'error')} ">
                 <span class="grupo">
-                    <label for="empleado.fechaInicio" class="col-md-2 control-label text-info">
+                    <label for="empleado.fechaInicio" class="col-md-4 control-label text-info">
                         Fecha Inicio
                     </label>
 
@@ -259,35 +238,65 @@
                 </span>
             </div>
 
-            <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'fechaFin', 'error')} ">
-                <span class="grupo">
-                    <label for="empleado.fechaFin" class="col-md-2 control-label text-info">
-                        Fecha Fin
-                    </label>
+        <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'fechaFin', 'error')} ">
+            <span class="grupo">
+                <label for="empleado.fechaFin" class="col-md-4 control-label text-info">
+                    Fecha Fin
+                </label>
 
-                    <div class="col-md-6">
-                        <elm:datepicker id="fechaFin" name="empleado.fechaFin" title="fechaFin" class="datepicker form-control" value="${empleadoInstance?.fechaFin}"/>
-                    </div>
+                <div class="col-md-6">
+                    <elm:datepicker id="fechaFin" name="empleado.fechaFin" title="fechaFin" class="datepicker form-control" value="${empleadoInstance?.fechaFin}"/>
+                </div>
 
-                </span>
-            </div>
+            </span>
+        </div>
+
+
+        <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'direccionReferencia', 'error')} ">
+            <span class="grupo">
+                <label for="persona.direccionReferencia" class="col-md-4 control-label text-info">
+                    Referencias dirección
+                </label>
+
+                <div class="col-md-6">
+                    <g:textArea name="persona.direccionReferencia" maxlength="127" class="persona form-control" value="${empleadoInstance.persona?.direccionReferencia}" style="resize: none"/>
+                </div>
+
+            </span>
+        </div>
+
+
 
             <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'sueldo', 'error')} required">
                 <span class="grupo">
-                    <label for="empleado.sueldo" class="col-md-2 control-label text-info">
+                    <label for="empleado.sueldo" class="col-md-4 control-label text-info">
                         Sueldo
                     </label>
 
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <g:field name="empleado.sueldo" type="number" value="${fieldValue(bean: empleadoInstance, field: 'sueldo')}" class="number form-control  required" required=""/>
                     </div>
                     *
                 </span>
             </div>
 
+        <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'porcentajeComision', 'error')} required">
+            <span class="grupo">
+                <label for="empleado.porcentajeComision" class="col-md-4 control-label text-info">
+                    Porcentaje Comisión
+                </label>
+
+                <div class="col-md-4">
+                    <g:select name="empleado.porcentajeComision" type="number" value="${empleadoInstance.porcentajeComision ?: 0}"
+                              from="${0..100}" class="number form-control  required" required=""/>
+                </div>
+                *
+            </span>
+        </div>
+
             <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'cuenta', 'error')} ">
                 <span class="grupo">
-                    <label for="empleado.cuenta" class="col-md-2 control-label text-info">
+                    <label for="empleado.cuenta" class="col-md-4 control-label text-info">
                         Cuenta
                     </label>
 
@@ -300,12 +309,12 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'hijo', 'error')} required">
                 <span class="grupo">
-                    <label for="empleado.hijo" class="col-md-2 control-label text-info">
+                    <label for="empleado.hijo" class="col-md-4 control-label text-info">
                         Hijos
                     </label>
 
                     <div class="col-md-3">
-                        <g:field name="empleado.hijo" type="number" value="${empleadoInstance.hijo}" class="digits form-control required" required=""/>
+                        <g:field name="empleado.hijo" type="number" value="${empleadoInstance.hijo}" class="digits form-control required" required="" maxlength="2"/>
                     </div>
 
                     <div class="col-md-3">
@@ -315,7 +324,7 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'iess', 'error')} ">
                 <span class="grupo">
-                    <label for="empleado.iess" class="col-md-2 control-label text-info">
+                    <label for="empleado.iess" class="col-md-4 control-label text-info">
                         IESS
                     </label>
 
@@ -328,7 +337,7 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'numero', 'error')} ">
                 <span class="grupo">
-                    <label for="empleado.numero" class="col-md-2 control-label text-info">
+                    <label for="empleado.numero" class="col-md-4 control-label text-info">
                         Número
                     </label>
 
@@ -341,7 +350,7 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'tipoContrato', 'error')} ">
                 <span class="grupo">
-                    <label for="empleado.tipoContrato" class="col-md-2 control-label text-info">
+                    <label for="empleado.tipoContrato" class="col-md-4 control-label text-info">
                         Tipo Contrato
                     </label>
 
@@ -355,7 +364,7 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'cargo', 'error')} ">
                 <span class="grupo">
-                    <label for="empleado.cargo.id" class="col-md-2 control-label text-info">
+                    <label for="empleado.cargo.id" class="col-md-4 control-label text-info">
                         Cargo
                     </label>
 
@@ -369,12 +378,12 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'observaciones', 'error')} ">
                 <span class="grupo">
-                    <label for="empleado.observaciones" class="col-md-2 control-label text-info">
+                    <label for="empleado.observaciones" class="col-md-4 control-label text-info">
                         Observaciones
                     </label>
 
                     <div class="col-md-6">
-                        <g:textArea name="empleado.observaciones" maxlength="127" class="allCaps form-control" value="${empleadoInstance?.observaciones}"/>
+                        <g:textArea name="empleado.observaciones" maxlength="127" class="allCaps form-control" value="${empleadoInstance?.observaciones}" style="resize: none"/>
                     </div>
 
                 </span>
