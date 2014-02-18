@@ -34,7 +34,7 @@ class RubroController extends cratos.seguridad.Shield {
 
     def cargaRubros(){
 
-        def rubros = Rubro.findAllByTipoRubro(TipoRubro.get(params.id),[sort:"descripcion"])
+        def rubros = Rubro.findAllByTipoRubroAndEmpresa(TipoRubro.get(params.id),session.empresa,[sort:"descripcion"])
         [rubros:rubros]
     }
 
@@ -62,6 +62,7 @@ class RubroController extends cratos.seguridad.Shield {
         rubro.valor=params.valor.toDouble()
         rubro.tipoRubro=tipo
         rubro.editable="1"
+        rubro.empresa=session.empresa
         if(!rubro.save(flush: true)){
             println "error rubro save "+rubro.errors
         }
@@ -74,14 +75,14 @@ class RubroController extends cratos.seguridad.Shield {
     def composicion(){
         def tipos = TipoContrato.list([sort:"descripcion"])
         def tiposRubro=TipoRubro.list([sort: "descripcion"])
-        def rubros = Rubro.findAllByTipoRubro(tiposRubro[0])
+        def rubros = Rubro.findAllByTipoRubroAndEmpresa(tiposRubro[0],session.empresa)
 
 
 
         [tipos:tipos,tiposRubro:tiposRubro,rubros:rubros]
     }
     def cargaRubrosCombo(){
-        def rubros = Rubro.findAllByTipoRubro(TipoRubro.get(params.id),[sort:"descripcion"])
+        def rubros = Rubro.findAllByTipoRubroAndEmpresa(TipoRubro.get(params.id),session.empresa,[sort:"descripcion"])
         [rubros:rubros]
     }
 
@@ -109,6 +110,7 @@ class RubroController extends cratos.seguridad.Shield {
         rubro.valor=params.valor.toDouble()
         rubro.tipoContrato=TipoContrato.get(params.tipoContrato)
         rubro.editable="1"
+        rubro.empresa=session.empresa
         if(!rubro.save(flush: true)){
             println "error rubro save "+rubro.errors
         }
@@ -173,7 +175,7 @@ class RubroController extends cratos.seguridad.Shield {
 
 
     def cargaRubrosContrato(){
-        def rubros = RubroTipoContrato.findAllByTipoContrato(TipoContrato.get(params.id))
+        def rubros = RubroTipoContrato.findAllByTipoContratoAndEmpresa(TipoContrato.get(params.id),session.empresa)
         rubros.sort{it.rubro.tipoRubro.descripcion}
         [rubros:rubros]
     }
@@ -245,7 +247,7 @@ class RubroController extends cratos.seguridad.Shield {
                 total+=sueldo
 //                println "total "+total+" sueldo "  +sueldo
 
-                def rubros = RubroTipoContrato.findAllByTipoContrato(emp.tipoContrato)
+                def rubros = RubroTipoContrato.findAllByTipoContratoAndEmpresa(emp.tipoContrato,session.empresa)
 //                println "rubros ==> "+rubros.rubro.descripcion+"  "+rubros.rubro.valor+"  "+rubros.rubro.porcentaje
 //                def rubrosEsp = RubroTipoContrato.findAllByEmpleado(emp)
                 rubros.each {r->
@@ -277,6 +279,7 @@ class RubroController extends cratos.seguridad.Shield {
             }
 
             rol.pagado=total.toDouble().round(2)
+            rol.empresa=session.empresa
             rol.save(flush: true)
             println "done"
             render "ok"
@@ -327,7 +330,7 @@ class RubroController extends cratos.seguridad.Shield {
 //            anio=periodo.fechaInicio.format("YYYY")
         }else{
             mes=meses[0]
-            roles= RolPagos.findAllByMess(mes,[sort: "id",order: "desc"])
+            roles= RolPagos.findAllByMessAndEmpresa(mes,session.empresa,[sort: "id",order: "desc"])
         }
 
         def rol=null
@@ -426,8 +429,9 @@ class RubroController extends cratos.seguridad.Shield {
             return
         }
     }
-
+//
     def save() {
+        println "aqu?"
         def rubroInstance
         if(params.id) {
             rubroInstance = Rubro.get(params.id)
@@ -463,18 +467,18 @@ class RubroController extends cratos.seguridad.Shield {
 
         [rubroInstance: rubroInstance]
     }
-
-    def edit() {
-        def rubroInstance = Rubro.get(params.id)
-        if (!rubroInstance) {
-            flash.message = "No se encontr&oacute; Rubro a modificar"
-//            redirect(action: "list")
-            render "NO"
-            return
-        }
-
-        [rubroInstance: rubroInstance]
-    }
+//
+//    def edit() {
+//        def rubroInstance = Rubro.get(params.id)
+//        if (!rubroInstance) {
+//            flash.message = "No se encontr&oacute; Rubro a modificar"
+////            redirect(action: "list")
+//            render "NO"
+//            return
+//        }
+//
+//        [rubroInstance: rubroInstance]
+//    }
 
     def delete() {
         def rubroInstance = Rubro.get(params.id)
@@ -649,7 +653,7 @@ class RubroController extends cratos.seguridad.Shield {
 
         } //update
 
-
+        rubroInstance.empresa=session.empresa
         if (!rubroInstance.save(flush: true)) {
             def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Rubro."
             msg += renderErrors(bean: rubroInstance)

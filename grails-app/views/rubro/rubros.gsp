@@ -36,7 +36,7 @@
     }
     .uno{
 
-      width: 150px;
+        width: 150px;
 
     }
 
@@ -57,45 +57,72 @@
 
     <g:hiddenField name="id" id="${rubroInstance?.id}"/>
 
-    <div class="fila">
-        <label class="izquierda uno">Tipo: </label>
-      <g:select class="form-control izquierda required" name="tipoRubro.id" from="${tipos}" id="tipoRubro" optionKey="id" style="width: 250px; margin-bottom: 10px" required=""/>
+    <div class="row">
+        <div class="col-xs-1 negrilla">
+            Tipo:
+        </div>
+        <div class="col-xs-3 ">
+            <g:select class="form-control izquierda required" name="tipoRubro.id" from="${tipos}" id="tipoRubro" optionKey="id"  required=""/>
+        </div>
 
-   </div>
-
-    <div class="fila">
-        <label class="izquierda uno"> Porcentaje: </label>
-
-        <g:textField class="form-control izquierda required" name="porcentaje"  id="porcentaje" style="width: 50px; margin-bottom: 10px"/>
-
-
-        <label class="izquierda" style="margin-left: 30px; width: 120px">Valor: </label>
-        <g:textField name="valor" id="valor" style="width: 50px; margin-bottom: 10px" class="form-control izquierda required"/>
+    </div>
+    <div class="row">
+        <div class="col-xs-1 negrilla">
+            Descripción:
+        </div>
+        <div class="col-xs-5 ">
+            <g:textField name="descripcion" id="descripcion"  class="form-control required" maxlength="63"/>
+        </div>
     </div>
 
-    <div class="fila">
-        <label class="izquierda uno">Descripción: </label>
-        <g:textField name="descripcion" id="descripcion" style="width: 250px; margin-bottom: 10px" class="form-control required"/>
+    <div class="row">
+        <div class="col-xs-1 negrilla">
+            Porcentaje:
+        </div>
+        <div class="col-xs-2 ">
+            <g:textField class="form-control  required" name="porcentaje"  id="porcentaje" />
+        </div>
+
+        <div class="col-xs-1 negrilla">
+            Valor:
+        </div>
+        <div class="col-xs-2 ">
+            <g:textField name="valor" id="valor" class="form-control  required"/>
+        </div>
+
     </div>
+    <div class="row">
+        <div class="col-xs-1 negrilla">
+            IESS:
+        </div>
+        <div class="col-xs-1 negrilla">
+            <g:checkBox name="iess" id="iess" class="  required"/>
+        </div>
+        <div class="col-xs-1 negrilla">
+            Gravable:
+        </div>
+        <div class="col-xs-1 negrilla">
+            <g:checkBox name="gravable" id="gravable" class="  izquierda required"/>
+        </div>
+        <div class="col-xs-1 negrilla">
+            Décimo:
+        </div>
+        <div class="col-xs-1 negrilla">
+            <g:checkBox name="decimo" id="decimo" class=" izquierda required"/>
+        </div>
+        %{--<div class="col-xs-1 negrilla">--}%
+            %{--Editable:--}%
+        %{--</div>--}%
+        %{--<div class="col-xs-1 negrilla">--}%
+            %{--<g:checkBox name="editable" id="editable" class=" izquierda required"/>--}%
+        %{--</div>--}%
 
-    <div class="fila">
-        <label class="izquierda dos">IESS:</label>
-        <g:checkBox name="iess" id="iess" class="form-control izquierda required"/>
 
-        <label class="izquierda dos">Gravable:</label>
-        <g:checkBox name="gravable" id="gravable" class=" form-control izquierda required"/>
-
-        <label class="izquierda dos">Décimo:</label>
-        <g:checkBox name="decimo" id="decimo" class="form-control izquierda required"/>
-
-        <label class="izquierda dos">Editable:</label>
-        <g:checkBox name="editable" id="editable" class="form-control izquierda required"/>
     </div>
 
 
     <div class="fila" style="margin-top: 40px; margin-bottom: 15px">
         <g:link class="btn agregar btn-success btn-ajax" id="agregar"><i class="fa fa-plus"></i> Agregar</g:link>
-        <g:link class="btn lista btn-info btn-ajax" id="lista"><i class="fa fa-list-alt"></i> Lista de Rubros</g:link>
 
     </div>
 
@@ -117,7 +144,7 @@
 
 
     $(".lista").click(function () {
-     location.href="${g.createLink(controller: 'rubro', action: 'list')}"
+        location.href="${g.createLink(controller: 'rubro', action: 'list')}"
     });
 
 
@@ -140,53 +167,45 @@
 
 
         $.ajax({
-           type : "POST",
-           url  : "${g.createLink(controller: 'rubro', action: 'saveRubro')}",
-           data : {
-              tipoRubro : $("#tipoRubro").val(),
-              porcentaje : $("#porcentaje").val(),
-              valor: $("#valor").val(),
-              descripcion : $("#descripcion").val(),
-              iess:         $("#iess").is(':checked'),
-              gravable     :$("#gravable").is(':checked'),
-              decimo       :$("#decimo").is(':checked'),
-              editable     :$("#editable").is(':checked')
+            type : "POST",
+            url  : "${g.createLink(controller: 'rubro', action: 'saveRubro')}",
+            data : {
+                tipoRubro : $("#tipoRubro").val(),
+                porcentaje : $("#porcentaje").val(),
+                valor: $("#valor").val(),
+                descripcion : $("#descripcion").val(),
+                iess:         $("#iess").is(':checked'),
+                gravable     :$("#gravable").is(':checked'),
+                decimo       :$("#decimo").is(':checked'),
+                editable     :$("#editable").is(':checked')
 
-           },
-           success : function (msg) {
+            },
+            success : function (msg) {
+                var part = msg
+                if(part == 'OK'){
+                    $.ajax({
+                        type    : "POST",
+                        url     : "${g.createLink(controller: 'rubro',action: 'cargaRubros')}",
+                        data    : "id=" +$("#tipoRubro").val(),
+                        success : function (msg) {
 
-//               var part = msg.split('_')
-               var part = msg
-
-               console.log("-->" + part)
-
-               if(part == 'OK'){
-
-                   bootbox.alert("Rubro grabado correctamente!")
-
-                   $.ajax({
-                       type    : "POST",
-                       url     : "${g.createLink(controller: 'rubro',action: 'cargaRubros')}",
-                       data    : "id=" +$("#tipoRubro").val(),
-                       success : function (msg) {
-
-                           $("#detalle").html(msg)
-                       }
-                   });
+                            $("#detalle").html(msg)
+                        }
+                    });
 
 
 
-               }else {
+                }else {
 
-                   bootbox.alert("Error al grabar el rubro")
+                    bootbox.alert("Error al grabar el rubro")
 
-               }
+                }
 
 
 
 
 
-           }
+            }
 
 
 

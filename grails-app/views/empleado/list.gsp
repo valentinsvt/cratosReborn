@@ -39,10 +39,9 @@
                     <tr>
                         <th>Cédula</th>
                         <th>Nombres</th>
-                        <g:sortableColumn property="porcentajeComision" title="Porcentaje Comision"/>
+                        <th>Cargo</th>
+                        <th>Contrato</th>
                         <g:sortableColumn property="estado" title="Estado"/>
-                        <g:sortableColumn property="fechaInicio" title="Fecha Inicio"/>
-                        <g:sortableColumn property="fechaFin" title="Fecha Fin"/>
                         <g:sortableColumn property="sueldo" title="Sueldo"/>
                         <th width="110">Acciones</th>
                     </tr>
@@ -52,10 +51,10 @@
                         <tr data-id="${empleadoInstance.id}">
                             <td>${empleadoInstance.persona?.cedula}</td>
                             <td>${empleadoInstance.persona?.apellido} ${empleadoInstance.persona?.nombre}</td>
-                            <td>${fieldValue(bean: empleadoInstance, field: "porcentajeComision")}</td>
+                            <td>${empleadoInstance.cargo}</td>
+                            <td>${empleadoInstance.tipoContrato?.descripcion}</td>
                             <td><g:formatBoolean boolean="${empleadoInstance.estado == 'A'}" true="Activo" false="Inactivo"/></td>
-                            <td><g:formatDate date="${empleadoInstance.fechaInicio}" format="dd-MM-yyyy"/></td>
-                            <td><g:formatDate date="${empleadoInstance.fechaFin}" format="dd-MM-yyyy"/></td>
+
                             <td>${fieldValue(bean: empleadoInstance, field: "sueldo")}</td>
                             <td>
                                 <a href="#" data-id="${empleadoInstance.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver">

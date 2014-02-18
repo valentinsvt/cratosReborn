@@ -3,7 +3,7 @@
     <title>Cratos - Gestor Contable</title>
     <meta name="layout" content="main"/>
     <style type="text/css">
-    .totales {
+    .totales{
         font-weight : bold;
         text-align  : center;
     }
@@ -53,7 +53,7 @@
         <b>Observaciones:</b> ${gestor?.observaciones}
     </div>
 </div>
-<div class="vertical-container" style="padding-top: 30px;">
+<div class="vertical-container" style="padding-top: 30px;${(cuentas?.size() > 0)?'':'min-height:150px'}">
     <p class="css-vertical-text">Movimientos</p>
     <div class="linea"></div>
     <g:if test="${cuentas?.size() > 0}">
@@ -84,32 +84,29 @@
                 <g:set var="valH" value="${0}"/>
                 <g:each var="genera" in="${cuentas}" status="i">
                     <tr>
-                  <td style="text-align: left">${genera.cuenta.numero + ' (' + genera.cuenta.descripcion + ')'}</td>
-                    <g:if test="${genera.debeHaber == 'D'}">
-                        <td style="text-align: center">${genera.porcentaje ?: 0}</td>
-                        <td style="text-align: center">${genera.porcentajeImpuestos ?: 0}</td>
-                        <td style="text-align: center">${genera.valor ?: 0}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-
-                        </tr>
-                        <g:set var="por" value="${por + genera.porcentaje ?: 0}"/>
-                        <g:set var="imp" value="${imp + genera.porcentajeImpuestos ?: 0}"/>
-                        <g:set var="val" value="${val + genera.valor ?: 0}"/>
-                    </g:if>
-                    <g:else>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td style="text-align: center">${genera.porcentaje ?: 0}</td>
-                        <td style="text-align: center">${genera.porcentajeImpuestos ?: 0}</td>
-                        <td style="text-align: center">${genera.valor ?: 0}</td>
-
-                        <g:set var="porH" value="${porH + genera.porcentaje ?: 0}"/>
-                        <g:set var="impH" value="${impH + genera.porcentajeImpuestos ?: 0}"/>
-                        <g:set var="valH" value="${valH + genera.valor ?: 0}"/>
-                    </g:else>
+                        <td style="text-align: left">${genera.cuenta.numero + ' (' + genera.cuenta.descripcion + ')'}</td>
+                        <g:if test="${genera.debeHaber == 'D'}">
+                            <td style="text-align: center">${genera.porcentaje ?: 0}</td>
+                            <td style="text-align: center">${genera.porcentajeImpuestos ?: 0}</td>
+                            <td style="text-align: center">${genera.valor ?: 0}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <g:set var="por" value="${por + genera.porcentaje ?: 0}"/>
+                            <g:set var="imp" value="${imp + genera.porcentajeImpuestos ?: 0}"/>
+                            <g:set var="val" value="${val + genera.valor ?: 0}"/>
+                        </g:if>
+                        <g:else>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td style="text-align: center">${genera.porcentaje ?: 0}</td>
+                            <td style="text-align: center">${genera.porcentajeImpuestos ?: 0}</td>
+                            <td style="text-align: center">${genera.valor ?: 0}</td>
+                            <g:set var="porH" value="${porH + genera.porcentaje ?: 0}"/>
+                            <g:set var="impH" value="${impH + genera.porcentajeImpuestos ?: 0}"/>
+                            <g:set var="valH" value="${valH + genera.valor ?: 0}"/>
+                        </g:else>
                     </tr>
                 </g:each>
                 <tr>
