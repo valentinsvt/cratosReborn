@@ -23,8 +23,11 @@
             <td  style="text-align: center">${(r.gravable=="1")?"Si":"No"}</td>
             <td  style="text-align: center">${(r.decimo=="1")?"Si":"No"}</td>
             <td>
-                <a href="#" class="btn btn-small btn-azul edit" title="editar"  desc="${r.descripcion}" porc="${r.porcentaje}" valor="${r.valor}" iess="${r.iess}" grav="${r.gravable}" dec="${r.decimo}" >
+                <a href="#" class="btn btn-small btn-azul edit" title="editar" iden="${r.id}" desc="${r.descripcion}" porc="${r.porcentaje}" valor="${r.valor}" iess="${r.iess}" grav="${r.gravable}" dec="${r.decimo}" >
                     <i class="fa fa-pencil"></i>
+                </a>
+                <a href="#" class="btn btn-small btn-danger delete" title="Borrar" iden="${r.id}"  >
+                    <i class="fa fa-trash-o"></i>
                 </a>
             </td>
         </tr>
@@ -35,7 +38,7 @@
 <script type="text/javascript">
     $(".edit").click(function(){
 
-        $("#id").val($(this).attr("id"))
+        $("#id").val($(this).attr("iden"))
         $("#porcentaje").val($(this).attr("porc"))
         $("#valor").val($(this).attr("valor"))
         $("#descripcion").val($(this).attr("desc"))
@@ -58,4 +61,19 @@
             $("#gravable").removeAttr("checked")
 
     });
+    $(".delete").click(function(){
+        $.ajax({
+            type    : "POST",
+            url     : "${g.createLink(controller: 'rubro',action: 'delete_ajax')}",
+            data    : "id=" +$(this).attr("iden"),
+            success : function (msg) {
+                if(msg="ok")
+                $("#tipoRubro").change()
+                else{
+                    bootbox.alert("El rubro no se puede eleminar puesto que esta asignado a un tipo de contrato")
+                }
+
+            }
+        });
+    })
 </script>

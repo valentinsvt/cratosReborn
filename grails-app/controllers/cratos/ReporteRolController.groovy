@@ -149,58 +149,137 @@ class ReporteRolController {
 
         Paragraph preface = new Paragraph();
         addEmptyLine(preface, 1);
-        preface.add(new Paragraph("Detalle del rol de pagos del mes de ${rol?.mess.descripcion.toLowerCase()} ${anio} de ${emp.persona.nombre} ${emp.persona.apellido}", fontTitulo));
-        preface.add(new Paragraph("Generado por el usuario: " + session.usuario + "   el: " + new Date().format("dd/MM/yyyy hh:mm"), fontInfo))
+//        preface.add(new Paragraph("Detalle del rol de pagos del mes de ${rol?.mess.descripcion.toLowerCase()} ${anio} de ${emp.persona.nombre} ${emp.persona.apellido}", fontTitulo));
+        preface.add(new Paragraph("Rol de pago individual",fontTitulo))
+        preface.add(new Paragraph("",fontTitulo))
+        preface.add(new Paragraph(emp.persona.empresa.nombre,fontTitulo))
+        preface.add(new Paragraph("",fontTitulo))
+        preface.add(new Paragraph(anio+" - "+rol?.mess.descripcion,fontTitulo))
+        preface.setAlignment(Element.ALIGN_CENTER)
         addEmptyLine(preface, 1);
+
         document.add(preface);
 
         PdfPTable tablaEmp = new PdfPTable(4);
         tablaEmp.setWidthPercentage(100);
+        tablaEmp.setWidths(arregloEnteros([11,39,20,30]))
         tablaEmp.setSpacingAfter(15f)
 
-        addCellTabla(tablaEmp, new Paragraph("Nombres", fontTh), [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaEmp, new Paragraph("Nombres:", fontTh), [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
         addCellTabla(tablaEmp, new Paragraph("${emp.persona.nombre} ${emp.persona.apellido}", fontTd), [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-        addCellTabla(tablaEmp, new Paragraph("Cédula", fontTh), [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaEmp, new Paragraph("Cédula:", fontTh), [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
         addCellTabla(tablaEmp, new Paragraph("${emp.persona.cedula}", fontTd), [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
 
-        addCellTabla(tablaEmp, new Paragraph("Cargo", fontTh), [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaEmp, new Paragraph("Cargo:", fontTh), [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
         addCellTabla(tablaEmp, new Paragraph("${emp.cargo?.descripcion}", fontTd), [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-        addCellTabla(tablaEmp, new Paragraph("Tipo de contrato", fontTh), [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaEmp, new Paragraph("Tipo de contrato:", fontTh), [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
         addCellTabla(tablaEmp, new Paragraph("${emp.tipoContrato?.descripcion}", fontTd), [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
 
         document.add(tablaEmp)
-
-        PdfPTable tablaDatos = new PdfPTable(3);
-        tablaDatos.setWidthPercentage(100);
-//        tablaDatos.setWidths(arregloEnteros([12, 24, 10, 12, 24]))
+        Paragraph espacio = new Paragraph();
+        addEmptyLine(espacio, 1);
+        document.add(espacio);
+        /*ingresos*/
+        PdfPTable tablaDatos = new PdfPTable(2);
+        tablaDatos.setWidthPercentage(50);
+        tablaDatos.setWidths(arregloEnteros([70,30]))
         tablaDatos.setSpacingAfter(10f)
-
-        addCellTabla(tablaDatos, new Paragraph("Rubro", fontTh), [border: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE])
-        addCellTabla(tablaDatos, new Paragraph("Tipo", fontTh), [border: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE])
-        addCellTabla(tablaDatos, new Paragraph("Valor", fontTh), [border: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE])
-
+        Paragraph ingresos = new Paragraph();
+        tablaDatos.setHorizontalAlignment(0)
+        ingresos.add(new Paragraph("Ingresos",fontTh))
+        addEmptyLine(ingresos,1)
+        document.add(ingresos)
+        def recibir = 0
         def total = 0
         detalle.each { d ->
-            if (d.rubroTipoContrato) {
-                addCellTabla(tablaDatos, new Paragraph(d.rubroTipoContrato.rubro.descripcion, fontTd), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-                addCellTabla(tablaDatos, new Paragraph(d.rubroTipoContrato.rubro.tipoRubro.descripcion, fontTd), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE,])
-            } else {
-                if (d.descripcion) {
-                    addCellTabla(tablaDatos, new Paragraph(d.descripcion, fontTd), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+            if(d.valor>0){
+                if (d.rubroTipoContrato) {
+                    addCellTabla(tablaDatos, new Paragraph(d.rubroTipoContrato.rubro.descripcion, fontTd), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+//                addCellTabla(tablaDatos, new Paragraph(d.rubroTipoContrato.rubro.tipoRubro.descripcion, fontTd), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE,])
                 } else {
-                    addCellTabla(tablaDatos, new Paragraph("SUELDO", fontTd), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                    if (d.descripcion) {
+                        addCellTabla(tablaDatos, new Paragraph(d.descripcion, fontTd), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                    } else {
+                        addCellTabla(tablaDatos, new Paragraph("SUELDO", fontTd), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                    }
+//                addCellTabla(tablaDatos, new Paragraph("", fontTd), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
                 }
-                addCellTabla(tablaDatos, new Paragraph("", fontTd), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                addCellTabla(tablaDatos, new Paragraph(numero(d.valor, 2), fontTd), [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+                total += d.valor
             }
-            addCellTabla(tablaDatos, new Paragraph(numero(d.valor, 2), fontTd), [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
-            total += d.valor
+
         }
-
-        addCellTabla(tablaDatos, new Paragraph("TOTAL", fontTh), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 2])
+//        println "TOTAL!! "+total
+        addCellTabla(tablaDatos, new Paragraph("Total Ingresos", fontTh), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 1])
         addCellTabla(tablaDatos, new Paragraph(numero(total, 2), fontTh), [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
-
+        recibir+=total
         document.add(tablaDatos)
+        /*Provisiones*/
+        PdfPTable tablaDatosP = new PdfPTable(2);
+        tablaDatosP.setWidthPercentage(50);
+        tablaDatosP.setWidths(arregloEnteros([70,30]))
+        tablaDatosP.setSpacingAfter(10f)
+        Paragraph prov = new Paragraph();
+        tablaDatosP.setHorizontalAlignment(0)
+        prov.add(new Paragraph("Provisiones",fontTh))
+        addEmptyLine(prov,1)
+        document.add(prov)
+        total = 0
+        detalle.each { d ->
+            if(d.valor<0 && d.rubroTipoContrato ){
+                if (d.rubroTipoContrato.rubro.tipoRubro.codigo=="P") {
+                    addCellTabla(tablaDatosP, new Paragraph(d.rubroTipoContrato.rubro.descripcion, fontTd), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                    addCellTabla(tablaDatosP, new Paragraph(numero(d.valor*-1, 2), fontTd), [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+                    total += d.valor*-1
+                }
 
+            }
+
+        }
+//        println "TOTAL!! "+total
+        addCellTabla(tablaDatosP, new Paragraph("Total Provisiones", fontTh), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 1])
+        addCellTabla(tablaDatosP, new Paragraph(numero(total, 2), fontTh), [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        recibir-=total
+        document.add(tablaDatosP)
+        /*egresos*/
+        PdfPTable tablaDatosE = new PdfPTable(2);
+        tablaDatosE.setWidthPercentage(50);
+        tablaDatosE.setWidths(arregloEnteros([70,30]))
+        tablaDatosE.setSpacingAfter(10f)
+        Paragraph egresos = new Paragraph();
+        tablaDatosE.setHorizontalAlignment(0)
+        egresos.add(new Paragraph("Egresos",fontTh))
+        addEmptyLine(egresos,1)
+        document.add(egresos)
+        total = 0
+        detalle.each { d ->
+            if(d.valor<0){
+                if (d.rubroTipoContrato.rubro.tipoRubro.codigo=="2") {
+                    addCellTabla(tablaDatosE, new Paragraph(d.rubroTipoContrato.rubro.descripcion, fontTd), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                    addCellTabla(tablaDatosE, new Paragraph(numero(d.valor*-1, 2), fontTd), [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+                    total += d.valor*-1
+                } else {
+                    if (d.descripcion) {
+                        addCellTabla(tablaDatosE, new Paragraph(d.descripcion, fontTd), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                        addCellTabla(tablaDatosE, new Paragraph(numero(d.valor*-1, 2), fontTd), [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+                        total += d.valor*-1
+                    }
+                }
+
+            }
+
+        }
+//        println "TOTAL!! "+total
+        addCellTabla(tablaDatosE, new Paragraph("Total Egresos", fontTh), [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 1])
+        addCellTabla(tablaDatosE, new Paragraph(numero(total, 2), fontTh), [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        recibir-=total
+        document.add(tablaDatosE)
+        Paragraph rec = new Paragraph();
+        addEmptyLine(rec,1)
+        rec.add(new Paragraph("A recibir:  "+recibir.toDouble().round(2),fontTitulo))
+        addEmptyLine(rec,1)
+        rec.setAlignment(Element.ALIGN_CENTER)
+        document.add(rec)
         document.close();
         pdfw.close()
         byte[] b = baos.toByteArray();

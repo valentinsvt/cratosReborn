@@ -201,7 +201,9 @@ class EmpleadoController extends cratos.seguridad.Shield {
                 eq("empresa", session.empresa)
             }
         }
-        return [empleadoInstanceList: empleadoInstanceList, empleadoInstanceCount: empleadoInstanceCount]
+        def mes = Mes.list([sort:"id"])
+        def periodos = Periodo.findAllByContabilidad(session.contabilidad,[sort: "fechaInicio"])
+        return [empleadoInstanceList: empleadoInstanceList, empleadoInstanceCount: empleadoInstanceCount,mes:mes,periodos:periodos]
     } //list
 
     def show_ajax() {

@@ -204,6 +204,7 @@ class RubroController extends cratos.seguridad.Shield {
             rol.mess=mes
             rol.pagado=0
             rol.periodo=periodo
+            rol.empresa=session.empresa
             if(!rol.save(flush: true)){
                 println "error save rol "+rol.errors
             }
@@ -361,6 +362,7 @@ class RubroController extends cratos.seguridad.Shield {
         def rol = RolPagos.get(params.rol)
         def emp = Empleado.get(params.emp)
         def detalle= DetallePago.findAllByEmpleadoAndRolPagos(emp,rol)
+        detalle.sort{it.rubroTipoContrato?.rubro?.tipoRubro?.codigo}
         [detalle:detalle,emp:emp,rol:rol]
     }
 
@@ -585,7 +587,7 @@ class RubroController extends cratos.seguridad.Shield {
             if (rubroInstance) {
                 try {
                     rubroInstance.delete(flush: true)
-                    render "OK_Eliminación de Rubro."
+                    render "ok."
                 } catch (e) {
                     render "NO_No se pudo eliminar el Rubro"
                 }
@@ -604,7 +606,7 @@ class RubroController extends cratos.seguridad.Shield {
 
     def saveRubro() {
 
-//        println("params:" + params)
+        println("params:" + params)
 
 
         if(params.decimo == 'true'){
@@ -625,10 +627,17 @@ class RubroController extends cratos.seguridad.Shield {
             params.gravable = '0'
         }
 
-        if(params.editable ==  'true'){
-            params.editable = '1'
-        }else {
-            params.editable = '0'
+        params.editable = '1'
+
+               try{
+            params.valor=params.valor.toDouble()
+        }catch(e){
+            params.valor =0
+        }
+        try{
+            params.porcentaje=params.porcentaje.toDouble()
+        }catch(e){
+            params.porcentaje =0
         }
 
 
@@ -656,6 +665,7 @@ class RubroController extends cratos.seguridad.Shield {
         rubroInstance.empresa=session.empresa
         if (!rubroInstance.save(flush: true)) {
             def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Rubro."
+            println "errores "+rubroInstance.errors
             msg += renderErrors(bean: rubroInstance)
             render msg
             return
@@ -669,6 +679,6 @@ class RubroController extends cratos.seguridad.Shield {
 
 
     } //save para grabar desde ajax
-    
-    
+
+
 }

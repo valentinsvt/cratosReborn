@@ -56,45 +56,71 @@
 
     <g:hiddenField name="id" id="rubro_id"/>
 
+    <div class="row">
+        <div class="col-xs-1 negrilla">
 
-    <div class="fila">
-        <label class="izquierda uno">Tipo de Contrato: </label>
-        <g:select name="tipoContrato" from="${tipos}" id="tipoContrato" optionKey="id" optionValue="descripcion" class="form-control izquierda" style="width: 250px; margin-bottom: 10px"/>
+        </div>
+        <div class="col-xs-3 ">
+
+        </div>
     </div>
-    <div class="fila">
-        <label class="izquierda uno">Tipo de Rubro: </label>
-        <g:select name="tipoRubro" from="${tiposRubro}" id="tipoRubro" optionKey="id" class="form-control izquierda"  style="width: 250px; margin-bottom: 10px"/>
+    <div class="row">
+        <div class="col-xs-2 negrilla">
+            Tipo de Contrato:
+        </div>
+        <div class="col-xs-3 ">
+            <g:select name="tipoContrato" from="${tipos}" id="tipoContrato" optionKey="id" optionValue="descripcion" class="form-control izquierda" style="width: 250px; margin-bottom: 10px"/>
+        </div>
     </div>
-    <div class="fila">
-        <label class="izquierda uno">Rubros: </label>
-        <div id="div_rubros"></div>
-        %{--<g:select name="rubros" from="${rubros}" id="rubros" optionKey="id" class="form-control izquierda"  style="width: 250px; margin-bottom: 10px"/>--}%
-    </div>
-
-    <div id="valores">
-
-    <div class="fila">
-        <label class="izquierda uno"> Porcentaje: </label>
-
-        <g:textField class="form-control izquierda required" name="rubro_porcentaje"  id="rubro_porcentaje" style="width: 100px; margin-bottom: 10px"/>
-
-
-        <label class="izquierda" style="margin-left: 10px; width: 50px">Valor: </label>
-        <g:textField name="rubro_valor" id="rubro_valor" style="width: 90px; margin-bottom: 10px" class="form-control izquierda required"/>
-    </div>
-
-
-    <div class="fila" >
-        <label class="izquierda dos">IESS:</label>
-        <g:checkBox name="rubro_iess" id="rubro_iess" class="form-control izquierda required" checked=""/>
-        <label class="izquierda dos">Gravable:</label>
-        <g:checkBox name="rubro_gravable" id="rubro_gravable" class=" form-control izquierda required" checked=""/>
-        <label class="izquierda dos">Décimo:</label>
-        <g:checkBox name="rubro_decimo" id="rubro_decimo" class="form-control izquierda required" checked=""/>
-        %{--<label class="izquierda dos">Editable:</label>--}%
-        %{--<g:checkBox name="editable" id="editable" class="form-control izquierda required"/>--}%
+    <div class="row">
+        <div class="col-xs-2 negrilla">
+            Tipo de Rubro:
+        </div>
+        <div class="col-xs-3 ">
+            <g:select name="tipoRubro" from="${tiposRubro}" id="tipoRubro" optionKey="id" class="form-control izquierda"  style="width: 250px; margin-bottom: 10px"/>
+        </div>
+        <div class="col-xs-1 negrilla">
+            Rubros:
+        </div>
+        <div class="col-xs-3 ">
+            <div id="div_rubros"></div>
+        </div>
     </div>
 
+    <div class="row">
+        <div class="col-xs-2 negrilla">
+            Porcentaje:
+        </div>
+        <div class="col-xs-3 ">
+            <g:textField class="form-control izquierda required" name="rubro_porcentaje"  id="rubro_porcentaje" style="width: 100px; margin-bottom: 10px"/>
+        </div>
+        <div class="col-xs-1 negrilla">
+            Valor:
+        </div>
+        <div class="col-xs-3 ">
+            <g:textField name="rubro_valor" id="rubro_valor" style="width: 90px; margin-bottom: 10px" class="form-control izquierda required"/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-1 negrilla">
+            IESS:
+        </div>
+        <div class="col-xs-1 ">
+            <g:checkBox name="rubro_iess" id="rubro_iess" class="  required" checked=""/>
+        </div>
+        <div class="col-xs-1 negrilla">
+            Gravable:
+        </div>
+        <div class="col-xs-1 ">
+            <g:checkBox name="rubro_gravable" id="rubro_gravable" class="   required" checked=""/>
+        </div>
+        <div class="col-xs-1 negrilla">
+            Décimo:
+        </div>
+        <div class="col-xs-1 ">
+            <g:checkBox name="rubro_decimo" id="rubro_decimo" class="  required" checked=""/>
+        </div>
     </div>
 
     <div class="fila" style="margin-top: 40px; margin-bottom: 15px">

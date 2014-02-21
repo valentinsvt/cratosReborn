@@ -55,7 +55,7 @@
     <p class="css-vertical-text">Rubros</p>
     <div class="linea"></div>
 
-    <g:hiddenField name="id" id="${rubroInstance?.id}"/>
+    <input type="hidden" name="id" id="id"/>
 
     <div class="row">
         <div class="col-xs-1 negrilla">
@@ -64,7 +64,6 @@
         <div class="col-xs-3 ">
             <g:select class="form-control izquierda required" name="tipoRubro.id" from="${tipos}" id="tipoRubro" optionKey="id"  required=""/>
         </div>
-
     </div>
     <div class="row">
         <div class="col-xs-1 negrilla">
@@ -170,6 +169,7 @@
             type : "POST",
             url  : "${g.createLink(controller: 'rubro', action: 'saveRubro')}",
             data : {
+                id:$("#id").val(),
                 tipoRubro : $("#tipoRubro").val(),
                 porcentaje : $("#porcentaje").val(),
                 valor: $("#valor").val(),

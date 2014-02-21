@@ -4,30 +4,40 @@
   Date: 14/02/14
   Time: 12:25 PM
 --%>
-
-<div id="valores">
-
-    <div class="fila">
-        <label class="izquierda uno"> Porcentaje: </label>
-
+<div class="row">
+    <div class="col-xs-2 negrilla">
+        Porcentaje:
+    </div>
+    <div class="col-xs-3 ">
         <g:textField class="form-control izquierda required" name="rubro_porcentaje"  id="rubro_porcentaje" style="width: 100px; margin-bottom: 10px"/>
-
-
-        <label class="izquierda" style="margin-left: 10px; width: 50px">Valor: </label>
+    </div>
+    <div class="col-xs-1 negrilla">
+        Valor:
+    </div>
+    <div class="col-xs-3 ">
         <g:textField name="rubro_valor" id="rubro_valor" style="width: 90px; margin-bottom: 10px" class="form-control izquierda required"/>
     </div>
-
-
-<div class="fila" >
-    <label class="izquierda dos">IESS:</label>
-    <g:checkBox name="rubro_iess" id="rubro_iess" class="form-control izquierda required" checked=""/>
-    <label class="izquierda dos">Gravable:</label>
-    <g:checkBox name="rubro_gravable" id="rubro_gravable" class=" form-control izquierda required" checked=""/>
-    <label class="izquierda dos">Décimo:</label>
-    <g:checkBox name="rubro_decimo" id="rubro_decimo" class="form-control izquierda required" checked=""/>
-
 </div>
 
+<div class="row">
+    <div class="col-xs-1 negrilla">
+        IESS:
+    </div>
+    <div class="col-xs-1 ">
+        <g:checkBox name="rubro_iess" id="rubro_iess" class="  required" checked=""/>
+    </div>
+    <div class="col-xs-1 negrilla">
+        Gravable:
+    </div>
+    <div class="col-xs-1 ">
+        <g:checkBox name="rubro_gravable" id="rubro_gravable" class="   required" checked=""/>
+    </div>
+    <div class="col-xs-1 negrilla">
+        Décimo:
+    </div>
+    <div class="col-xs-1 ">
+        <g:checkBox name="rubro_decimo" id="rubro_decimo" class="  required" checked=""/>
+    </div>
 </div>
 
 

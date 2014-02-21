@@ -6,12 +6,12 @@
     <elm:notFound elem="Empleado" genero="o"/>
 </g:if>
 <g:else>
-    <g:form class="form-horizontal" name="frmEmpleado" role="form" action="save_ajax" method="POST">
+    <g:form class="" name="frmEmpleado" role="form" action="save_ajax" method="POST">
         <g:hiddenField name="empleado.id" value="${empleadoInstance?.id}"/>
         <g:hiddenField name="persona.id" value="${empleadoInstance?.persona?.id}"/>
         <div class="col3">
             <!-------------------------------------------------- PERSONA  DESDE AQUI -------------------------------------------------------------------->
-            <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'cedula', 'error')} required">
+            <div class="form-group keeptogether   ${hasErrors(bean: empleadoInstance.persona, field: 'cedula', 'error')} required">
                 <span class="grupo">
                     <label for="persona.cedula" class="col-md-3 control-label text-info">
                         Cédula
@@ -24,7 +24,7 @@
                 </span>
             </div>
 
-            <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'nombre', 'error')} required">
+            <div class="form-group keeptogether   ${hasErrors(bean: empleadoInstance.persona, field: 'nombre', 'error')} required">
                 <span class="grupo">
                     <label for="persona.nombre" class="col-md-3 control-label text-info">
                         Nombre
@@ -37,7 +37,7 @@
                 </span>
             </div>
 
-            <div class="form-group keeptogether keeptogether  ${hasErrors(bean: empleadoInstance.persona, field: 'apellido', 'error')} required">
+            <div class="form-group keeptogether   ${hasErrors(bean: empleadoInstance.persona, field: 'apellido', 'error')} required">
                 <span class="grupo">
                     <label for="persona.apellido" class="col-md-3 control-label text-info">
                         Apellido
@@ -351,7 +351,7 @@
                     </label>
 
                     <div class="col-md-6">
-                        <g:select id="empleado.tipoContrato" name="tipoContrato.id" from="${cratos.TipoContrato.list()}" optionKey="id" optionValue="descripcion"
+                        <g:select id="empleado.tipoContrato" name="empleado.tipoContrato.id" from="${cratos.TipoContrato.list()}" optionKey="id" optionValue="descripcion"
                                   value="${empleadoInstance?.tipoContrato?.id}" class="many-to-one form-control" noSelection="['': '']"/>
                     </div>
 

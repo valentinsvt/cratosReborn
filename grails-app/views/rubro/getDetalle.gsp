@@ -5,7 +5,7 @@
     </div>
     para guardar los cambios de cada rubro.
 </div>
-<table style="width: 100%;">
+<table style="width: 95%;" class="table table-striped">
     <thead>
     <tr>
         <th>Rubro</th>
@@ -38,7 +38,9 @@
                 <td style="text-align: right">${d.valor}</td>
             </g:if>
             <g:else>
-                <td style="text-align: right"><input type="text" style="width: 80px;text-align: right" class="rubro" id="d_${d.id}" value="${d.valor}" valor="${d.valor}"></td>
+                <td style="text-align: right">
+                    <input type="text" style="width: 80px;text-align: right;float: right" class="rubro form-control" id="d_${d.id}" value="${d.valor}" valor="${d.valor}">
+                </td>
                 <td style="width: 15px;text-align: center">
                     <div style="float: left; margin: auto" class="guardarDatos btnpq ui-state-default ui-corner-all" detalle="${d.id}" title="Guardar">
                         <span class="ui-icon ui-icon-circle-check"></span>
@@ -61,14 +63,24 @@
 </table>
 <g:if test="${rol.estado!='R'}">
     <fieldset style="width: 90%;height: 50px;margin-bottom: 10px;" class="ui-corner-all">
-        <legend style="font-size: 12px;">Agregar Rubro</legend>
+        <legend style="font-size: 14px;">Agregar Rubro</legend>
         <input type="hidden" id="emp" value="${emp?.id}">
-        <div style="height: 25px;line-height: 25px">
-            <b> Descripcion:</b>
-            <input type="text" style="width: 150px" id="desc">
-            <b> Valor:</b>
-            <input type="text" style="width: 60px" id="val">
-            <a href="#" id="agregarRubro">Agregar</a>
+        <div class="row">
+            <div class="col-xs-2 negrilla" >
+                Descripcion:
+            </div>
+            <div class="col-xs-3 negrilla" >
+                <input type="text" class="form-control" style="width: 150px" id="desc">
+            </div>
+            <div class="col-xs-1 negrilla" >
+                Valor:
+            </div>
+            <div class="col-xs-2 negrilla" >
+                <input type="text" style="width: 60px" id="val" class="form-control">
+            </div>
+            <div class="col-xs-1 negrilla" >
+                <a href="#" id="agregarRubro" class="btn btn-azul">Agregar</a>
+            </div>
         </div>
     </fieldset>
 </g:if>
@@ -96,7 +108,12 @@
                             data    : "rol=${rol?.id}&emp="+emp,
                             success : function (msg) {
                                 $("#control").val("1")
-                                $("#dlg-rol").html(msg)
+                                $("#body-dlg-rol").html(msg)
+                                var v=$("#"+$("#etiqueta").val()).html()
+                                v= v.replace(" ","")
+                                v= parseFloat(v)
+                                $("#"+$("#etiqueta").val()).html(number_format(v*1+val*1,2,".",""))
+                                actualizaTotal();
                             }
                         });
                     }
@@ -136,7 +153,9 @@
                     if(total!=$(".detalle_total").html()*1)
                         $("#control").val("1")
                     $(".detalle_total").html(number_format (total, 2, ".", ""))
+                    $("#"+$("#etiqueta").val()).html(number_format(total,2,"."," "))
                     txt.css("background","rgba(225, 242, 182,0.6)")
+                    actualizaTotal();
 
                 }
             });
@@ -151,6 +170,7 @@
                 data    : "detalle="+$(this).attr("detalle"),
                 success : function (msg) {
                     if(msg=="ok"){
+                      //  window.location.reload(true)
                         elem.parent().parent().remove()
                         var total=0
                         $(".rubro").each(function(){
@@ -165,7 +185,9 @@
                         if(total!=$(".detalle_total").html()*1)
                             $("#control").val("1")
                         $(".detalle_total").html(number_format (total, 2, ".", ""))
-                        txt.css("background","rgba(225, 242, 182,0.6)")
+                        $("#"+$("#etiqueta").val()).html(number_format(total,2,".",""))
+                        actualizaTotal();
+                        //txt.css("background","rgba(225, 242, 182,0.6)")
                     }else{
                         alert("Ha ocurrido un error")
                     }
