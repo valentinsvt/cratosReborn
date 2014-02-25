@@ -168,10 +168,10 @@
                 </tr>
                 </tfoot>
             </table>
-            <h1 style="text-align: left;float: left;width: 100%;">TOTAL ${p.key}: ${tot.toDouble().round(2)}</h1>
+            <h1 style="text-align: left;float: left;width: 100%;">TOTAL ${p.key}: ${tot?.toDouble()?.round(2)}</h1>
             <g:if test="${(p.key=="PATRIMONIO")}">
                 %{--<h1 style="text-align: left;float: left;width: 100%;">TOTAL PASIVO Y PATRIMONIO: ${(saldos[cntaPas.id.toString()].toDouble()+saldos[cntaPat.id.toString()].toDouble())?.round(2)}</h1>--}%
-                <h1 style="text-align: left;float: left;width: 100%;">TOTAL PASIVO Y PATRIMONIO: ${(saldos[cntaPas.id.toString()]+saldos[cntaPat.id.toString()]).toDouble().round(2)}</h1>
+                <h1 style="text-align: left;float: left;width: 100%;">TOTAL PASIVO Y PATRIMONIO: ${(saldos[cntaPas.id.toString()]+saldos[cntaPat.id.toString()])?.toDouble()?.round(2)}</h1>
             </g:if>
             <g:if test="${firma1}">
                 <div style="width: 170px;height: 10px;float: left;margin-top: 150px;border-top: 1px solid black;text-align: center">

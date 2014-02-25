@@ -86,6 +86,7 @@ class LoginController {
     }
 
     def validar() {
+        //println "params "+params
         def user = Persona.withCriteria {
             eq("login", params.login, [ignoreCase: true])
             eq("password", params.pass.encodeAsMD5())
@@ -94,9 +95,13 @@ class LoginController {
         if (user.size() == 0) {
             flash.message = "No se ha encontrado el usuario"
             flash.tipo = "error"
+            render "error_"+flash.message
+            return
         } else if (user.size() > 1) {
             flash.message = "Ha ocurrido un error grave"
             flash.tipo = "error"
+            render "error_"+flash.message
+            return
         } else {
             def ahora = new Date().clearTime()
             user = user[0]
@@ -132,16 +137,14 @@ class LoginController {
                 flash.message = "No puede ingresar. Comuníquese con el administrador."
                 flash.tipo = "error"
                 flash.icon = "icon-splatter"
-            } else if (perfiles.size() == 1) {
-                session.perfil = perfiles.first().perfil
-                redirect(controller: "inicio", action: "index")
+                render "error_"+flash.message
                 return
             } else {
-                redirect(action: "perfiles")
-                return
+                return [perfiles:perfiles]
+
             }
         }
-        redirect(controller: 'login', action: "login")
+       // redirect(controller: 'login', action: "login")
     }
 
     def perfiles() {

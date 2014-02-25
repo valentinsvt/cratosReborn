@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
     <head>
-        <meta name="layout" content="login">
+        <meta name="layout" content="loginL">
         <title>Cambio de password</title>
     </head>
 

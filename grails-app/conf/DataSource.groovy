@@ -14,7 +14,7 @@ environments {
     development {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:postgresql://10.0.0.2:5432/cratosReborn2"
+            url = "jdbc:postgresql://10.0.0.2:5432/asoFin"
             username = "postgres"
             password = "postgres"
         }

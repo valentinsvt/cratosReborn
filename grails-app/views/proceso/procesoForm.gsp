@@ -467,7 +467,7 @@
         })
         /*todo guardar proceso..... move on*/
         $("#guardarProceso").click(function() {
-            console.log("save")
+
             openLoader("Validando")
             var bandData=true
             var error=""
@@ -553,7 +553,6 @@
             if(bandData){
                 var data =""
                 $(".filaFP").each(function(){
-                    console.log($(this))
                     data+=$(this).attr("fp")+";"
 
                 })

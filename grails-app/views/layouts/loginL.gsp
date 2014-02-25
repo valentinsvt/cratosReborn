@@ -19,6 +19,7 @@
 
         <!-- Custom styles -->
         <link href="${resource(dir: 'css', file: 'custom.css')}" rel="stylesheet">
+        <link href="${resource(dir: 'css', file: 'CustomSvt.css')}" rel="stylesheet">
         <link href="${resource(dir: 'css', file: 'custom/modals.css')}" rel="stylesheet">
         <link href="${resource(dir: 'css', file: 'custom/tablas.css')}" rel="stylesheet">
         <link href="${resource(dir: 'css', file: 'custom/datepicker.css')}" rel="stylesheet">
