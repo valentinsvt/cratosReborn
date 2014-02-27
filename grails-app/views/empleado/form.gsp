@@ -1,4 +1,4 @@
-<%@ page import="cratos.Persona" %>
+<%@ page import="cratos.seguridad.Persona" %>
 <%@ page import="cratos.Empleado" %>
 
 <style type="text/css">
