@@ -303,8 +303,10 @@
                 $('#tree').on("loaded.jstree",function () {
                     $("#loading").hide();
                     $("#tree").removeClass("hide").show();
+                }).on("select_node.jstree",function (node, selected, event) {
+                    $('#tree').jstree('toggle_node', selected.selected[0]);
                 }).jstree({
-                            plugins     : [ "types", "state", "contextmenu" ],
+                            plugins     : [ "types", "state", "contextmenu", "wholerow" ],
                             core        : {
                                 multiple       : false,
                                 check_callback : true,
