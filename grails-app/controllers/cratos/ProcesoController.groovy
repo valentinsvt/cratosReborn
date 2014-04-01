@@ -34,6 +34,10 @@ class ProcesoController extends cratos.seguridad.Shield {
     def save = {
         if (request.method == 'POST') {
             // println "save proceso "+params
+            params.lang="en"
+            def key = "org.springframework.web.servlet.DispatcherServlet.LOCALE_RESOLVER"
+            def localeResolver = request.getAttribute(key)
+            localeResolver.setLocale(request, response, new Locale("en"))
             def p
             params.controllerName = controllerName
             params.actionName = actionName
@@ -125,6 +129,10 @@ class ProcesoController extends cratos.seguridad.Shield {
 
     def valorAsiento = {
         if (request.method == 'POST') {
+            params.lang="en"
+            def key = "org.springframework.web.servlet.DispatcherServlet.LOCALE_RESOLVER"
+            def localeResolver = request.getAttribute(key)
+            localeResolver.setLocale(request, response, new Locale("en"))
             println "cambiar Valor Asiento " + params
             def vd = params.vd.toDouble()
             def vh = params.vh.toDouble()
@@ -387,6 +395,10 @@ class ProcesoController extends cratos.seguridad.Shield {
 
     def nuevoAuxiliar = {
         if (request.method == 'POST') {
+            params.lang="en"
+            def key = "org.springframework.web.servlet.DispatcherServlet.LOCALE_RESOLVER"
+            def localeResolver = request.getAttribute(key)
+            localeResolver.setLocale(request, response, new Locale("en"))
 //            println "nuevo aux "+params
             def msn = null
             if (params.razon == "D")
@@ -461,6 +473,10 @@ class ProcesoController extends cratos.seguridad.Shield {
 
     def savePagoNota = {
         println "save pago nota " + params
+        params.lang="en"
+        def key = "org.springframework.web.servlet.DispatcherServlet.LOCALE_RESOLVER"
+        def localeResolver = request.getAttribute(key)
+        localeResolver.setLocale(request, response, new Locale("en"))
         def fecha = params.remove("fecha")
         def fechaEmi = new Date().parse("dd-MM-yyyy", params.fechaEmision)
         params.remove("fechaEmision")
@@ -506,6 +522,10 @@ class ProcesoController extends cratos.seguridad.Shield {
 
     def savePago = {
         println "save pago " + params
+        params.lang="en"
+        def key = "org.springframework.web.servlet.DispatcherServlet.LOCALE_RESOLVER"
+        def localeResolver = request.getAttribute(key)
+        localeResolver.setLocale(request, response, new Locale("en"))
         def fecha = params.remove("fecha")
         def pago = new PagoAux(params)
         pago.fecha = new Date().parse("dd-MM-yyyy", fecha)
@@ -714,6 +734,10 @@ class ProcesoController extends cratos.seguridad.Shield {
 
     def guardarSri() {
 //        println("guardarSri:" + params)
+        params.lang="en"
+        def key = "org.springframework.web.servlet.DispatcherServlet.LOCALE_RESOLVER"
+        def localeResolver = request.getAttribute(key)
+        localeResolver.setLocale(request, response, new Locale("en"))
         def fecha = params.remove("fechaEmision")
         def proceso = Proceso.get(params.id)
         def retencion = Retencion.findByProceso(proceso)
