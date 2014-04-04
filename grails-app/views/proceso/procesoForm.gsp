@@ -12,6 +12,7 @@
         font-weight : bold;
         display     : inline-block;
     }
+    
     .number{
         text-align: right;
     }
