@@ -223,7 +223,7 @@ class ProcesoService {
                 rt.numero = num
                 rt.numeroComprobante = ""
                 rt.proveedor = p.proveedor
-                if (p.proveedor.nombre)
+                if (p.proveedor?.nombre)
                     rt.persona = p.proveedor.nombre
                 else {
                     rt.persona = "" + p.proveedor.nombreContacto + " " + p.proveedor.apellidoContacto

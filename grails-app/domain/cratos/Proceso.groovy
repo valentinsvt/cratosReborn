@@ -47,6 +47,7 @@ class Proceso implements Serializable {
     String facturaEstablecimiento
     String facturaPuntoEmision
     String facturaSecuencial
+    String facturaAutorizacion
     Empresa empresa
     String tipoProceso /*para saber si es compra, venta etc etc........... C--> compra, V---> venta, A--> Ajuste, O--> otros, R->Depreciacion*/
 
@@ -106,7 +107,7 @@ class Proceso implements Serializable {
             facturaSecuencial column: 'prcsfcsc'
             empresa column: 'empr__id'
             tipoProceso column: 'prcstpps'
-
+            facturaAutorizacion column: 'prcsfcat'
         }
     }
     static constraints = {
@@ -158,5 +159,6 @@ class Proceso implements Serializable {
         facturaSecuencial(blank: true, nullable: true)
         empresa(nullable: false,blank:false)
         tipoProceso(nullable: true,blank: true,size: 1..1)
+        facturaAutorizacion(nullable: true,blank: true,size: 1..20)
     }
 }

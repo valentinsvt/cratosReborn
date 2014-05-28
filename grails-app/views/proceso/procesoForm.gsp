@@ -254,6 +254,13 @@
                 <input type="text" name="facturaSecuencial" id="secuencial" size="10" maxlength="9" value="${proceso?.facturaSecuencial}" class=" digits form-control label-shared  " validate=" number"
                        title="El número de secuencia del documento"  ${registro?'disabled':''} />
             </div>
+            <div class="col-xs-2 negrilla" style="width: 120px;margin-left: -30px">
+                Autorización:
+            </div>
+            <div class="col-xs-2 negrilla">
+                <input type="text" name="facturaAutorizacion" id="auto" size="10" maxlength="15" value="${proceso?.facturaAutorizacion}" class=" digits form-control label-shared " validate=" number"
+                       title="El número autorización de la factura a registrar " ${registro?'disabled':''} />
+            </div>
             <div class="col-xs-3 negrilla" style="width: 140px">
                 <a href="#" id="abrir-fp" class="btn btn-azul">
                     <i class="fa fa-credit-card"></i>
