@@ -169,23 +169,23 @@
                                 <p>El reporte es hasta la fecha final del periodo seleccionado.</p>
                             </div>
                         </li>
-                        <li>
-                            <span id="estadoSituacion">
-                                <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#situacion">
-                                    Estado de Situación Financiera
-                                </a>
-                                Conocido anteriormente como Balance General
-                            </span>
+                        %{--<li>--}%
+                            %{--<span id="estadoSituacion">--}%
+                                %{--<a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#situacion">--}%
+                                    %{--Estado de Situación Financiera--}%
+                                %{--</a>--}%
+                                %{--Conocido anteriormente como Balance General--}%
+                            %{--</span>--}%
 
-                            <div class="descripcion hide">
-                                <h4>Situaci&oacute;n Financiera</h4>
+                            %{--<div class="descripcion hide">--}%
+                                %{--<h4>Situaci&oacute;n Financiera</h4>--}%
 
-                                <p>Este reporte muesta el resultado del ejercicio financiero. Anteriormente era conocido como Balance General</p>
+                                %{--<p>Este reporte muesta el resultado del ejercicio financiero. Anteriormente era conocido como Balance General</p>--}%
 
-                                <p>No es necesario cerrar la contabilidad para obtener este reporte. En el caso de períodos contables anteriores,
-                                el resultado queda registrado dentro de la cuenta de utilidades correspondiente</p>
-                            </div>
-                        </li>
+                                %{--<p>No es necesario cerrar la contabilidad para obtener este reporte. En el caso de períodos contables anteriores,--}%
+                                %{--el resultado queda registrado dentro de la cuenta de utilidades correspondiente</p>--}%
+                            %{--</div>--}%
+                        %{--</li>--}%
                         <li>
                             <span id="estadoResultado">
                                 <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#integral">
@@ -1004,7 +1004,7 @@
                     firma2 = $.trim(firma2)
                     firma2 = firma2.replace(new RegExp(" ", "g"), "_");
 //                            console.log(firma1,firma2)
-                    if ($("#cero").attr("checked") != "checked") {
+                    if ($("#cero").prop("checked")==false) {
                         ceros = "0"
                     }
 
@@ -1031,7 +1031,7 @@
                     firma2 = $.trim(firma2)
                     firma2 = firma2.replace(new RegExp(" ", "g"), "_");
 //                            console.log(firma1,firma2)
-                    if ($("#ceroCierre").attr("checked") != "checked") {
+                    if ($("#ceroCierre").prop("checked")==false) {
                         ceros = "0"
                     }
 

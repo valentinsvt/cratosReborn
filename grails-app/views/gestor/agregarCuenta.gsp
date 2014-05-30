@@ -10,11 +10,11 @@
         <tr>
             <th style="max-width: 250px;">C&oacute;digo(Comprobante)</th>
 
-            <th>Porcentaje</th>
+            <th>B. Imponible</th>
             <th>Impuestos</th>
             <th>Valor</th>
 
-            <th>Porcentaje</th>
+            <th>B. Imponible</th>
             <th>Impuestos</th>
             <th>Valor</th>
             <th></th>

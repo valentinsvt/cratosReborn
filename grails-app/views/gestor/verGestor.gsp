@@ -40,11 +40,11 @@
       <tr>
 	<th>C&oacute;digo(nombre)</th>
 
-	<th>Porcentaje</th>
+	<th>B. Imponible</th>
 	<th>Impuestos</th>
 	<th>Valor</th>
 
-	<th>Porcentaje</th>
+	<th>B. Imponible</th>
 	<th>Impuestos</th>
 	<th>Valor</th>
 	
