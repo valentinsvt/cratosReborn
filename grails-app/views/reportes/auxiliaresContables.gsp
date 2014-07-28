@@ -128,8 +128,9 @@
 
 
                 <td class="tipo" align="center" style="width: 130px;text-align: left">
-
-                    ${asientos.comprobante.proceso.proveedor}
+                    <g:if test="${asientos.comprobante.proceso.proveedor}">
+                        ${raw(""+asientos.comprobante.proceso.proveedor?.ruc +" - "+ asientos.comprobante.proceso.proveedor?.nombre)}
+                    </g:if>
 
                 </td>
 
