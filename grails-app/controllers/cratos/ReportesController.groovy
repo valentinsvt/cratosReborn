@@ -465,7 +465,7 @@ order by rplnnmro
     }
 
     def auxiliaresContables() {
-
+//         println "aqui"
 //        params.cont = 1
 //        params.per = 10
 //        params.cnta = 1108
@@ -474,14 +474,16 @@ order by rplnnmro
         // println("periodoCont:" + params.per)
         // println("cuenta-->>" + params.cnta)
 
-
         def contabilidad = Contabilidad.get(params.cont);
         def fini
         def fin
         def periodo
         def perIni
+        def sp
+
         if (params.per != "-1") {
             periodo = Periodo.get(params.per);
+            sp = kerberosoldService.ejecutarProcedure("saldos", periodo.contabilidadId)
             fini = periodo.fechaInicio
             fin = periodo.fechaFin
         } else {
@@ -492,7 +494,8 @@ order by rplnnmro
             fini = periodos[0].fechaInicio
             periodo = periodos.last()
             fin = periodo.fechaFin
-            println " inicio: " + fini + " fin: " + fin + "  periodo " + periodo + "  params " + params
+            sp = kerberosoldService.ejecutarProcedure("saldos", periodo.contabilidadId)
+//            println " inicio: " + fini + " fin: " + fin + "  periodo " + periodo + "  params " + params
         }
         //println "inicio "+fini;
         // println "fin "+ fin;
@@ -529,7 +532,7 @@ order by rplnnmro
 
                 def saldoMensual = SaldoMensual.findByCuentaAndPeriodo(cuentaP, periodo)?.refresh()
 
-                println("SM con refres :" + saldoMensual)
+//                println("SM con refres :" + saldoMensual)
 
 
                 def comprobante = Comprobante.findAllByProcesoInList(proceso)
@@ -550,7 +553,7 @@ order by rplnnmro
 
             cuenta = Cuenta.get(params.cnta);
 
-            println("cuentaC: " + cuenta.id)
+//            println("cuentaC: " + cuenta.id)
 
             def saldoMensual = SaldoMensual.findByCuentaAndPeriodo(cuenta, periodo)?.refresh()
 //            println "saldos 1 " + saldoMensual?.debe + "  " + saldoMensual.haber + "  " + saldoMensual.saldoInicial
@@ -562,7 +565,7 @@ order by rplnnmro
                     saldoMensual = saldoMensual.pop()
             }
 
-            println("saldoMensual: refresh " + saldoMensual)
+//            println("saldoMensual: refresh " + saldoMensual)
 
             def comprobante = Comprobante.findAllByProcesoInListAndRegistrado(proceso, "S")
 
@@ -597,7 +600,7 @@ order by rplnnmro
             }
 
             def saldoInicialMostrar = saldoInicial
-            println "saldo inicial:" + saldoInicial
+//            println "saldo inicial:" + saldoInicial
 
             asiento.each { v ->
 
