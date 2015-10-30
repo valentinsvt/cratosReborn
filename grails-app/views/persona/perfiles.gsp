@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta name="layout" content="main">
-        <title>Configurar usuario</title>
+        <title>Configurar perfiles de usuario</title>
 
         <style type="text/css">
         .perfil .fa-li, .perfil span, .permiso .fa-li, .permiso span {
@@ -22,7 +22,7 @@
     <body>
 
         <div class="well">
-            Usuario ${usuario.nombre} ${usuario.apellido}
+            <strong>Usuario: </strong> ${usuario.nombre} ${usuario.apellido}
         </div>
 
 

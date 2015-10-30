@@ -321,10 +321,10 @@
             //datepicker
 
             $(function () {
-                $("#datepicker").datepicker({ minDate : new Date(${periodo.fechaInicio.format("yyyy")}, ${periodo.fechaInicio.format("MM")}, ${periodo.fechaInicio.format("dd")}),
-                    maxDate                           : new Date(${periodo.fechaFin.format("yyyy")}, ${periodo.fechaFin.format("MM")}, ${periodo.fechaFin.format("dd")})
+                %{--$("#datepicker").datepicker({ minDate : new Date(${periodo.fechaInicio.format("yyyy")}, ${periodo.fechaInicio.format("MM")}, ${periodo.fechaInicio.format("dd")}),--}%
+                    %{--maxDate                           : new Date(${periodo.fechaFin.format("yyyy")}, ${periodo.fechaFin.format("MM")}, ${periodo.fechaFin.format("dd")})--}%
 
-                });
+                %{--});--}%
             });
 
             var url = "${resource(dir:'images', file:'loading_bg.gif')}";

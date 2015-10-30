@@ -130,51 +130,87 @@
 <div class="vertical-container" style="margin-top: 25px;min-height: 200px">
     <p class="css-vertical-text">Movimientos</p>
     <div class="linea"></div>
+    <div class="row" style="margin-bottom: 10px">
+    <div class="col-xs-3 negrilla">
+        Nombre:
+        <input type="text" class=" form-control label-shared" style="width: 150px" name="nombreBus" id="nombreBus"/>
+    </div>
+    <div class="col-xs-3 negrilla">
+        C&oacute;digo:
+        <input type="text" class=" form-control label-shared" style="width: 150px" name="codigo" id="codigoBus"/>
+    </div>
+    <div class="col-xs-2 negrilla">
+        <input type="hidden" name="movimientos" value="1"/>
+        %{--<input type="button" class="fg-button ui-state-default  ui-corner-all" name="buscar" id="buscar" value="Buscar"/>--}%
+        <a href="#" class="btn btn-azul"  id="buscar">
+            <i class="fa fa-search"></i>
+            Buscar
+        </a>
+    </div>
+</div>
     <g:render template="busquedaCuentas"/>
 </div>
-<div class="vertical-container" style="margin-top: 25px;min-height: 200px;margin-bottom: 30px">
-    <p class="css-vertical-text">Agregar movimientos</p>
-    <div class="linea"></div>
-    <div class="row" style="margin-bottom: 10px">
-        <div class="col-xs-3 negrilla">
-            Nombre:
-            <input type="text" class=" form-control label-shared" style="width: 150px" name="nombreBus" id="nombreBus"/>
-        </div>
-        <div class="col-xs-3 negrilla">
-            C&oacute;digo:
-            <input type="text" class=" form-control label-shared" style="width: 150px" name="codigo" id="codigoBus"/>
-        </div>
-        <div class="col-xs-2 negrilla">
-            <input type="hidden" name="movimientos" value="1"/>
-            %{--<input type="button" class="fg-button ui-state-default  ui-corner-all" name="buscar" id="buscar" value="Buscar"/>--}%
-            <a href="#" class="btn btn-azul"  id="buscar">
-                <i class="fa fa-search"></i>
-                Buscar
-            </a>
-        </div>
-    </div>
-    <div id="divPlanCuentas" style=" padding: 5px; margin-top: 2px; width: 700px;">
+%{--<div class="vertical-container" style="margin-top: 25px;min-height: 200px;margin-bottom: 30px">--}%
+    %{--<p class="css-vertical-text">Agregar movimientos</p>--}%
+    %{--<div class="linea"></div>--}%
 
-    </div>
-</div>
+    %{--<div id="divPlanCuentas" style=" padding: 5px; margin-top: 2px; width: 700px;">--}%
+
+    %{--</div>--}%
+%{--</div>--}%
 <script type="text/javascript">
     $(function () {
         var band = 1
+        %{--$("#buscar").click(function () {--}%
+            %{--openLoader("Buscando")--}%
+            %{--$.ajax({--}%
+                %{--type    : "POST",--}%
+                %{--url     : "${g.createLink(controller: 'gestorContable',action: 'buscarCuentas')}",--}%
+                %{--data    : "nombre=" + $('#nombreBus').val() + "&codigo=" + $("#codigoBus").val(),--}%
+                %{--success : function (msg) {--}%
+                    %{--closeLoader()--}%
+                    %{--$('#divPlanCuentas').html(" ")--}%
+                    %{--$('#divPlanCuentas').html(msg);--}%
+                    %{--var b = true--}%
+
+                %{--}--}%
+            %{--})--}%
+        %{--});--}%
+
+
         $("#buscar").click(function () {
-            openLoader("Buscando")
+           openLoader("Buscando");
             $.ajax({
                 type    : "POST",
                 url     : "${g.createLink(controller: 'gestorContable',action: 'buscarCuentas')}",
                 data    : "nombre=" + $('#nombreBus').val() + "&codigo=" + $("#codigoBus").val(),
                 success : function (msg) {
-                    closeLoader()
-                    $('#divPlanCuentas').html(" ")
-                    $('#divPlanCuentas').html(msg);
-                    var b = true
+                    closeLoader();
+                    var c = bootbox.dialog({
+                        id      : "dlgBuscarMov",
+                        title   : "Movimientos",
+                        message : msg,
+                        buttons : {
+                            cancelar : {
+
+                                label     : "Cancelar",
+                                className : "btn-primary",
+                                callback  : function () {
+                                }
+                            }
+                        } //buttons
+                    }); //dialog
+//                    $('#divPlanCuentas').html(" ")
+//                    $('#divPlanCuentas').html(msg);
+//                    var b = true
 
                 }
             })
+
         });
+
+
+
         $("#tipo").change(function () {
             $.ajax({
                 type    : "POST",

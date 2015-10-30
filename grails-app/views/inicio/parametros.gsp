@@ -8,7 +8,7 @@
         <style type="text/css">
 
         .tab-content, .left, .right {
-            height : 600px;
+            height : 650px;
         }
 
         .tab-content {
@@ -179,6 +179,21 @@
                                 o internacionales, no se trata de sus propios productos bancarios</p>
 
                                 <p>Se aplica al control de cuentas contables como libro bancos</p>
+                            </div>
+                        </li>
+
+                        <li>
+                            <i class="fa-li ${iconGen}"></i>
+                            <span id="cuentaBancaria">
+                                <g:link controller="cuentaBanco" action="list">Cuenta bancaria</g:link> Cuenta Bancaria
+                            </span>
+
+                            <div class="descripcion hide">
+                                <h4>Cuenta Bancaria</h4>
+
+                                <p>Lista las diferentes cuentas existentes en bancos locales
+                                o internacionales</p>
+
                             </div>
                         </li>
 

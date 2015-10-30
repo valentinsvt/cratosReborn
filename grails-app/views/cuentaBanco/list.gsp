@@ -1,10 +1,10 @@
 
-<%@ page import="cratos.Item" %>
+<%@ page import="cratos.CuentaBanco" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="layout" content="main">
-        <title>Lista de Item</title>
+        <title>Lista de Cuentas Bancarias</title>
     </head>
     <body>
 
@@ -14,7 +14,7 @@
         <div class="btn-toolbar toolbar">
             <div class="btn-group">
                 <g:link action="form" class="btn btn-default btnCrear">
-                    <i class="fa fa-file-o"></i> Nuevo Item
+                    <i class="fa fa-file-o"></i> Nueva Cuenta Bancaria
                 </g:link>
             </div>
             <div class="btn-group pull-right col-md-3">
@@ -30,74 +30,53 @@
         </div>
 
         <div class="vertical-container vertical-container-list">
-            <p class="css-vertical-text">Lista de Item</p>
+            <p class="css-vertical-text">Lista de Cuentas Bancarias</p>
 
             <div class="linea"></div>
             <table class="table table-condensed table-bordered table-striped table-hover">
                 <thead>
                     <tr>
-                        
+                        <g:sortableColumn property="numero" title="Número" />
 
-                        <g:sortableColumn property="empresa" title="Empresa"/>
+                        <th>Banco</th>
 
-                        <g:sortableColumn property="codigo" title="Código"/>
+                        <th>Tipo de Cuenta</th>
+                        <g:sortableColumn property="fechaInicio" title="Fecha Inicio" />
 
-                        <g:sortableColumn title="Nombre" property="nombre"/>
 
-                        <g:sortableColumn property="precioUnitario" title="Precio Unitario"/>
+                        <g:sortableColumn property="fechaFin" title="Fecha Fin" />
 
-                        <g:sortableColumn property="precioVenta" title="Precio de Venta"/>
 
-                        <g:sortableColumn property="precioCosto" title="Precio de Costo"/>
 
-                        %{--<g:sortableColumn property="iva" title="Iva" />--}%
-                        %{----}%
-                        %{--<g:sortableColumn property="ice" title="Ice" />--}%
-                        
-                        <g:sortableColumn property="peso" title="Peso" />
-                        
-                        %{--<g:sortableColumn property="stockMaximo" title="Stock Maximo" />--}%
-                        
-                        <g:sortableColumn property="stock" title="Stock" />
+                        <g:sortableColumn property="observaciones" title="Observaciones" />
                         
                         <th width="110">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <g:each in="${itemInstanceList}" status="i" var="itemInstance">
-                        <tr data-id="${itemInstance.id}">
+                    <g:each in="${cuentaBancoInstanceList}" status="i" var="cuentaBancoInstance">
+                        <tr data-id="${cuentaBancoInstance.id}">
 
+                            <td>${fieldValue(bean: cuentaBancoInstance, field: "numero")}</td>
 
-                            <td>${fieldValue(bean: itemInstance, field: "empresa")}</td>
-
-                            <td>${fieldValue(bean: itemInstance, field: 'codigo')}</td>
-
-                            <td>${fieldValue(bean: itemInstance, field: 'nombre')}</td>
-
-                            <td>${fieldValue(bean: itemInstance, field: 'precioUnitario')}</td>
-
-                            <td>${fieldValue(bean: itemInstance, field: 'precioVenta')}</td>
-
-                            <td>${fieldValue(bean: itemInstance, field: 'precioCosto')}</td>
-
-                            %{--<td>${fieldValue(bean: itemInstance, field: "iva")}</td>--}%
-                            %{----}%
-                            %{--<td>${fieldValue(bean: itemInstance, field: "ice")}</td>--}%
+                            <td>${fieldValue(bean: cuentaBancoInstance, field: "banco.descripcion")}</td>
                             
-                            <td>${fieldValue(bean: itemInstance, field: "peso")}</td>
-                            
-                            %{--<td>${fieldValue(bean: itemInstance, field: "stockMaximo")}</td>--}%
-                            
-                            <td>${fieldValue(bean: itemInstance, field: "stock")}</td>
-                            
+                            <td>${fieldValue(bean: cuentaBancoInstance, field: "tipoCuenta.tipoCuenta")}</td>
+
+                            <td><g:formatDate date="${cuentaBancoInstance.fechaInicio}" format="dd-MM-yyyy" /></td>
+
+                            <td><g:formatDate date="${cuentaBancoInstance.fechaFin}" format="dd-MM-yyyy" /></td>
+
+                            <td>${fieldValue(bean: cuentaBancoInstance, field: "observaciones")}</td>
+
                             <td>
-                                <a href="#" data-id="${itemInstance.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver">
+                                <a href="#" data-id="${cuentaBancoInstance.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver">
                                     <i class="fa fa-laptop"></i>
                                 </a>
-                                <a href="#" data-id="${itemInstance.id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar">
+                                <a href="#" data-id="${cuentaBancoInstance.id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar">
                                     <i class="fa fa-pencil"></i>
                                 </a>
-                                <a href="#" data-id="${itemInstance.id}" class="btn btn-danger btn-sm btn-delete btn-ajax" title="Eliminar">
+                                <a href="#" data-id="${cuentaBancoInstance.id}" class="btn btn-danger btn-sm btn-delete btn-ajax" title="Eliminar">
                                     <i class="fa fa-trash-o"></i>
                                 </a>
                             </td>
@@ -106,19 +85,19 @@
                 </tbody>
             </table>
         </div>
-        <elm:pagination total="${itemInstanceCount}" params="${params}"/>
+        <elm:pagination total="${cuentaBancoInstanceCount}" params="${params}"/>
 
         <script type="text/javascript">
             var id = null;
             function submitForm() {
-                var $form = $("#frmItem");
+                var $form = $("#frmCuentaBanco");
                 var $btn = $("#dlgCreateEdit").find("#btnSave");
                 if ($form.valid()) {
-                $btn.replaceWith(spinner);
-                    openLoader('Grabando');
+                    $btn.replaceWith(spinner);
+                    openLoader("Grabando");
                     $.ajax({
                         type    : "POST",
-                        url     : '${createLink(action:'save_ajax')}',
+                        url     : $form.attr("action"),
                         data    : $form.serialize(),
                             success : function (msg) {
                         var parts = msg.split("_");
@@ -139,7 +118,7 @@
             function deleteRow(itemId) {
                 bootbox.dialog({
                     title   : "Alerta",
-                    message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar el Item seleccionado? Esta acción no se puede deshacer.</p>",
+                    message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar la cuenta bancaria seleccionada? Esta acción no se puede deshacer.</p>",
                     buttons : {
                         cancelar : {
                             label     : "Cancelar",
@@ -151,7 +130,7 @@
                             label     : "<i class='fa fa-trash-o'></i> Eliminar",
                             className : "btn-danger",
                             callback  : function () {
-                                openLoader('Eliminando');
+                                openLoader("Eliminando");
                                 $.ajax({
                                     type    : "POST",
                                     url     : '${createLink(action:'delete_ajax')}',
@@ -163,8 +142,7 @@
                                         log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
                                         if (parts[0] == "OK") {
                                             location.reload(true);
-                                        }
-                                        else {
+                                        } else {
                                             closeLoader();
                                             spinner.replaceWith($btn);
                                             return false;
@@ -186,11 +164,10 @@
                     success : function (msg) {
                         var b = bootbox.dialog({
                             id      : "dlgCreateEdit",
-                            title   : title + " Item",
+                            title   : title + " Cuenta Bancaria",
                             message : msg,
                             buttons : {
                                 cancelar : {
-
                                     label     : "Cancelar",
                                     className : "btn-primary",
                                     callback  : function () {
@@ -207,7 +184,7 @@
                             } //buttons
                         }); //dialog
                         setTimeout(function () {
-                            b.find(".form-control").not('.datepicker').first().focus()
+                            b.find(".form-control").not(".datepicker").first().focus()
                         }, 500);
                     } //success
                 }); //ajax
@@ -230,7 +207,7 @@
                         },
                         success : function (msg) {
                             bootbox.dialog({
-                                title   : "Ver Item",
+                                title   : "Ver CuentaBanco",
                                 message : msg,
                                 buttons : {
                                     ok : {

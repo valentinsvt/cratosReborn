@@ -164,7 +164,10 @@ class ProcesoService {
                             while (!cuadrado) {
                                 if (datosAsientos[indice].debe) {
                                     println "encontro--> indice " + indice + " " + datosAsientos[indice].debe
-                                    datosAsientos[pos].debe += debe
+                                    if(datosAsientos[pos].debe){
+                                        datosAsientos[pos].debe += debe
+                                    }
+
                                     println "cambio--> indice " + indice + " " + datosAsientos[indice].debe
                                     cuadrado = true
                                 } else {

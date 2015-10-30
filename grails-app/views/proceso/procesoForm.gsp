@@ -624,11 +624,12 @@
                         data    : "id=" + $("#idProceso").val(),
                         success : function (msg) {
                             // $("#registro").html(msg).show("slide");
-                            closeLoader()
+                            closeLoader();
                             location.reload(true);
                         },
                         error   : function () {
                             bootbox.alert("Ha ocurrido un error. Por favor revise el gestor y los valores del proceso.")
+                            closeLoader();
                         }
                     });
                 }

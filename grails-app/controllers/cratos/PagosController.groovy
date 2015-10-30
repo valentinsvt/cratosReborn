@@ -4,8 +4,10 @@ class PagosController extends cratos.seguridad.Shield {
 
     def conciliacionBancaria() {
         def emp = Empresa.get(session.empresa.id)
+        def tipoDoc = TipoDocumento.findByCodigo("CHQ");
         def pagos = PagoAux.withCriteria {
-            eq("tipoDocumento", TipoDocumento.get(1)) //cheque
+//            eq("tipoDocumento", tipoDoc) //cheque
+            eq("tipo", tipoDoc.codigo) //cheque
             auxiliar {
                 proveedor {
                     eq("empresa", emp)

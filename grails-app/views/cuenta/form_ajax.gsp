@@ -117,7 +117,7 @@
                 </label>
 
                 <div class="col-md-6">
-                    <g:select id="cuentaBanco" name="cuentaBanco.id" from="${cratos.CuentaBanco.list()}" optionKey="id" value="${cuentaInstance?.cuentaBanco?.id}"
+                    <g:select id="cuentaBanco" name="cuentaBanco.id" from="${cratos.CuentaBanco.list()}" optionKey="id" optionValue="numero" value="${cuentaInstance?.cuentaBanco?.id}"
                               class="many-to-one form-control" noSelection="['': '']"/>
                 </div>
 

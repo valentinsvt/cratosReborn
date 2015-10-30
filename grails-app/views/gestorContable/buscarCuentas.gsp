@@ -1,4 +1,7 @@
-<table class="table table-striped" width="400px">
+
+<div class="row-fluid"  style="width: 99.7%;height: 600px;overflow-y: auto;float: right;">
+    <div class="span12">
+<table class="table table-striped" width="400px" style="overflow-y: auto">
     <thead>
     <tr>
         <th>C&oacute;digo</th>
@@ -32,6 +35,8 @@
     </g:if>
     </tbody>
 </table>
+        </div>
+</div>
 
 
 <script type="text/javascript">
@@ -44,6 +49,7 @@
                 data: "id="+$(this).attr("cuenta")+"&razon="+$("#dh_"+$(this).attr("cuenta")).val()+"&tc="+$("#tipo").val(),
                 success: function(msg){
                     $("#agregarCuentas").html(msg)
+                    $("#dlgBuscarMov").modal("hide");
                 }
             });
 
