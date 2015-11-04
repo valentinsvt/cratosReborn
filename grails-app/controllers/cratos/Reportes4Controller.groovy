@@ -70,7 +70,7 @@ class Reportes4Controller {
         headers.add(new Paragraph("Movimiento desde: " + periodo.fechaInicio.format("dd-MM-yyyy") + "  hasta: " + periodo.fechaFin.format("dd-MM-yyyy"), fontTitulo))
         headers.add(new Paragraph(" ", fontInfo))
 
-        PdfPTable tablaCuentas = new PdfPTable(3);
+        PdfPTable tablaCuentas = new PdfPTable(4);
         tablaCuentas.setWidthPercentage(100);
 
         Cuenta.findAllByEmpresaAndNivel(empresa, Nivel.get(1)).each {cuenta ->
@@ -95,15 +95,11 @@ class Reportes4Controller {
 
         Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
         Font fontInfo = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
+        Font fontInfoBold = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
         def prmsCellHead2 = [border: Color.WHITE,
                 align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def prmsCellHead3 = [border: Color.WHITE,
                 align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
-
-        addCellTabla(tablaCuentas, new Paragraph(cuenta?.numero, fontInfo), prmsCellHead2)
-        addCellTabla(tablaCuentas, new Paragraph(cuenta?.descripcion, fontInfo), prmsCellHead2)
-//        addCellTabla(tablaCuentas, new Paragraph(cuenta?.nivel?.descripcion, fontInfo), prmsCellHead2)
-
         def saldos = SaldoMensual.findAllByCuentaAndPeriodo(cuenta, periodo)
         def saldoInit = 0
 
@@ -112,74 +108,26 @@ class Reportes4Controller {
             saldoInit += (it.saldoInicial + it.debe - it.haber)
         }
 
-
-        addCellTabla(tablaCuentas, new Paragraph(g.formatNumber(number: saldoInit, minFractionDigits:2, maxFractionDigits: 2, format: "##,##0", locale: "ec"), fontInfo), prmsCellHead3)
+                addCellTabla(tablaCuentas, new Paragraph(cuenta?.numero, fontInfoBold), prmsCellHead2)
+                addCellTabla(tablaCuentas, new Paragraph(cuenta?.descripcion?.toUpperCase(), fontInfoBold), prmsCellHead2)
+                addCellTabla(tablaCuentas, new Paragraph(g.formatNumber(number: saldoInit, minFractionDigits:2, maxFractionDigits: 2, format: "##,##0", locale: "ec"), fontInfoBold), prmsCellHead3)
+                addCellTabla(tablaCuentas, new Paragraph('', fontInfo), prmsCellHead2)
 
         if(cuenta.movimiento == '0'){
-
             Cuenta.findAllByPadre(cuenta).each {cuentaHija ->
                 getCuentas(tablaCuentas, cuentaHija, periodo)
             }
-
         }else {
-
             Asiento.findAllByCuenta(cuenta).each { asiento ->
-
-                if(asiento.comprobante.proceso.proveedor){
-
-                    if(asiento.comprobante.proceso.proveedor.nombre){
-
-                        addCellTabla(tablaCuentas, new Paragraph(" ", fontInfo), prmsCellHead2)
-                        addCellTabla(tablaCuentas, new Paragraph(" ", fontInfo), prmsCellHead2)
-                        addCellTabla(tablaCuentas, new Paragraph(asiento?.comprobante?.proceso?.proveedor?.nombre, fontInfo), prmsCellHead2)
-
-
-                    } else if ( asiento?.comprobante?.proceso?.proveedor?.nombreContacto){
-
-                        addCellTabla(tablaCuentas, new Paragraph(" ", fontInfo), prmsCellHead2)
-                        addCellTabla(tablaCuentas, new Paragraph(" ", fontInfo), prmsCellHead2)
-                        addCellTabla(tablaCuentas, new Paragraph(asiento?.comprobante?.proceso?.proveedor?.nombreContacto, fontInfo), prmsCellHead2)
-
-
-                    }else {
-
-                        addCellTabla(tablaCuentas, new Paragraph(" ", fontInfo), prmsCellHead2)
-                        addCellTabla(tablaCuentas, new Paragraph(" ", fontInfo), prmsCellHead2)
-                        addCellTabla(tablaCuentas, new Paragraph(" ", fontInfo), prmsCellHead2)
-
-
-                    }
-
-
-
-                }else {
-                    addCellTabla(tablaCuentas, new Paragraph(" ", fontInfo), prmsCellHead2)
-                    addCellTabla(tablaCuentas, new Paragraph(" ", fontInfo), prmsCellHead2)
-                    addCellTabla(tablaCuentas, new Paragraph(" ", fontInfo), prmsCellHead2)
-
-
-
-                }
-
-
+                addCellTabla(tablaCuentas, new Paragraph(" ", fontInfo), prmsCellHead2)
+                addCellTabla(tablaCuentas, new Paragraph(asiento?.comprobante?.proceso?.proveedor?.nombre, fontInfo), prmsCellHead2)
+                addCellTabla(tablaCuentas, new Paragraph(" ", fontInfo), prmsCellHead2)
                 addCellTabla(tablaCuentas, new Paragraph(g.formatNumber(number: asiento.debe - asiento.haber , minFractionDigits:
                         2, maxFractionDigits: 2, format: "##,##0", locale: "ec"), fontInfo), prmsCellHead2)
 
-
-
-
             }
-
             return tablaCuentas
-
         }
-
-
-
-
-
-
-
     }
 
 

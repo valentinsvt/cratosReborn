@@ -10,22 +10,35 @@
         <legend>Adquisición</legend>
 
         <div class="fila span-20 ">
-            <div class="span-3  ${hasErrors(bean: adquisicionesInstance, field: 'registro', 'error')} ">
-                <label for="registroGestor" id="registroLabel">
-                    Gestor Contable
-                </label>
+            %{--<div class="span-3  ${hasErrors(bean: adquisicionesInstance, field: 'registro', 'error')} ">--}%
+            %{--<label for="registroGestor" id="registroLabel">--}%
+            %{--Gestor Contable--}%
+            %{--</label>--}%
+            %{--</div>--}%
+
+            %{--<div class="span-6">--}%
+            %{--<g:select class="field  many-to-one ui-corner-all required" name="gestor.id" id="gestor" maxlenght="15"--}%
+            %{--value="${adquisicionesInstance?.gestor?.id}"--}%
+            %{--title="${Adquisiciones.constraints.gestor.attributes.title}" from="${cratos.Gestor.list([sort: 'nombre'])}" noSelection="${['': '']}" optionKey="id" optionValue="nombre"/>--}%
+            %{--</div>--}%
+
+
+            <div class="fila">
+                <div class="label span-3">
+                    Gestor Contable:
+                </div>
+
+                <div class="span-6">
+                    <g:select class="form-control required" name="gestor.id" id="gestor"
+                              value="${adquisicionesInstance?.gestor?.id}"
+                              title="${Adquisiciones.constraints.gestor.attributes.title}" from="${cratos.Gestor.list([sort: 'nombre'])}" noSelection="${['': '']}" optionKey="id" optionValue="nombre"/>
+                </div>
             </div>
 
-            <div class="span-6">
-                <g:select class="field  many-to-one ui-corner-all required" name="gestor.id" id="gestor" maxlenght="15"
-                          value="${adquisicionesInstance?.gestor?.id}"
-                          title="${Adquisiciones.constraints.gestor.attributes.title}" from="${cratos.Gestor.list([sort: 'nombre'])}" noSelection="${['': '']}" optionKey="id" optionValue="nombre"/>
-            </div>
 
-            <div class="span-3 prepend-1 ${hasErrors(bean: adquisicionesInstance, field: 'factura', 'error')}">
-                <label for="factura">
+            <div class="fila">
+            <div class="span-3 label">
                     Factura
-                </label>
             </div>
 
             <div class="span-6">
@@ -37,32 +50,37 @@
                                                                                                                                                                                                  value="${adquisicionesInstance?.facturaNumero}"
                                                                                                                                                                                                  title="${Adquisiciones.constraints.facturaNumero.attributes.title}"/>
             </div>
-        </div>
+            </div>
 
-        <div class="fila span-20">
 
-            <div class="span-3 ${hasErrors(bean: adquisicionesInstance, field: 'fecha', 'error')}">
-                <label for="fecha" id="fecha">
-                    Fecha
-                </label>
+
+
+
+            <div class="fila">
+            <div class="span-3 label">
+                Fecha
             </div>
 
             <div class="span-6">
                 ${new Date().format("dd-MM-yyyy")}
             </div>
 
-            <div class=" span-3 prepend-1${hasErrors(bean: adquisicionesInstance, field: 'fechaPago', 'error')}">
-                <label for="fechaPago">
+            <div class=" span-3 label">
                     Fecha Pago
-                </label>
             </div>
 
-            <div class="span-6">
-                <elm:datePicker class="field ui-corner-all"
-                                title="${Adquisiciones.constraints.fechaPago.attributes.title}"
-                                name="fechaPago" format="yyyy-MM-dd" style="width: 80px" value="${adquisicionesInstance.fechaPago}"/>
+            %{--<div class="col-md-4">--}%
+            <div class="col-md-4">
+                    <elm:datepicker name="fechaPago" title="Fecha de Pago" class="datepicker form-control" maxDate="-15y"
+                                    value="${adquisicionesInstance.fechaPago}"/>
             </div>
+
+
+            </div>
+
         </div>
+
+
 
         <div class="fila span-20">
             <div class="span-3 ${hasErrors(bean: adquisicionesInstance, field: 'proveedor', 'error')}">

@@ -207,7 +207,7 @@
                         },
                         success : function (msg) {
                             bootbox.dialog({
-                                title   : "Ver CuentaBanco",
+                                title   : "Ver Cuenta Bancaria",
                                 message : msg,
                                 buttons : {
                                     ok : {

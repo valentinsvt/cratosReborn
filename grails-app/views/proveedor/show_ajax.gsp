@@ -24,7 +24,7 @@
             Nombre
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-7">
             <g:fieldValue bean="${proveedorInstance}" field="nombre"/>
         </div>
 
@@ -37,7 +37,7 @@
             Dirección
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-7">
             <g:fieldValue bean="${proveedorInstance}" field="direccion"/>
         </div>
 
@@ -77,7 +77,7 @@
             Empresa
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-7">
             ${proveedorInstance?.empresa?.encodeAsHTML()}
         </div>
 
@@ -228,7 +228,7 @@
             Actividad
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-7">
             <g:fieldValue bean="${proveedorInstance}" field="actividad"/>
         </div>
 

@@ -23,7 +23,7 @@
             <i class="fa fa-list-alt"></i>
             Lista de gestores
         </g:link>
-        <g:link action="nuevoGestor" id="${gestor.id}" class="btn btn-default" name="editarGestor" >
+        <g:link action="nuevoGestor" id="${gestor.id}" class="btn btn-success" name="editarGestor" >
             <i class="fa fa-pencil"></i>
             Editar
         </g:link>

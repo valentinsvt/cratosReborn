@@ -224,7 +224,7 @@
                     var id = $(this).data("id");
                     $.ajax({
                         type    : "POST",
-                        url     : "${createLink(action:'show_ajax')}",
+                        url     : "${createLink(action:'show')}",
                         data    : {
                             id : id
                         },
